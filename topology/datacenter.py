@@ -4,7 +4,10 @@ from topology.link import Link
 from topology.location import Node
 import json
 from topology.numpy_encoder import NpEncoder
+import graphviz as gvz
 
+inf = 1000000000
+eps = 1e-9
 
 class Datacenter(object):
     """
@@ -17,6 +20,15 @@ class Datacenter(object):
         self.description = description
         self.locations = locations
         self.links = links
+
+    def add_dummy_sink(self):
+        """
+        Adds a dummy sink connected to the gateway to initialise the paths.
+        """
+        dummy_sink = Node("DummySink", inf, inf, inf)
+        dummy_link = Link(self.get_locations_by_type("Gateway")[0], dummy_sink, inf, 0, inf)
+        self.add_location(dummy_sink)
+        self.add_link(dummy_link)
 
     def copy(self, name):
         """
@@ -52,6 +64,21 @@ class Datacenter(object):
             raise ValueError("Invalid type. Type should be in [Gateway, SuperSpine, Spine, Leaf, Node, Dummy]")
         return [i for i in self.locations if i.type == type]
 
+
+    def get_locations_by_types(self):
+        """
+        As above but makes list of lists in format [[gateways], [super_spines], 
+        [spines], [leafs], [nodes]]
+        If level is empty then ignore
+        """
+        nodes = []
+        gateway = self.get_locations_by_type("Gateway")
+        super_spines = self.get_locations_by_type("SuperSpine")
+        spines = self.get_locations_by_type("Spine")
+        leafs = self.get_locations_by_type("Leaf")
+        nodes = self.get_locations_by_type("Node")
+        return [i for i in (gateway, super_spines, spines, leafs, nodes) if i]
+
     def outgoing_edge(self, location: Location) -> list:
         """
         Returns a list of outgoing links from a particular location
@@ -62,7 +89,7 @@ class Datacenter(object):
         """
         Returns a list of incoming links from a particular location
         """
-        return [l for l in self.getLinks() if l.sink == location]
+        return [l for l in self.links if l.sink == location]
 
     def add_link(self, link: Link) -> None:
         """
@@ -105,7 +132,7 @@ class Datacenter(object):
         """
         Prints information about the datacenter.
         """
-        for link in self.getLinks():
+        for link in self.links:
             print("\n")
             print("Description: ", link.description)
             print("Latency: {}, Bandwidth: {}".format(link.latency, link.bandwidth))
@@ -121,9 +148,23 @@ class Datacenter(object):
                 print("\tCPU: ", link.sink.cpu)
                 print("\tRAM: ", link.sink.ram)
                 print("\tCost: ", link.sink.cost)
+    
+    def save_as_dot(self, filename = None):
+        """
+        saves the datacenter topology as a DOT to filename.dot
+        """
+        if filename != None:
+            if filename[-5:] != ".dot":
+                filename = filename + ".dot"
+        else:
+            filename = self.description + ".dot"
 
-    # def addArtificialNode(self):
-    #     # Adds an artifical sink node connected to each node in list 'connections'. If connections contains one location 'B' then it will add a link B -> Sink
-    #     dummy = Node("Dummy", 10000, 10000, 10000)
-    #     self.addLocation(dummy)
-    #     self.addLink(self.getLocationsByType("gateway")[0], dummy, {"bandwidth": 10000, "latency": 0, "cost": 10000})
+        plot = gvz.Digraph()
+        for location in self.locations:
+            plot.node(name=str(location.id), label=location.description)
+        
+        for link in self.links:
+            plot.edge(str(link.source.id), str(link.sink.id))
+
+        with open(filename, "w") as f:
+            f.write(plot.source)
