@@ -13,7 +13,7 @@ class Link(object):
         \param biderectional  Boolean flag for leaf-leaf links which can flow either way.
     """
 
-    def __init__(self, source: Location, sink: Location, bandwidth: float, latency: float, cost: float, two_way: bool = False):
+    def __init__(self, source: Location, sink: Location, bandwidth: float, latency: float = 0, cost: float = 1, two_way: bool = False):
         self.source = source
         self.sink = sink
         self.description = "({}, {})".format(source.description, sink.description)
@@ -26,13 +26,13 @@ class Link(object):
         """
         makes a copy of the link
         """
-        return Link(self.source.copy(), self.sink.copy(), self.description[:], copy.deepcopy(self.parameters), self.two_way)
+        return Link(self.source.copy(), self.sink.copy(), self.bandwidth, self.latency, self.cost, self.two_way)
     
     def copy_with_new_nodes(self, source: Location, sink: Location):
         """
         makes a copy of the link but with new source and sink nodes.
         """
-        return Link(source, sink, copy.deepcopy(self.parameters), self.two_way)
+        return Link(source, sink, self.bandwidth, self.latency, self.cost, self.two_way)
     
     def get_opposing_edge_description(self) -> str:
         """
