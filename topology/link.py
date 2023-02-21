@@ -1,5 +1,6 @@
 import copy
 from topology.location import Location
+inf = 1e6
 
 class Link(object):
     """
@@ -8,31 +9,38 @@ class Link(object):
         \param soure          Start node in the link (instance of location class)
         \param sink           End node in the link (instance of location class)
         \param bandwidth      Float bandwidth of link
-        \param latency      Float bandwidth of link
-        \param cost      Float bandwidth of link
+        \param latency        Float latency of link
+        \param availability   Float availability of the link, MTTF/(MTTR+MTTF)
+        \param cost           Float dual cost of link.
         \param biderectional  Boolean flag for leaf-leaf links which can flow either way.
     """
 
-    def __init__(self, source: Location, sink: Location, bandwidth: float, latency: float = 0, cost: float = 1, two_way: bool = False):
+    def __init__(self, source: Location, sink: Location, bandwidth: float = 1e6, latency: float = 0, availability: float = float(1), cost: float = 1, assignment_link: bool = False):
         self.source = source
         self.sink = sink
-        self.description = "({}, {})".format(source.description, sink.description)
         self.bandwidth = bandwidth
         self.latency = latency
         self.cost = cost
-        self.two_way = two_way
+        self.availability = availability
+        self.assignment_link = assignment_link
 
     def copy(self):
         """
         makes a copy of the link
         """
-        return Link(self.source.copy(), self.sink.copy(), self.bandwidth, self.latency, self.cost, self.two_way)
+        return Link(self.source.copy(), self.sink.copy(), self.bandwidth, self.latency, self.cost, self.availability)
     
     def copy_with_new_nodes(self, source: Location, sink: Location):
         """
         makes a copy of the link but with new source and sink nodes.
         """
-        return Link(source, sink, self.bandwidth, self.latency, self.cost, self.two_way)
+        return Link(source, sink, self.bandwidth, self.latency, self.availability, self.cost)
+
+    def get_description(self):
+        """
+        Gets the description of the edge in string format.
+        """
+        return "({}, {})".format(self.source.description, self.sink.description)
     
     def get_opposing_edge_description(self) -> str:
         """
@@ -50,4 +58,4 @@ class Link(object):
         """
         returns the link as a dictionary for use with json
         """
-        return {"source": self.source.id, "sink": self.sink.id, "description": self.description, "bandwidth": self.bandwidth, "latency": self.latency, "cost": self.cost, "two_way": self.two_way}
+        return {"source": self.source.id, "sink": self.sink.id, "description": self.get_description(), "bandwidth": self.bandwidth, "latency": self.latency, "cost": self.cost, "two_way": self.two_way}

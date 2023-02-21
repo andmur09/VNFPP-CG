@@ -1,7 +1,7 @@
 import random
-from service_class.component import Component
+from service_class.vnf import Component
 from service_class.service import Service
-from topology.datacenter import Datacenter
+from topology.network import Network
 from topology.link import Link
 from topology.location import *
 
@@ -205,7 +205,7 @@ def make_datacenter():
     edges.append(Link(l13, l14, 40, 1, two_way=True))
     edges.append(Link(l5, l6, 40, 1, two_way=True))
 
-    return Datacenter("EricssonDC", locations, edges)
+    return Network("EricssonDC", locations, edges)
 
 def randomServices(no_services, no_components):
     components = []

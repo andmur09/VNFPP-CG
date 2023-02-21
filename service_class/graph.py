@@ -1,14 +1,15 @@
-from topology.datacenter import Datacenter
+from topology.network import Network
 from topology.location import Location
 import itertools
 import graphviz as gvz
 
-class service_graph(Datacenter):
+class service_graph(Network):
     """
     This class is used to make a service graph. Service graph can be used for optimising datacenter.
     """
-    def __init__(self, name, locations, links):
+    def __init__(self, name, locations, links, n_layers: int):
         super().__init__(name, locations, links)
+        self.n_layers = n_layers
         self.paths = [] 
 
     def add_path(self, path):
@@ -17,24 +18,6 @@ class service_graph(Datacenter):
         """
         self.paths.append(path)
     
-    def get_start_node(self):
-        """
-        Gets the start node in the graph, i.e. the one with no incoming edges.
-        """
-        for i in self.locations:
-            incoming = [l for l in self.links if l.sink == i]
-            if not incoming:
-                return i
-    
-    def get_end_node(self):
-        """
-        Gets the end node in the graph, i.e. the one with no outgoing edges.
-        """
-        for i in self.locations:
-            outgoing = [l for l in self.links if l.source == i]
-            if not outgoing:
-                return i
-
     def save_as_dot(self, filename = None):
         """
         saves the datacenter topology as a DOT to filename.dot
@@ -55,19 +38,41 @@ class service_graph(Datacenter):
         with open(filename, "w") as f:
             f.write(plot.source)
 
-class service_path(Datacenter):
+class service_path(Network):
     """
     This class represents a path on the above graph class.
     """
     id_iter = itertools.count()
-    def __init__(self, name, locations, links, times_traversed, component_assignment):
-        super().__init__(name, locations, links)
-        self.name = name + str(next(Location.id_iter))
-        self.times_traversed = times_traversed
-        self.component_assignment = component_assignment
+    def __init__(self, description, locations, links, network: Network, n_layers: int):
+        super().__init__(description, locations, links)
+        self.description = description + "_path" + str(next(service_path.id_iter))
+        self.network = network
+        self.n_layers = n_layers
     
+    def get_params(self):
+        """
+        Gets a dictionary of parameters required for the RMP. These are: the number of times each edge has been traversed in the path and the nodes that each required VNF is considered assigned to.
+        """
+        to_return = {"components assigned": {}, "times traversed": {}}
+        # Gets the number of times each edge from the network topology is traversed across the layers of the graph.
+        for edge1 in [e for e in self.network.links if e.assignment_link == False]:
+            n = 0
+            for edge2 in self.links:
+                if edge1.source.description in edge2.source.description and edge1.sink.description in edge2.sink.description:
+                    n += 1
+            to_return["times traversed"][edge1.get_description()] = n
+        # Gets which components are assigned to which nodes.
+        for edge in self.links:
+            tokens1, tokens2 = edge.source.description.split("_"), edge.sink.description.split("_")
+            if tokens1[0] == tokens2[0]:
+                l = int(tokens1[-1][-1])
+                to_return["components assigned"][l] = tokens1[0]
+        return to_return
+            
     def check_if_same(self, other_path):
-        if self.times_traversed != other_path.times_traversed and self.component_assignment != other_path.component_assignment:
-            return False
-        else:
+        """
+        Used to check for duplicate paths.
+        """
+        if self.get_params == other_path.get_params:
             return True
+        return False
