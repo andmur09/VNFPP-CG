@@ -1,6 +1,8 @@
 import itertools
 import re
 
+inf = 1e6
+
 class Location(object):
     id_iter = itertools.count()
     """
@@ -28,64 +30,33 @@ class Location(object):
         return a dictionary for use with json.
         """
         return {"id": self.id, "description": self.description, "type": self.type}
-    
 
-class Gateway(Location):
-    """
-    Represents a datacenter gateway node.
-    """
-    def __init__(self, description: str):
-        super().__init__(description)
-        self.type = "Gateway"
-
-class SuperSpine(Location):
-    """
-    Represents a super spine switch location.
-    """
-    def __init__(self, description: str):
-        super().__init__(description)
-        self.type = "SuperSpine"
-
-class Spine(Location):
-    """
-    Represents a spine switch location.
-    """
-    def __init__(self, description: str):
-        super().__init__(description)
-        self.type = "Spine"
-
-class Leaf(Location):
+class Switch(Location):
     """
     Represents a leaf switch location.
     """
     def __init__(self, description: str):
         super().__init__(description)
-        self.type = "Leaf"
+        self.type = "Switch"
 
 
 class Node(Location):
     """
-    Represents a node switch location.
+    Represents a node location.
     cpu: CPU available on the node.
     ram: RAM available on the node.
+    availability: Availability of node, MTTF/(MTTR+MTTF)
     cost: Node rental cost.
     active: Whether the node is active (False to simulate node failure).
     """
-    def __init__(self, description: str, cpu: float, ram: float, cost: float = float(1), active: bool = True):
+    def __init__(self, description: str, cpu: float, ram: float, cost: float = float(1), availability: float = float(1), active: bool = True):
         super().__init__(description)
         self.type = "Node"
         self.cpu = cpu
         self.ram = ram
         self.cost = cost
+        self.availability = availability
         self.active = active
-
-    def deactivate(self):
-        if self.active == True:
-            self.active = False
-    
-    def activate(self):
-        if self.active == False:
-            self.active = True
 
     def get_component_assigned(self) -> str:
         """
@@ -102,5 +73,15 @@ class Node(Location):
         """
         return a dictionary for use with json.
         """
-        return {"id": self.id, "description": self.description, "type": self.type, "ram": self.ram, "cpu": self.cpu, "cost": self.cost}
+        return {"id": self.id, "description": self.description, "type": self.type, "ram": self.ram, "cpu": self.cpu, "availability": self.availability, "cost": self.cost}
 
+class Dummy(Node):
+    """
+    Represents a dummy node location. We use this to initialise the column generation. The dummy node is an artificial node with arbitrarily
+    high CPU and RAM such that every function can be hosted here. However it has arbitrarily high cost to if another placement is possible,
+    the optimisation will chose the different placement. As a result any service with a function placed on the dummy node can be conidered
+    as failed.
+    """
+    def __init__(self, description):
+        super().__init__(description, inf, inf, inf)
+        

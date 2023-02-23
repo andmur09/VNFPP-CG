@@ -1,10 +1,11 @@
+from multiprocessing.sharedctypes import Value
 import numpy as np
 from math import log, exp
 from scipy import stats
 from time import time
 from service_class.service import Service
-from service_class.graph import service_path
-from topology.datacenter import Datacenter
+from service_class.graph import service_graph, service_path
+from topology.network import Network
 from topology.location import Node
 import gurobipy as gp
 from gurobipy import GRB
@@ -25,7 +26,7 @@ class ColumnGeneration(object):
                     verbose - int verbosity of output.
                     results - string filename to use to log output.
     """
-    def __init__(self, datacenter: Datacenter, services: list, verbose: int = 1, logfile: str ='log.txt') -> None:
+    def __init__(self, network: Network, services: list, verbose: int = 1, logfile: str ='log.txt') -> None:
         """
         Initialises the optimisation problem
         """
@@ -34,7 +35,11 @@ class ColumnGeneration(object):
         self.verbose = verbose
         logging.basicConfig(filename=logfile, encoding='utf-8', level=logging.DEBUG, filemode='w') if self.verbose == True else None
 
-        self.datacenter = datacenter
+        self.network = network
+
+        # Adds the dummy node to the network.
+        self.network.add_dummy_node()
+
         self.services = services
         self.lower_bound = eps
         self.upper_bound = inf
@@ -43,143 +48,50 @@ class ColumnGeneration(object):
         
         # Initialises inner approximation for each service
         for service in services:
-            service.add_graph(self.datacenter)
+            service.make_graph(self.network)
 
-    def get_initial_paths(self):
+    def pricing_problem(self, service):
         """
-        Generates initial paths with arbitrarily high cost to kickstart algorithm.
+        Solves the pricing problem for a service and finds the best new path to add to the master problem.
         """
-        for s in self.services:
-            graph = s.graphs[self.datacenter.description]
-            for link in graph.links:
-                if "Dummy" in link.description:
-                    # Sets link cost to dummy node to be arbitrarily small so that the path is always selected.
-                    # This is a modelling convenience to ensure that there is a valid path.
-                    link.cost = eps
-            # Solves shortest path column generation problem
-            m = self.column_generation(s)
-            # Adds path to service graph
-            self.add_path_from_model(s, m)
-            for link in graph.links:
-                if "Dummy" in link.description:
-                    # From henceforth makes the cost arbitrarily high so that it is not selected.
-                    link.cost = inf
+        graph = service.graph
+        m = gp.Model(graph.description, env=env)
+        w = np.array([l.cost for l in graph.links])
+        x = m.addMVar(shape = len(graph.links), name = [l.get_description() for l in graph.links], vtype = GRB.BINARY)
 
-    def add_path_from_model(self, service, model):
-        """
-        Given a service and a column generation model it adds the current path to the service graph.
-        """
-        graph = service.graphs[self.datacenter.description]
-        links = [v for v in model.getVars() if "links" in v.varName]
-        # From solution gets set of links
-        links_i = [i for i in range(len(graph.links)) if links[i].x == 1]
-        used_links = [graph.links[i] for i in range(len(graph.links)) if i in links_i]
+        # Gets source and sink
+        source = graph.get_location_by_description(service.source.description + "_l0")
+        sink = graph.get_location_by_description(service.sink.description + "_l{}".format(graph.n_layers - 1))
 
-        # From links gets set of nodes and adds path
-        used_nodes = set()
-        for link in used_links:
-            if link.source not in used_nodes:
-                used_nodes.add(link.source)
-            if link.sink not in used_nodes:
-                used_nodes.add(link.sink)
-        used_nodes = list(used_nodes)
-
-        # Counts each time an edge in the original topology has been traversed by the path
-        times_traversed = {}
-        for link1 in self.datacenter.links:
-            z = 0
-            for link2 in used_links:
-                if link1.source.description == link2.source.description and link1.sink.description == link2.sink.description:
-                    z += 1   
-                elif link1.sink.description == link2.source.description and link1.source.description == link2.sink.description:
-                    z += 1
-            times_traversed[link1.description] = z
+        # Flow constraints for each node.
+        for node in graph.locations:
+            o_indexes = [graph.links.index(o) for o in graph.outgoing_edge(node)]
+            i_indexes = [graph.links.index(i) for i in graph.incoming_edge(node)]
+            # 1 edge leaving the source must be active.
+            if node == source:
+                m.addConstr(gp.quicksum(x[o] for o in o_indexes) - gp.quicksum(x[i] for i in i_indexes) == 1, name = "sourceflow_{}".format(node.description))
+            # 1 edge entering sink must be active
+            elif node == sink:
+                m.addConstr(gp.quicksum(x[o] for o in o_indexes) - gp.quicksum(x[i] for i in i_indexes) == -1, name = "sinkflow_{}".format(node.description))
+            # Flow conservation for every other node.
+            else:
+                m.addConstr(gp.quicksum(x[o] for o in o_indexes) == gp.quicksum(x[i] for i in i_indexes), name = "conservation_{}".format(node.description))
         
-        # Makes binary vector representing assignment of component to node for the path:
-        component_assignment = {}
-        for component in service.components:
-            component_assignment[str(component.description)] = {}
-            for node in self.datacenter.get_locations_by_type("Node"):
-                if node.description + "[" + component.description + "]" in [i.description for i in used_nodes]:
-                    component_assignment[str(component.description)][str(node.description)] = 1
-                else:
-                    component_assignment[str(component.description)][str(node.description)] = 0
-        path = service_path(self.datacenter.description + "_" + service.description, used_nodes, used_links, times_traversed, component_assignment)
-        graph.add_path(path)
+        # Adds latency constraint.
+        lat = np.array([l.latency for l in graph.links])
+        m.addConstr(lat @ x <= service.latency, name = "latency")
+
+        # Gets dual variable associated with constraint that 100% of the flow must be used
         if self.model != None:
-            self.add_column_from_path(service, path)
-    
-    def add_column_from_path(self, service, path):
-        """
-        Takes a service graph path object and adds the equivalent column to the master problem.
-        """
-        c_tp = [self.model.getConstrByName("throughput_{}".format(service.description))]
-        c_bw = [c for c in self.model.getConstrs() if "bandwidth" in c.getAttr("ConstrName")]
-        c_assignment = [c for c in self.model.getConstrs() if "assignmentflow_{}".format(service.description) in c.getAttr("ConstrName")]
-
-        coeff_tp = [1]
-        # Gets the coefficients for the bandwidth constraints (equivalent to the number of times the path has traversed a particular link).
-        coeffs_bw = []
-        for c in c_bw:
-            edge = c.getAttr("ConstrName")
-            coeffs_bw.append(path.times_traversed[str(c.getAttr("ConstrName").split("_")[-1])])
-
-        coeffs_assignment = []
-        for c in c_assignment:
-            tokens = c.getAttr("ConstrName").split("_")
-            coeffs_assignment.append(path.component_assignment[tokens[2]][tokens[3]])
-
-        constraints = c_tp + c_bw + c_assignment
-        coefficients = coeff_tp + coeffs_bw + coeffs_assignment
-        paths = service.graphs[self.datacenter.description].paths
-        self.model.addVar(column = gp.Column(coefficients, constraints), name = service.description + "_flows_{}".format(len(paths)))
-
-
-    def column_generation(self, service):
-        """
-        Solves the column generation problem for a service and finds the best new path to add to the master problem.
-        """
-        if self.model != None:
-            pi = self.model.getConstrByName("throughput_{}".format(service.description)).getAttr("Pi")
+            pi = -self.model.getConstrByName("pathflow_{}".format(service.description)).getAttr("Pi")
         else:
             pi = 0
-        m = gp.Model(self.datacenter.description + "_" + service.description, env=env)
-        graph = service.graphs[self.datacenter.description]
 
-        # Adds variables representing whether an edge has been used in a path or not:
-        links = m.addMVar(shape=len(graph.links), vtype=GRB.BINARY, name="links")
-        weights = np.array([l.cost for l in graph.links])
-
-        # Gets indexes of links corresponding to ones leaving the source
-        start = graph.get_start_node()
-        outgoing = graph.outgoing_edge(start)
-        start_indexes = [i for i in range(len(graph.links)) if graph.links[i] in outgoing]
-
-        # Adds constraint that exactly one link leaving the source must be active
-        m.addConstr(gp.quicksum([links[i] for i in start_indexes]) == 1)
-
-        # Gets indexes of links corresponding to ones entering the sink
-        end = graph.get_end_node()
-        incoming = graph.incoming_edge(end)
-        end_indexes = [i for i in range(len(graph.links)) if graph.links[i] in incoming]
-
-        # Adds constraint that exactly one link entering the sink must be active
-        m.addConstr(gp.quicksum([links[i] for i in end_indexes]) == 1)
-
-        # Adds constraint that the sum of the flow into and out of every other edge must be conserved
-        source_and_sink = [graph.locations.index(i) for i in [start, end]]
-        for i in range(len(graph.locations)):
-            if i not in source_and_sink:
-                incoming = graph.incoming_edge(graph.locations[i])
-                incoming_i = [i for i in range(len(graph.links)) if graph.links[i] in incoming]
-                outgoing = graph.outgoing_edge(graph.locations[i])
-                outgoing_i = [i for i in range(len(graph.links)) if graph.links[i] in outgoing]
-                m.addConstr(gp.quicksum([links[i] for i in incoming_i]) == gp.quicksum([links[o] for o in outgoing_i]))
-        
-        m.setObjective(-pi + weights @ links, GRB.MINIMIZE)
+        # Sets objective to reduced cost.
+        m.setObjective(pi + w @ x, GRB.MINIMIZE)
         m.update()
         m.optimize()
-
+        m.write("{}.lp".format(m.getAttr("ModelName")))
         if m.status == GRB.OPTIMAL:
             logging.info(" Optimisation terminated successfully.") if self.verbose > 0 else None
             logging.info(' Ojective: {}'.format(m.objVal)) if self.verbose > 0 else None
@@ -187,7 +99,7 @@ class ColumnGeneration(object):
             vars = m.getVars()
             for i in range(len(vars)):
                 if vars[i].x != 0:
-                    logging.info("Description: {}, Value: {}".format(graph.links[i].description, vars[i].x)) if self.verbose > 0 else None
+                    logging.info("Description: {}, Value: {}".format(graph.links[i].get_description(), vars[i].x)) if self.verbose > 0 else None
             return m
         else:
             logging.error(" Optimisation Failed - consult .ilp") if self.verbose > 0 else None
@@ -195,120 +107,119 @@ class ColumnGeneration(object):
             m.write("{}.ilp".format(m.getAttr("ModelName")))
             raise ValueError("Optimisation failed")
 
-    def update_duals(self):
+    def add_path_from_model(self, service, model):
         """
-        Updates the edges on the service graphs in line with current dual solution from the master problem.
+        Given a service and a column generation model it adds the current path to the service graph.
         """
-        for s in self.services:
-            graph = s.graphs[self.datacenter.description]
-            for link in graph.links:
-                if "Component" not in link.description:
-                    if link.source.description != link.sink.description:
-                        try:
-                            link.cost = -self.model.getConstrByName("bandwidth_{}".format(link.description)).getAttr("Pi")
-                        except:
-                            opposing = "({}, {})".format(link.sink.description, link.source.description)
-                            link.cost = -self.model.getConstrByName("bandwidth_{}".format(opposing)).getAttr("Pi")
-                elif "Component" in link.description:
-                    # Gets the description of the component assigned
-                    component = [n.get_component_assigned() for n in [link.source, link.sink] if isinstance(n, Node) == True]
-                    component = [c for c in component if c != None]
-                    assert len(component) == 1
-                    component = component[0]
-                    # Gets the description of the node that the component is assigned on
-                    node = [n.description for n in [link.source, link.sink] if "Component" not in n.description]
-                    assert len(node) == 1
-                    node = node[0]
-                    # Gets the constraint using the service, component and node description
-                    constraint = self.model.getConstrByName("assignmentflow_{}_{}_{}".format(s.description, component, node))
-                    link.cost = -constraint.getAttr("Pi")/2
-            graph.save_as_dot()
+        graph = service.graph
+        vars = model.getVars()
+        # Gets the list of edges used - equal to the edges whose binary variable has value 1.
+        used_edges = [graph.links[i] for i in range(len(graph.links)) if vars[i].x == 1]
+
+        # Gets the list of used nodes from the used edges.
+        used_nodes = []
+        for edge in used_edges:
+            if edge.source not in used_nodes: used_nodes.append(edge.source)
+            if edge.sink not in used_nodes: used_nodes.append(edge.sink)
+
+        # Makes the path and adds it to the list of paths for the service graph.
+        path = service_path(service.description, used_nodes, used_edges, self.network, service, n_layers = graph.n_layers)
+        graph.add_path(path)
+        return path
 
     def build_initial_model(self):
         """
         Builds and solves the restricted master problem given the initial approximation points.
         """
-        self.model = gp.Model(self.datacenter.description, env=env)
-        nodes = self.datacenter.get_locations_by_type("Node")
-        n_nodes = len(nodes)
-        rep_constants = [10 if "Dummy" in n.description else 1 for n in nodes]
+        self.model = gp.Model(self.network.description, env=env)
+        nodes = [n for n in self.network.locations if isinstance(n, Node) == True]
 
-        components = set()
-        # Adds flow vector for each service where each element represents a path associated with that service
+        vnfs = set()
         # Also makes set of components for all services so that no duplicate components are considered
         for service in self.services:
-            graph = service.graphs[self.datacenter.description]
-            self.model.addVar(vtype=GRB.CONTINUOUS, name= service.description + "_flows_1")
-            for component in service.components:
-                components.add(component)
-        components = list(components)
+            for f in service.vnfs:
+                vnfs.add(f)
+        vnfs = list(vnfs)
 
-        # For LP relaxation makes variables continuous
-        for component in components:
-            self.model.addMVar(shape=n_nodes, lb = 0, ub = 1, vtype=GRB.CONTINUOUS, name=component.description + "_assignment")
-        self.model.update()
+        # Gets set of edges - not including reverse edges since edges are bidirectional.
+        edges = []
+        for edge in self.network.links:
+            if edge.get_description() and edge.get_opposing_edge_description() not in [e.get_description() for e in edges]:
+                edges.append(edge)
+
+        # Adds variables, for LP relaxation makes variables continuous.
+        # Assignment variables.
+        for node in nodes:
+            for function in vnfs:
+                self.model.addVar(lb = 0, ub = 1, vtype=GRB.CONTINUOUS, obj = node.cost, name= node.description + "_" + function.description + "_assignment")
         
-        # # Adds constraint that the sum of flows for each service must be greater than the required throughput for the service
+        # Path variables.
         for service in self.services:
-            flows = [v for v in self.model.getVars() if service.description + "_flows" in v.varName]
-            self.model.addConstr(gp.quicksum(flows) >= service.required_throughput, name="throughput_{}".format(service.description))
+            for path in service.graph.paths:
+                self.model.addVar(vtype=GRB.CONTINUOUS, name = path.description + "_flow")
+        self.model.update()
 
-        # Adds a constraint that says that the sum of all flows through the edge must be less than the bandwidth:
-        for i in range(len(self.datacenter.links)):
-            path_vars = []
-            coefficients = []
-            for service in self.services:
-                path_vars.append([v for v in self.model.getVars() if service.description + "_flows" in v.varName])
-                graph = service.graphs[self.datacenter.description]
-                coefficients.append([path.times_traversed[self.datacenter.links[i].description] for path in graph.paths])
-            self.model.addConstr(gp.quicksum(coefficients[s][p]*path_vars[s][p] for s in range(len(self.services)) for p in range(len(path_vars[s]))) <= self.datacenter.links[i].bandwidth, name="bandwidth_{}".format(self.datacenter.links[i].description))
-        
-        # Adds constraint that forces flows to be equal to zero for any path not containing a node that a required component is assigned to
-        for n in range(len(nodes)):
+        # Adds constraint that the sum of CPU and RAM of the functions does not exceed the capacity of the nodes.
+        for node in nodes:
+            cpu_n, ram_n = node.cpu, node.ram
+            cpu_f, ram_f = [f.cpu for f in vnfs], [f.ram for f in vnfs]
+            vars_used = [self.model.getVarByName(node.description + "_" + f.description + "_assignment") for f in vnfs]
+            self.model.addConstr(gp.quicksum(cpu_f[i] * vars_used[i] for i in range(len(vnfs))) <= cpu_n, name = "cpu_{}".format(node.description))
+            self.model.addConstr(gp.quicksum(ram_f[i] * vars_used[i] for i in range(len(vnfs))) <= ram_n, name = "ram_{}".format(node.description))
+
+        # Adds constraint that says the sum of all flows through each edge must not exceed the bandwidth capacity.
+        for edge in edges:
+            e_ij, e_ji = edge.get_description(), edge.get_opposing_edge_description()
+            links_used, tp, vars_used = [], [], []
             for s in self.services:
-                for c in s.components:
-                    #print([c.description for c in s.components])
-                    y = self.model.getVarByName(c.description + "_assignment"+"[{}]".format(n))
-                    x = [v for v in self.model.getVars() if s.description + "_flows" in v.varName]
-                    graph = s.graphs[self.datacenter.description]
-                    assignments = [p.component_assignment for p in graph.paths]
-                    #print(assignments)
-                    alpha = [assignments[g][c.description][nodes[n].description] for g in range(len(x))]
-                    self.model.addConstr(gp.quicksum(alpha[i]*x[i] for i in range(len(x))) <= s.required_throughput * y, name="assignmentflow_{}_{}_{}".format(s.description, c.description, nodes[n].description))
+                for p in s.graph.paths:
+                    links_used.append(p.get_params()["times traversed"][e_ij] + p.get_params()["times traversed"][e_ji])
+                    tp.append(s.throughput)
+                    vars_used.append(self.model.getVarByName(p.description + "_flow"))
+            self.model.addConstr(gp.quicksum(links_used[i] * tp[i] * vars_used[i] for i in range(len(vars_used))) <= edge.bandwidth, name = "bandwidth_{}".format(edge.get_description()))
 
-        # Adds a constraint that says that a component must be assigned to x different nodes where x is the replica count
-        # To enable solutions even when it is not possible to assign enough replicas, we multiply the variable for the assignment of a component
-        # to a dummy node by an arbitrarily high constant.
-        for component in components:
-            assignment_vars = [v for v in self.model.getVars() if component.description + "_assignment" in v.varName]
-            self.model.addConstr(gp.quicksum(assignment_vars[i] * rep_constants[i] for i in range(len(assignment_vars))) >= component.replica_count, name = "replicas_{}".format(component.description))
+        # Adds a constraint that says for each service, 100% of the flow must be routed.
+        for service in self.services:
+            vars_used = [self.model.getVarByName(p.description + "_flow") for p in service.graph.paths]
+            self.model.addConstr(gp.quicksum(vars_used) == 1, name = "pathflow_{}".format(service.description))
 
-        # Adds a constraint that says that the sum of component requirements running on a node must not exceed the capacity.
-        for i in range(len(nodes)):
-            assignment_variables = [self.model.getVarByName(component.description + "_assignment"+"[{}]".format(i)) for component in components]
-            # For CPU
-            requirements = [component.requirements["cpu"] for component in components]
-            self.model.addConstr(gp.quicksum([assignment_variables[i]*requirements[i] for i in range(len(components))]) <= nodes[i].cpu, name="capacity_{}_{}".format("cpu", nodes[i].description))
-            # For RAM
-            requirements = [component.requirements["ram"] for component in components]
-            self.model.addConstr(gp.quicksum([assignment_variables[i]*requirements[i] for i in range(len(components))]) <= nodes[i].ram, name="capacity_{}_{}".format("ram", nodes[i].description))
-            # Adds a constraint that fixes all assignment variables to zero whenever a node is not active (used to simulate node failure)
-            if nodes[i].active == False:
-                for v in assignment_variables:
-                    self.model.addConstr(v == 0)
-
-        #Sets objective to minimise node rental costs
-        node_rental_costs = []
-        node_assignments = []
-        for i in range(len(nodes)):
-            node_rental_costs.append(nodes[i].cost)
-            node_assignments.append([self.model.getVarByName(component.description + "_assignment"+"[{}]".format(i)) for component in components])
-        self.model.setObjective(gp.quicksum(node_rental_costs[i] * node_assignments[i][j] for i in range(len(nodes)) for j in range(len(components))), GRB.MINIMIZE)
+        # Adds a constraint that says, if a vnf is not installed on a node, then every path that considers the vnf to be installed on that node must have zero flow.
+        for service in self.services:
+            for node in nodes:
+                for function in service.vnfs:
+                    assignment_var_used = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
+                    vars_used = [self.model.getVarByName(p.description + "_flow") for p in service.graph.paths]
+                    assignment_params = [1 if p.get_params()["components assigned"][function.description] == node.description else 0 for p in service.graph.paths]
+                    self.model.addConstr(gp.quicksum(assignment_params[i] * vars_used[i] for i in range(len(service.graph.paths))) <= assignment_var_used, name="assignment_{}_{}_{}".format(service.description, node.description, function.description))
         
+        # Updates and optimises the model.
         self.model.update()
         self.model.optimize()
             
         logging.info(" Initial model built, solving.") if self.verbose > 0 else None
+        self.model.update()
+        self.model.write("{}.lp".format(self.model.getAttr("ModelName")))
+        self.model.optimize()
+        if self.model.status == GRB.OPTIMAL:
+            logging.info( " Optimisation terminated successfully.") if self.verbose > 0 else None
+            logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
+            logging.info(' Vars:') if self.verbose > 0 else None
+            for v in self.model.getVars():
+                if v.x != 0:
+                    logging.info(" Variable {}: ".format(v.varName) + str(v.x)) if self.verbose > 0 else None
+            logging.info(" Dual Solution:") if self.verbose > 0 else None
+            for c in self.model.getConstrs():
+                logging.info(" Constr {}: ".format(c.getAttr("ConstrName")) + str(c.getAttr("Pi"))) if self.verbose > 0 else None
+        else:
+            logging.error(" Optimisation Failed - consult .ilp file") if self.verbose > 0 else None
+            self.model.computeIIS()
+            self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
+            raise ValueError("Optimisation failed")
+    
+    def rmp(self):
+        """
+        Updates and solves the RMP and prints primal and dual solution to log.
+        """
         self.model.update()
         self.model.optimize()
         if self.model.status == GRB.OPTIMAL:
@@ -318,12 +229,80 @@ class ColumnGeneration(object):
             for v in self.model.getVars():
                 if v.x != 0:
                     logging.info(" Variable {}: ".format(v.varName) + str(v.x)) if self.verbose > 0 else None
+            logging.info(" Dual Solution:") if self.verbose > 0 else None
+            for c in self.model.getConstrs():
+                logging.info(" Constr {}: ".format(c.getAttr("ConstrName")) + str(c.getAttr("Pi"))) if self.verbose > 0 else None
         else:
             logging.error(" Optimisation Failed - consult .ilp file") if self.verbose > 0 else None
             self.model.computeIIS()
             self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
             raise ValueError("Optimisation failed")
-   
+
+    def update_duals(self):
+        """
+        Updates the edge weights of the service graphs given the dual values from the current iteration.
+        """
+        for service in self.services:
+            graph = service.graph
+            normal_edges = [e for e in graph.links if e.assignment_link == False]
+            # Updates the edge cost using the dual value associated with the bandwidth constraint for each link.
+            for e in normal_edges:
+                e_o = graph.get_edge_from_original_network(e)
+                if self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())) != None:
+                    e.cost = -self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())).getAttr("Pi") * service.throughput
+                elif self.model.getConstrByName("bandwidth_{}".format(e_o.get_opposing_edge_description())) != None:
+                    e.cost = -self.model.getConstrByName("bandwidth_{}".format(e_o.get_opposing_edge_description())).getAttr("Pi") * service.throughput
+                else:
+                    raise KeyError("Bandwidth constraint not found for edge.")
+            # Updates the assignment edge cost using the duals associated with the assignment constraints.
+            assignment_edges = [e for e in graph.links if e.assignment_link == True]
+            for e in assignment_edges:
+                node, function = graph.get_node_and_function_from_assignment_edge(e)
+                constr = self.model.getConstrByName("assignment_{}_{}_{}".format(service.description, node.description, function.description))
+                if constr != None:
+                    e.cost = -constr.getAttr("Pi")
+                else:
+                    raise KeyError("Constraint not found for this service, node, function combination.")
+    
+    def add_column_from_path(self, path):
+        """
+        Adds a new path variable with column of coefficients taken from the pricing problem.
+        """
+        params = path.get_params()
+        constrs = self.model.getConstrs()
+        # Gets the constraints containing the variable.
+        bw = [c for c in constrs if "bandwidth" in c.getAttr("ConstrName")]
+        pf = self.model.getConstrByName("pathflow_{}".format(path.service.description))
+        ass = [c for c in constrs if "assignment_{}".format(path.service.description) in c.getAttr("ConstrName")]
+        constrs = bw + [pf] + ass
+        coefficients = np.zeros(len(constrs))
+
+        # Gets the coefficients in the column associated with the new path variable in each constraint.
+        for i in range(len(constrs)):
+            if "bandwidth" in constrs[i].getAttr("ConstrName"):
+                # For bandwidth constraints this is the number of times the link is used multiplied by the throughput of the service.
+                edge = self.network.get_link_by_description(constrs[i].getAttr("ConstrName").split("_")[-1])
+                opp_edge = edge.get_opposing_edge_description()
+                edge = edge.get_description()
+                coefficients[i] = (params["times traversed"][edge] + params["times traversed"][opp_edge]) * path.service.throughput
+            elif "pathflow" in constrs[i].getAttr("ConstrName"):
+                # This is just 1 since we sum all the path flow variables.
+                coefficients[i] = 1
+            elif "assignment" in constrs[i].getAttr("ConstrName"):
+                # This is 1 if the path has the function hosted on a particular node.
+                tokens = constrs[i].getAttr("ConstrName").split("_")
+                node, function = tokens[2], tokens[3]
+                if params["components assigned"][function] == node:
+                    coefficients[i] = 1
+                else:
+                    coefficients[i] = 0
+            else:
+                raise ValueError("No other constraints should contain the path variable")
+
+        # Adds the variable and column.
+        self.model.addVar(column = gp.Column(coefficients, constrs), name = path.description + "_flow")
+
+
     def compute_optimality_gap(self):
         logging.info(" Computing current optimality gap:") if self.verbose > 0 else None
         logging.info(" Lower bound: {}".format(self.lower_bound)) if self.verbose > 0 else None
@@ -337,112 +316,66 @@ class ColumnGeneration(object):
         Finds schedule that optimises probability of success using column generation
         """
         start = time()
+        terminate = False
         
-        # Uses heuristics to generate intitial points.
-        logging.info(" Attempting to generate initial point.") if self.verbose > 0 else None
-        self.get_initial_paths()
-        logging.info(" Initialisation completed.\n")
+        # Adding initial path.
+        logging.info(" Attempting to generate initial path.") if self.verbose > 0 else None
         for service in self.services:
-            graph = service.graphs[self.datacenter.description]
-            for path in graph.paths:
-                path.save_as_dot("path")
+            cgp = self.pricing_problem(service)
+            self.add_path_from_model(service, cgp)
+            # Updates edges containing dummy node to have arbitrarily high latency so they are not included in future paths.
+            for edge in service.graph.links:
+                if "dummy" in edge.get_description():
+                    edge.latency = inf
+
+        logging.info(" Initialisation completed.\n")
 
         # Solves restricted master problem using initial points and saves solution.
         logging.info(" BUILDING INITIAL MODEL.\n") if self.verbose > 0 else None
         self.build_initial_model()
-        logging.info(" Updating service graphs with dual information.\n")
-        self.update_duals()
+        k = 1
 
-        no_iterations = 1
-        self.upper_bound = self.model.objVal
-        
-        lb = self.upper_bound
-        statuses = []
-        # Solves the column generation problem for each sub problem.
-        for service in self.services:
-            logging.info(" SOLVING COLUMN GENERATION FOR {}\n".format(service.description)) if self.verbose > 0 else None
-            try:
-                cg = self.column_generation(service)
-                if cg.objVal < 0:
-                    logging.info(" New path for service {} has negative reduced cost so adding.\n".format(service.description)) if self.verbose > 0 else None
-                    self.add_path_from_model(service, cg)
-                lb += cg.objVal
-                statuses.append(True)
-            except ValueError:
-                lb += -inf
-                statuses.append(False)
-        # If lower bound is better than current lower bound it updates.
-        if lb >= self.lower_bound and all(statuses) == True:
-            self.lower_bound = lb
-        bound = self.compute_optimality_gap()
-
-        # If all of the sub problems resulted in non-negative reduced cost we can terminate.
-        # We define an alowable tolerance on the reduced cost which we check against.
-        while (bound > tolerance or bound < 0) and no_iterations < max_iterations:
-            no_iterations += 1
-            # If not satisfied we can run the master problem with the new columns added
-            self.model.update()
-            self.model.write("{}.lp".format(self.model.getAttr("ModelName")))
-            logging.info(" SOLVING RMP ON ITERATION {}\n".format(no_iterations)) if self.verbose > 0 else None
-            self.model.optimize()
-            if self.model.status == GRB.OPTIMAL:
-                logging.info( " Optimisation terminated successfully.") if self.verbose > 0 else None
-                logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
-                logging.info(' Vars:') if self.verbose > 0 else None
-                for v in self.model.getVars():
-                    if v.x != 0:
-                        logging.info(" Variable {}: ".format(v.varName) + str(v.x)) if self.verbose > 0 else None
-            else:
-                logging.error(" Optimisation Failed - consult .ilp file") if self.verbose > 0 else None
-                self.model.computeIIS()
-                self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
-                raise ValueError("Optimisation failed")
-
+        while terminate == False and k < max_iterations:
             logging.info(" Updating service graphs with dual information.\n")
             self.update_duals()
+            terminate = True
 
-            self.upper_bound = self.model.objVal
-            logging.info(" UPDATING UPPER BOUND: {}".format(self.model.objVal)) if self.verbose > 0 else None
-
-            lb = self.upper_bound
-            statuses = []
             # Solves the column generation problem for each sub problem.
             for service in self.services:
                 logging.info(" SOLVING COLUMN GENERATION FOR {}\n".format(service.description)) if self.verbose > 0 else None
-                try:
-                    cg = self.column_generation(service)
-                    if cg.objVal < 0:
-                        logging.info(" New path for service {} has negative reduced cost so adding.\n".format(service.description)) if self.verbose > 0 else None
-                        self.add_path_from_model(service, cg)
-                    lb += cg.objVal
-                    statuses.append(True)
-                except ValueError:
-                    lb += -inf
-                    statuses.append(False)
-            # If lower bound is better than current lower bound it updates.
-            if lb >= self.lower_bound and all(s tatuses) == True:
-                self.lower_bound = lb
-            bound = self.compute_optimality_gap()
+                cg = self.pricing_problem(service)
+                if cg.objVal < 0:
+                    terminate = False
+                    logging.info(" New path for service {} has negative reduced cost so adding.\n".format(service.description)) if self.verbose > 0 else None
+                    path = self.add_path_from_model(service, cg)
+                    path.save_as_dot()
+                    self.add_column_from_path(path)
+            
+            # Updates and resolves RMP.
+            logging.info(" SOLVING RMP\n") if self.verbose > 0 else None
+            self.rmp()
+            k += 1
+        
 
-        if (bound <= tolerance and bound >= 0) and self.model.status == GRB.OPTIMAL:
-            logging.info(" Final Optimisation terminated sucessfully") if self.verbose > 0 else None
+        # Solves with integrality
+        for v in self.model.getVars():
+            if "assignment" in v.varName:
+                v.setAttr(GRB.Attr.VType, "I")
+        self.model.update()
+        self.model.optimize()
+
+        logging.info( " No more improving paths found\n.") if self.verbose > 0 else None
+
+        # Prints final solution
+        if self.model.status == GRB.OPTIMAL:
+            logging.info( " Optimisation terminated successfully\n.") if self.verbose > 0 else None
             logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
-            logging.info(" Probability: {}".format(exp(-self.model.objVal))) if self.verbose > 0 else None
-            logging.info(' Vars:')
-            for v in self.model.getVars():
-                if "_lam_" in v.varName and v.x == 0:
-                    continue
-                else:
-                    logging.info(" Variable {}: ".format(v.varName) + str(v.x)) if self.verbose > 0 else None
-            self.status = "Optimal"
-        else:
-            logging.warning(" Failed to satisfy bound on optimality within required iterations. Try increasing allowable iterations.") if self.verbose > 0 else None
-            logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
-            logging.info(" Probability: {}".format(exp(-self.model.objVal))) if self.verbose > 0 else None
             logging.info(' Vars:') if self.verbose > 0 else None
             for v in self.model.getVars():
-                if "_lam_" in v.varName and v.x == 0:
-                    continue
-                else:
+                if v.x != 0:
                     logging.info(" Variable {}: ".format(v.varName) + str(v.x)) if self.verbose > 0 else None
-            self.status = "Failed"
+        else:
+            logging.error(" Optimisation Failed - consult .ilp file") if self.verbose > 0 else None
+            self.model.computeIIS()
+            self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
+            raise ValueError("Optimisation failed")

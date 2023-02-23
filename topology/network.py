@@ -1,51 +1,63 @@
 from typing import List
+
+from kiwisolver import strength
 from topology.location import Location
+from topology.location import Dummy
 from topology.link import Link
 from topology.location import Node
 import json
 from topology.numpy_encoder import NpEncoder
 import graphviz as gvz
 
-inf = 1000000000
-eps = 1e-9
+inf = 1000000
+eps = 1e-6
 
-class Datacenter(object):
+class Network(object):
     """
-    Class representing a datacenter
-        \param description    String name describing datacenter
-        \param locations      List of locations in the datacenter (vertices)
-        \param links          List of links in the datacenter (edges)
+    Class representing a network
+        \param description    String name describing network
+        \param locations      List of locations in the network (vertices)
+        \param links          List of links in the network (edges)
     """
     def __init__(self, description: str, locations: list, links: list):
         self.description = description
         self.locations = locations
         self.links = links
 
-    def add_dummy_sink(self):
+    def copy(self, description: str):
         """
-        Adds a dummy sink connected to the gateway to initialise the paths.
+        returns a copy of the network.
         """
-        dummy_sink = Node("DummySink", inf, inf, inf)
-        dummy_link = Link(self.get_locations_by_type("Gateway")[0], dummy_sink, inf, 0, inf)
-        self.add_location(dummy_sink)
-        self.add_link(dummy_link)
-
-    def copy(self, name):
-        """
-        returns a copy of the datacenter
-        """
-        return Datacenter(name,  self.locations[:], [link.copy() for link in self.links])
-    
+        nodes = [n.copy() for n in self.locations]
+        edges = []
+        for link in self.links:
+            for node in nodes:
+                if node.description == link.source.description:
+                    source = node
+                elif node.description == link.sink.description:
+                    sink = node
+            edges.append(link.copy_with_new_nodes(source, sink))
+        return Network(description, nodes, edges)
+  
     def get_location_by_description(self, description: str) -> Location:
         """
-        returns a location in the datacenter matching the description argument.
+        returns a location in the network matching the description argument.
         """
         for location in self.locations:
             if location.description == description:
                 return location
         return None
+
+    def get_link_by_description(self, description: str) -> Link:
+        """
+        returns a link in the network mathching the description argument.
+        """
+        for link in self.links:
+            if link.get_description() == description:
+                return link
+        return None
     
-    def get_edge_by_locations(self, source_id, sink_id) -> Link:
+    def get_link_by_locations(self, source_id, sink_id) -> Link:
         """
         returns an edge given two location ids.
         """
@@ -58,26 +70,11 @@ class Datacenter(object):
 
     def get_locations_by_type(self, type: str) -> list:
         """
-        Gets a list of locations in the datacenter matching a certain type.
+        Gets a list of locations in the network matching a certain type.
         """
-        if type not in ["Gateway", "SuperSpine", "Spine", "Leaf", "Node", "Dummy"]:
-            raise ValueError("Invalid type. Type should be in [Gateway, SuperSpine, Spine, Leaf, Node, Dummy]")
+        if type not in ["Node", "Switch"]:
+            raise ValueError("Invalid type. Type should be either Node or Switch.")
         return [i for i in self.locations if i.type == type]
-
-
-    def get_locations_by_types(self):
-        """
-        As above but makes list of lists in format [[gateways], [super_spines], 
-        [spines], [leafs], [nodes]]
-        If level is empty then ignore
-        """
-        nodes = []
-        gateway = self.get_locations_by_type("Gateway")
-        super_spines = self.get_locations_by_type("SuperSpine")
-        spines = self.get_locations_by_type("Spine")
-        leafs = self.get_locations_by_type("Leaf")
-        nodes = self.get_locations_by_type("Node")
-        return [i for i in (gateway, super_spines, spines, leafs, nodes) if i]
 
     def outgoing_edge(self, location: Location) -> list:
         """
@@ -93,19 +90,30 @@ class Datacenter(object):
 
     def add_link(self, link: Link) -> None:
         """
-        Adds a link to the datacenter.
+        Adds a link to the network.
         """
         self.links.append(link)
 
     def add_location(self, location: Location) -> None:
         """
-        Adds a location to the datacenter.
+        Adds a location to the network.
         """
         self.locations.append(location)
+    
+    def add_dummy_node(self) -> None:
+        """
+        Adds a dummy node to the network. See topology.location.Dummy for details.
+        """
+        dummy = Dummy("dummy")
+        self.add_location(dummy)
+        other_locations = [l for l in self.locations if l != dummy]
+        for l in other_locations:
+            self.add_link(Link(dummy, l, cost = eps))
+            self.add_link(Link(l, dummy, cost = eps))
 
     def to_json(self) -> dict:
         """
-        Returns a json dictionary describing the datacenter.
+        Returns a json dictionary describing the network.
         """
         to_return = {"name": self.description, "locations": [], "links": []}
         for location in self.locations:
@@ -116,7 +124,7 @@ class Datacenter(object):
 
     def save_as_json(self, filename = None):
         """
-        saves the datacenter as a JSON to filename.json
+        saves the network as a JSON to filename.json
         """
         to_dump = self.to_json
         if filename != None:
@@ -130,11 +138,12 @@ class Datacenter(object):
     
     def print(self):
         """
-        Prints information about the datacenter.
+        Prints information about the network.
+        TODO: This needs updating.
         """
         for link in self.links:
             print("\n")
-            print("Description: ", link.description)
+            print("Description: ", link.get_description())
             print("Latency: {}, Bandwidth: {}".format(link.latency, link.bandwidth))
             print("Source: ", link.source.description)
             print("\tType: ", link.source.type)
@@ -151,7 +160,7 @@ class Datacenter(object):
     
     def save_as_dot(self, filename = None):
         """
-        saves the datacenter topology as a DOT to filename.dot
+        saves the network topology as a DOT to filename.dot
         """
         if filename != None:
             if filename[-5:] != ".dot":
