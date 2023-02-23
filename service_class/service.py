@@ -60,7 +60,6 @@ class Service(object):
         # Makes copy of network into n_components + 1 layers
         for i in range(n_layers):
             layer = topology.copy(topology.description + "_l{}".format(i))
-            layer.save_as_dot()
             for node in layer.locations:
                 node.description = node.description + "_l{}".format(i)
             nodes += layer.locations
@@ -68,7 +67,7 @@ class Service(object):
             layers.append(layer)
         
         # Adds edges connecting the nodes on layer l to layer l+1. Traversing this edge represents assigning component l to the node on layer l.
-        serv_g = service_graph(self.description + "_graph", nodes, edges, n_layers)
+        serv_g = service_graph(self.description + "_graph", nodes, edges, topology, self, n_layers)
         nodes = [n for n in topology.locations if isinstance(n, Node) == True]
 
         for node in nodes:

@@ -8,7 +8,7 @@ from optimisation.column_generation import ColumnGeneration
 
 def main():
     # Makes the locations in the netork
-    locations = [Switch("S1"), Switch("S2"), Switch("S3"), Switch("S4"), Switch("S5"), Node("N1", float(1), float(1)), Node("N2", float(1), float(1)), Node("N3", float(1), float(1))]
+    locations = [Switch("S1"), Switch("S2"), Switch("S3"), Switch("S4"), Switch("S5"), Node("N1", float(2), float(11), cost = 2), Node("N2", float(12), float(13), cost = 4), Node("N3", float(14), float(15), cost = 5)]
 
     # Makes the links between locations in the datacenter
     links = [Link(locations[0], locations[7], float(5), float(1)),
@@ -25,8 +25,8 @@ def main():
             Link(locations[5], locations[2], float(5), float(1)),
             Link(locations[2], locations[6], float(5), float(1)),
             Link(locations[6], locations[2], float(5), float(1)),
-            Link(locations[5], locations[7], float(5), float(1)),
-            Link(locations[7], locations[5], float(5), float(1)),
+            Link(locations[5], locations[7], float(1), float(1)),
+            Link(locations[7], locations[5], float(1), float(1)),
             Link(locations[4], locations[5], float(5), float(1)),
             Link(locations[5], locations[4], float(5), float(1)),
             Link(locations[6], locations[7], float(5), float(1)),
@@ -41,12 +41,12 @@ def main():
             Link(locations[6], locations[4], float(5), float(1))]
 
     # Creates then plots topology and saves to file
-    problem = Network("trial1", locations, links)
-    problem.save_as_dot()
+    problem = Network("tiny_test", locations, links)
+    #problem.save_as_dot()
 
     # Makes the services.
-    functions = [VNF("Component0", 1, 1), VNF("Component1", 1, 1)]
-    services = [Service("Service0", functions, 1, 10, 1, locations[0], locations[4])]
+    functions = [VNF("Component0", 1, 2), VNF("Component1", 3, 4)]
+    services = [Service("Service0", functions, 2, 10, 1, locations[0], locations[4])]
 
     # Initialises the optimisation problem.
     op = ColumnGeneration(problem, services)

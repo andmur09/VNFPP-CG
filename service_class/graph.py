@@ -1,5 +1,4 @@
 from topology.network import Network
-from topology.location import Location
 import itertools
 import graphviz as gvz
 
@@ -7,10 +6,35 @@ class service_graph(Network):
     """
     This class is used to make a service graph. Service graph can be used for optimising datacenter.
     """
-    def __init__(self, name, locations, links, n_layers: int):
+    def __init__(self, name, locations, links, network, service, n_layers: int):
         super().__init__(name, locations, links)
+        self.network = network
+        self.service = service
         self.n_layers = n_layers
-        self.paths = [] 
+        self.paths = []
+
+    def get_edge_from_original_network(self, link):
+        """
+        For a given link in the service graph, returns the equivalent link in the network topology.
+        """
+        tokens = link.get_description()[1:-1].split(",")
+        source, sink = tokens[0].split("_")[0], tokens[1].split("_")[0]
+        for link in self.network.links:
+            if link.get_description() == "(" + source + "," + sink + ")":
+                return link
+        return None
+    
+    def get_node_and_function_from_assignment_edge(self, link):
+        """
+        For a given assignment edge it returns the function and node combination considered by traversing that edge.
+        """
+        assert link.assignment_link == True
+        token = link.get_description()[1:].split(",")[0].split("_")
+        node, layer = token[0], token[1]
+        node = self.network.get_location_by_description(node)
+        function = self.service.vnfs[int(layer[1:])]
+        return node, function
+        
 
     def add_path(self, path):
         """
@@ -43,10 +67,11 @@ class service_path(Network):
     This class represents a path on the above graph class.
     """
     id_iter = itertools.count()
-    def __init__(self, description, locations, links, network: Network, n_layers: int):
+    def __init__(self, description, locations, links, network, service, n_layers: int):
         super().__init__(description, locations, links)
         self.description = description + "_path" + str(next(service_path.id_iter))
         self.network = network
+        self.service = service
         self.n_layers = n_layers
     
     def get_params(self):
@@ -66,7 +91,7 @@ class service_path(Network):
             tokens1, tokens2 = edge.source.description.split("_"), edge.sink.description.split("_")
             if tokens1[0] == tokens2[0]:
                 l = int(tokens1[-1][-1])
-                to_return["components assigned"][l] = tokens1[0]
+                to_return["components assigned"][self.service.vnfs[l].description] = tokens1[0]
         return to_return
             
     def check_if_same(self, other_path):

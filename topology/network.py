@@ -14,10 +14,10 @@ eps = 1e-6
 
 class Network(object):
     """
-    Class representing a datacenter
-        \param description    String name describing datacenter
-        \param locations      List of locations in the datacenter (vertices)
-        \param links          List of links in the datacenter (edges)
+    Class representing a network
+        \param description    String name describing network
+        \param locations      List of locations in the network (vertices)
+        \param links          List of links in the network (edges)
     """
     def __init__(self, description: str, locations: list, links: list):
         self.description = description
@@ -41,14 +41,23 @@ class Network(object):
   
     def get_location_by_description(self, description: str) -> Location:
         """
-        returns a location in the datacenter matching the description argument.
+        returns a location in the network matching the description argument.
         """
         for location in self.locations:
             if location.description == description:
                 return location
         return None
+
+    def get_link_by_description(self, description: str) -> Link:
+        """
+        returns a link in the network mathching the description argument.
+        """
+        for link in self.links:
+            if link.get_description() == description:
+                return link
+        return None
     
-    def get_edge_by_locations(self, source_id, sink_id) -> Link:
+    def get_link_by_locations(self, source_id, sink_id) -> Link:
         """
         returns an edge given two location ids.
         """
@@ -61,7 +70,7 @@ class Network(object):
 
     def get_locations_by_type(self, type: str) -> list:
         """
-        Gets a list of locations in the datacenter matching a certain type.
+        Gets a list of locations in the network matching a certain type.
         """
         if type not in ["Node", "Switch"]:
             raise ValueError("Invalid type. Type should be either Node or Switch.")
@@ -81,13 +90,13 @@ class Network(object):
 
     def add_link(self, link: Link) -> None:
         """
-        Adds a link to the datacenter.
+        Adds a link to the network.
         """
         self.links.append(link)
 
     def add_location(self, location: Location) -> None:
         """
-        Adds a location to the datacenter.
+        Adds a location to the network.
         """
         self.locations.append(location)
     
@@ -104,7 +113,7 @@ class Network(object):
 
     def to_json(self) -> dict:
         """
-        Returns a json dictionary describing the datacenter.
+        Returns a json dictionary describing the network.
         """
         to_return = {"name": self.description, "locations": [], "links": []}
         for location in self.locations:
@@ -115,7 +124,7 @@ class Network(object):
 
     def save_as_json(self, filename = None):
         """
-        saves the datacenter as a JSON to filename.json
+        saves the network as a JSON to filename.json
         """
         to_dump = self.to_json
         if filename != None:
@@ -129,7 +138,7 @@ class Network(object):
     
     def print(self):
         """
-        Prints information about the datacenter.
+        Prints information about the network.
         TODO: This needs updating.
         """
         for link in self.links:
@@ -151,7 +160,7 @@ class Network(object):
     
     def save_as_dot(self, filename = None):
         """
-        saves the datacenter topology as a DOT to filename.dot
+        saves the network topology as a DOT to filename.dot
         """
         if filename != None:
             if filename[-5:] != ".dot":
