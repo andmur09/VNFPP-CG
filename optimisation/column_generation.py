@@ -6,7 +6,7 @@ from time import time
 from service_class.service import Service
 from service_class.graph import service_graph, service_path
 from topology.network import Network
-from topology.location import Node
+from topology.location import Dummy, Node
 import gurobipy as gp
 from gurobipy import GRB
 from scipy import optimize
@@ -26,7 +26,8 @@ class ColumnGeneration(object):
                     verbose - int verbosity of output.
                     results - string filename to use to log output.
     """
-    def __init__(self, network: Network, services: list, verbose: int = 1, logfile: str ='log.txt') -> None:
+    def __init__(self, network: Network, services: list, verbose: int = 1, logfile: str ='log.txt', max_replicas: int = 5,
+                node_availability: float = 0.99, min_flow_param: int = 10) -> None:
         """
         Initialises the optimisation problem
         """
@@ -45,6 +46,9 @@ class ColumnGeneration(object):
         self.upper_bound = inf
         self.status = None
         self.model = None
+        self.max_replicas = 5
+        self.node_availability = 0.99
+        self.min_flow_param = 10
         
         # Initialises inner approximation for each service
         for service in services:
@@ -133,6 +137,11 @@ class ColumnGeneration(object):
         """
         self.model = gp.Model(self.network.description, env=env)
         nodes = [n for n in self.network.locations if isinstance(n, Node) == True]
+        # Finds the dummy node to ensure that availability is satisfied if dummy node is used.
+        dummy_node = [n for n in nodes if isinstance(n, Dummy)]
+        # Checks that there is only one dummy node.
+        assert len(dummy_node) <= 1
+        dummy_node = dummy_node[0]
 
         vnfs = set()
         # Also makes set of components for all services so that no duplicate components are considered
@@ -157,6 +166,19 @@ class ColumnGeneration(object):
         for service in self.services:
             for path in service.graph.paths:
                 self.model.addVar(vtype=GRB.CONTINUOUS, name = path.description + "_flow")
+        
+        # Service installation variables
+        for service in self.services:
+            for node in nodes:
+                for function in service.vnfs:
+                    self.model.addVar(lb = 0, ub = 1, vtype=GRB.CONTINUOUS, name= service.description + "_" + node.description + "_" + function.description + "_installation")
+
+        # Service replication variables
+        for service in self.services:
+            for function in service.vnfs:
+                for i in range(1, self.max_replicas + 1):
+                    self.model.addVar(lb = 0, ub = 1, vtype=GRB.CONTINUOUS, name= service.description + "_" + function.description + "_" + str(i) + "_replication")
+
         self.model.update()
 
         # Adds constraint that the sum of CPU and RAM of the functions does not exceed the capacity of the nodes.
@@ -188,10 +210,46 @@ class ColumnGeneration(object):
             for node in nodes:
                 for function in service.vnfs:
                     assignment_var_used = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
-                    vars_used = [self.model.getVarByName(p.description + "_flow") for p in service.graph.paths]
+                    flow_vars_used = [self.model.getVarByName(p.description + "_flow") for p in service.graph.paths]
                     assignment_params = [1 if p.get_params()["components assigned"][function.description] == node.description else 0 for p in service.graph.paths]
-                    self.model.addConstr(gp.quicksum(assignment_params[i] * vars_used[i] for i in range(len(service.graph.paths))) <= assignment_var_used, name="assignment_{}_{}_{}".format(service.description, node.description, function.description))
+                    self.model.addConstr(gp.quicksum(assignment_params[i] * flow_vars_used[i] for i in range(len(service.graph.paths))) <= assignment_var_used, name="assignment_{}_{}_{}".format(service.description, node.description, function.description))
         
+        # Adds a constraint that forces the installation variable of a service to be 1 if at least one path using that node is used to route flow.
+        for service in self.services:
+            for node in nodes:
+                for function in service.vnfs:
+                    installation_var_used = self.model.getVarByName(service.description + "_" + node.description + "_" + function.description + "_installation")
+                    flow_vars_used = [self.model.getVarByName(p.description + "_flow") for p in service.graph.paths]
+                    assignment_params = [1 if p.get_params()["components assigned"][function.description] == node.description else 0 for p in service.graph.paths]
+                    self.model.addConstr(self.min_flow_param * gp.quicksum(assignment_params[i] * flow_vars_used[i] for i in range(len(service.graph.paths))) >= installation_var_used, name="installation_{}_{}_{}".format(service.description, node.description, function.description))
+        
+        # Adds a constraint that forces one of the replication variables to take a value of one.
+        for service in self.services:
+            for function in service.vnfs:
+                dummy_installation = self.model.getVarByName(service.description + "_" + dummy_node.description + "_" + function.description + "_installation")
+                vars_used = [self.model.getVarByName(service.description+ "_" + function.description + "_" + str(i) + "_replication") for i in range(1, self.max_replicas + 1)]
+                self.model.addConstr(gp.quicksum(vars_used) + dummy_installation == 1, name = "replication_{}_{}".format(service.description, function.description))
+        
+        # Adds a constraint that constrains the number of replicas to be equal to the number of different nodes hosting that function across the service paths.
+        for service in self.services:
+            for function in service.vnfs:
+                #dummy_installation = self.model.getVarByName(service.description + "_" + dummy_node.description + "_" + function.description + "_installation")
+                replication_vars_used = [self.model.getVarByName(service.description+ "_" + function.description + "_" + str(i) + "_replication") for i in range(1, self.max_replicas + 1)]
+                installation_var_used = [self.model.getVarByName(service.description + "_" + n.description + "_" + function.description + "_installation") for n in nodes if isinstance(n, Dummy) == False]
+                params = [i for i in range(1, self.max_replicas + 1)]
+                self.model.addConstr(gp.quicksum(params[i] * replication_vars_used[i] for i in range(len(replication_vars_used))) <= gp.quicksum(installation_var_used), name = "nreplicas_{}_{}".format(service.description, function.description))
+        
+        # Adds availability constraints for each service.
+        for service in self.services:
+            rhs = log(service.availability)
+            vars_used, params, dummy_installations = [], [], []
+            for function in service.vnfs:
+                for i in range(1, self.max_replicas + 1):
+                    vars_used.append(self.model.getVarByName(service.description+ "_" + function.description + "_" + str(i) + "_replication"))
+                    params.append(-(1 - self.node_availability * function.availability)**i)
+                dummy_installations.append(self.model.getVarByName(service.description + "_" + dummy_node.description + "_" + function.description + "_installation"))
+            self.model.addConstr(gp.quicksum(params[i] * vars_used[i] for i in range(len(vars_used))) + gp.quicksum(dummy_installations[i] for i in range(len(service.vnfs)))>= rhs, name = "availability_{}".format(service.description))
+
         # Updates and optimises the model.
         self.model.update()
         self.model.optimize()
@@ -201,6 +259,7 @@ class ColumnGeneration(object):
         self.model.write("{}.lp".format(self.model.getAttr("ModelName")))
         self.model.optimize()
         if self.model.status == GRB.OPTIMAL:
+            self.upper_bound = self.model.objVal
             logging.info( " Optimisation terminated successfully.") if self.verbose > 0 else None
             logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
             logging.info(' Vars:') if self.verbose > 0 else None
@@ -222,7 +281,9 @@ class ColumnGeneration(object):
         """
         self.model.update()
         self.model.optimize()
+        self.model.write("{}.lp".format(self.model.getAttr("ModelName")))
         if self.model.status == GRB.OPTIMAL:
+            self.upper_bound = self.model.objVal
             logging.info( " Optimisation terminated successfully.") if self.verbose > 0 else None
             logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
             logging.info(' Vars:') if self.verbose > 0 else None
@@ -258,9 +319,10 @@ class ColumnGeneration(object):
             assignment_edges = [e for e in graph.links if e.assignment_link == True]
             for e in assignment_edges:
                 node, function = graph.get_node_and_function_from_assignment_edge(e)
-                constr = self.model.getConstrByName("assignment_{}_{}_{}".format(service.description, node.description, function.description))
-                if constr != None:
-                    e.cost = -constr.getAttr("Pi")
+                constr1 = self.model.getConstrByName("assignment_{}_{}_{}".format(service.description, node.description, function.description))
+                constr2 = self.model.getConstrByName("installation_{}_{}_{}".format(service.description, node.description, function.description))
+                if constr1 != None and constr2 != None:
+                    e.cost = -(constr1.getAttr("Pi") + self.min_flow_param * constr2.getAttr("Pi"))
                 else:
                     raise KeyError("Constraint not found for this service, node, function combination.")
     
@@ -274,7 +336,8 @@ class ColumnGeneration(object):
         bw = [c for c in constrs if "bandwidth" in c.getAttr("ConstrName")]
         pf = self.model.getConstrByName("pathflow_{}".format(path.service.description))
         ass = [c for c in constrs if "assignment_{}".format(path.service.description) in c.getAttr("ConstrName")]
-        constrs = bw + [pf] + ass
+        inst = [c for c in constrs if "installation_{}".format(path.service.description) in c.getAttr("ConstrName")]
+        constrs = bw + [pf] + ass + inst
         coefficients = np.zeros(len(constrs))
 
         # Gets the coefficients in the column associated with the new path variable in each constraint.
@@ -296,6 +359,13 @@ class ColumnGeneration(object):
                     coefficients[i] = 1
                 else:
                     coefficients[i] = 0
+            elif "installation" in constrs[i].getAttr("ConstrName").split("_"):
+                tokens = constrs[i].getAttr("ConstrName").split("_")
+                node, function = tokens[2], tokens[3]
+                if params["components assigned"][function] == node:
+                    coefficients[i] = self.min_flow_param
+                else:
+                    coefficients[i] = 0 
             else:
                 raise ValueError("No other constraints should contain the path variable")
 
@@ -304,12 +374,10 @@ class ColumnGeneration(object):
 
 
     def compute_optimality_gap(self):
-        logging.info(" Computing current optimality gap:") if self.verbose > 0 else None
-        logging.info(" Lower bound: {}".format(self.lower_bound)) if self.verbose > 0 else None
-        logging.info(" Upper bound: {}".format(self.upper_bound)) if self.verbose > 0 else None
-        gap = (self.upper_bound - self.lower_bound)/self.lower_bound
-        logging.info(" Gap: {}\n".format(gap)) if self.verbose > 0 else None
-        return gap
+        """
+        Computes the dual gap using the upper and lower bounds.
+        """
+        return self.upper_bound - self.lower_bound/self.lower_bound
 
     def optimise(self, max_iterations: int = 10, tolerance: float = 0.01):
         """
@@ -339,11 +407,13 @@ class ColumnGeneration(object):
             logging.info(" Updating service graphs with dual information.\n")
             self.update_duals()
             terminate = True
+            self.lower_bound = self.upper_bound
 
             # Solves the column generation problem for each sub problem.
             for service in self.services:
                 logging.info(" SOLVING COLUMN GENERATION FOR {}\n".format(service.description)) if self.verbose > 0 else None
                 cg = self.pricing_problem(service)
+                self.lower_bound -= cg.objVal
                 if cg.objVal < 0:
                     terminate = False
                     logging.info(" New path for service {} has negative reduced cost so adding.\n".format(service.description)) if self.verbose > 0 else None
@@ -356,11 +426,11 @@ class ColumnGeneration(object):
             self.rmp()
             k += 1
         
-
         # Solves with integrality
         for v in self.model.getVars():
-            if "assignment" in v.varName:
+            if "assignment" in v.varName or "replication" in v.varName or "isntallation" in v.varName:
                 v.setAttr(GRB.Attr.VType, "I")
+
         self.model.update()
         self.model.optimize()
 
@@ -369,6 +439,7 @@ class ColumnGeneration(object):
         # Prints final solution
         if self.model.status == GRB.OPTIMAL:
             logging.info( " Optimisation terminated successfully\n.") if self.verbose > 0 else None
+            logging.info( " Optimality Gap: {}".format(self.compute_optimality_gap()))
             logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
             logging.info(' Vars:') if self.verbose > 0 else None
             for v in self.model.getVars():

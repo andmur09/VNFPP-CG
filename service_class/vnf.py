@@ -9,12 +9,14 @@ class VNF(object):
         \param description      String description of component
         \param cpu              Float required CPU
         \param ram              Float required RAM
+        \param availability     Float availability of VNF
     """
-    def __init__(self, description: str, cpu: float, ram: float):
+    def __init__(self, description: str, cpu: float, ram: float, availability: float = 0.95):
         self.id = next(VNF.id_iter)
         self.description = description
         self.cpu = cpu
         self.ram = ram
+        self.availability = availability
     
     def __str__(self):
         """

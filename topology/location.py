@@ -33,7 +33,7 @@ class Location(object):
 
 class Switch(Location):
     """
-    Represents a leaf switch location.
+    Represents a switch location.
     """
     def __init__(self, description: str):
         super().__init__(description)
@@ -73,7 +73,7 @@ class Node(Location):
         """
         return a dictionary for use with json.
         """
-        return {"id": self.id, "description": self.description, "type": self.type, "ram": self.ram, "cpu": self.cpu, "availability": self.availability, "cost": self.cost}
+        return {"id": self.id, "description": self.description, "type": self.type, "cpu": self.cpu, "ram": self.ram, "cost": self.cost,"availability": self.availability}
 
 class Dummy(Node):
     """

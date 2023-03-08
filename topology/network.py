@@ -119,14 +119,14 @@ class Network(object):
         for location in self.locations:
             to_return["locations"].append(location.to_json())
         for link in self.links:
-            to_return["locations"].append(link.to_json())
+            to_return["links"].append(link.to_json())
         return to_return
 
     def save_as_json(self, filename = None):
         """
         saves the network as a JSON to filename.json
         """
-        to_dump = self.to_json
+        to_dump = self.to_json()
         if filename != None:
             if filename[-5:] != ".json":
                 filename = filename + ".json"
@@ -134,7 +134,7 @@ class Network(object):
             filename = self.description + ".json"
 
         with open(filename, 'w') as fp:
-            json.dump(to_dump, fp, indent=4, separators=(", ", ": "), cls=NpEncoder)
+            json.dump(to_dump, fp, indent=4, separators=(", ", ": "))
     
     def print(self):
         """
