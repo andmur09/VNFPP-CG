@@ -74,6 +74,35 @@ class service_path(Network):
         self.service = service
         self.n_layers = n_layers
     
+    def __str__(self):
+        """
+        Prints the path in a readable format.
+        """
+        # Gets the start and end node.
+        start = None
+        end = None
+        for location in self.locations:
+            outgoing_edges = [l for l in self.links if l.source == location]
+            incoming_edges = [l for l  in self.links if l.sink == location]
+            if not incoming_edges:
+                start = location
+            if not outgoing_edges:
+                end = location
+
+        outgoing_from_source = [l for l in self.links if l.source == start]
+        assert len(outgoing_from_source) == 1, "Path can only have one outgoing edge from each node"
+        path = [outgoing_from_source[0]]
+        # Builds path
+        current_node = path[-1].sink
+        while current_node != end:
+            outgoing_from_curr = [l for l in self.links if l.source == current_node]
+            assert len(outgoing_from_curr) == 1, "Path can only have one outgoing edge from each node"
+            path.append(outgoing_from_curr[0])
+            current_node = path[-1].sink
+        
+        str_path = [e.get_description() for e in path]
+        return " > ".join(str_path)
+        
     def get_params(self):
         """
         Gets a dictionary of parameters required for the RMP. These are: the number of times each edge has been traversed in the path and the nodes that each required VNF is considered assigned to.

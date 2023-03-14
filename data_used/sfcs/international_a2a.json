@@ -1,0 +1,14 @@
+{
+    "name": "InternationalA2A", 
+    "vnfs": [
+        "nat", 
+        "fw", 
+        "tm", 
+        "woc", 
+        "ids"
+    ], 
+    "throughput": 10, 
+    "latency": 500, 
+    "percentage_traffic": 11.7, 
+    "availability": null
+}

@@ -1,0 +1,8 @@
+{
+    "name": "firewall", 
+    "cpu": 4, 
+    "ram": 400, 
+    "throughput": 600, 
+    "latency": 0.8, 
+    "availability": 0.999
+}

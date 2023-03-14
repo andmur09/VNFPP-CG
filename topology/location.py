@@ -1,7 +1,7 @@
 import itertools
 import re
 
-inf = 1e6
+inf = 1e9
 
 class Location(object):
     id_iter = itertools.count()
@@ -49,7 +49,7 @@ class Node(Location):
     cost: Node rental cost.
     active: Whether the node is active (False to simulate node failure).
     """
-    def __init__(self, description: str, cpu: float, ram: float, cost: float = float(1), availability: float = float(1), active: bool = True):
+    def __init__(self, description: str, cpu: int, ram: float, cost: float = float(1), availability: float = float(1), active: bool = True):
         super().__init__(description)
         self.type = "Node"
         self.cpu = cpu
@@ -83,5 +83,5 @@ class Dummy(Node):
     as failed.
     """
     def __init__(self, description):
-        super().__init__(description, inf, inf, inf)
+        super().__init__(description, int(inf), inf, cost = inf)
         

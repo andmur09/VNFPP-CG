@@ -1,0 +1,14 @@
+{
+    "name": "AR", 
+    "vnfs": [
+        "nat", 
+        "fw", 
+        "tm", 
+        "voc", 
+        "ids"
+    ], 
+    "throughput": 5, 
+    "latency": 5, 
+    "percentage_traffic": 0.8, 
+    "availability": 0.99999
+}

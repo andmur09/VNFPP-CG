@@ -1,0 +1,13 @@
+{
+    "name": "AudioStreaming", 
+    "vnfs": [
+        "nat", 
+        "fw", 
+        "tm", 
+        "ids"
+    ], 
+    "throughput": 0.32, 
+    "latency": 300, 
+    "percentage_traffic": 0.99, 
+    "availability": 0.9
+}

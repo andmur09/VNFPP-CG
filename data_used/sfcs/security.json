@@ -1,0 +1,12 @@
+{
+    "name": "Security", 
+    "vnfs": [
+        "proxy", 
+        "fw", 
+        "ids"
+    ], 
+    "throughput": 0.1, 
+    "latency": 500, 
+    "percentage_traffic": 0.1, 
+    "availability": 0.99999
+}

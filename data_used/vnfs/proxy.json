@@ -1,0 +1,8 @@
+{
+    "name": "proxy", 
+    "cpu": 4, 
+    "ram": 200, 
+    "throughput": 1000, 
+    "latency": 0.025, 
+    "availability": 0.999
+}

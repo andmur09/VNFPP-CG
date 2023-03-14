@@ -1,0 +1,14 @@
+{
+    "name": "VoIP", 
+    "vnfs": [
+        "nat", 
+        "fw", 
+        "tm", 
+        "fw", 
+        "nat"
+    ], 
+    "throughput": 0.064, 
+    "latency": 100, 
+    "percentage_traffic": 0.1, 
+    "availability": null
+}

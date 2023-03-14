@@ -108,8 +108,8 @@ class Network(object):
         self.add_location(dummy)
         other_locations = [l for l in self.locations if l != dummy]
         for l in other_locations:
-            self.add_link(Link(dummy, l, cost = eps))
-            self.add_link(Link(l, dummy, cost = eps))
+            self.add_link(Link(dummy, l))
+            self.add_link(Link(l, dummy))
 
     def to_json(self) -> dict:
         """
