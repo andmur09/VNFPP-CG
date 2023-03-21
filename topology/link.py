@@ -13,7 +13,7 @@ class Link(object):
         \param assignment_link  Boolean used for modelling service graphs. An assignment link traversal represents assignment of a vnf to a node.
     """
 
-    def __init__(self, source: Location, sink: Location, bandwidth: float = 1e6, latency: float = 0, cost = 0, assignment_link: bool = False):
+    def __init__(self, source: Location = None, sink: Location = None, bandwidth: float = 1e6, latency: float = 0, cost = 0, assignment_link: bool = False):
         self.source = source
         self.sink = sink
         self.bandwidth = bandwidth

@@ -13,7 +13,7 @@ class VNF(object):
         \param latency          Float delay caused by VNF (ms)
         \param availability     Float availability of VNF
     """
-    def __init__(self, description, cpu: float = 1, ram: float = 1, throughput: float = None, latency: float = 0, availability: float = 1):
+    def __init__(self, description: str = None, cpu: float = 1, ram: float = 1, throughput: float = None, latency: float = 0, availability: float = 1):
         self.id = next(VNF.id_iter)
         self.description = description
         self.cpu = cpu
@@ -21,6 +21,7 @@ class VNF(object):
         self.throughput = throughput
         self.latency = latency
         self.availability = availability
+        self.cuts_generated = 0
     
     def __str__(self):
         """
@@ -58,12 +59,11 @@ class VNF(object):
         """
         Given a json file, it loads the data and stores as instance of VNF.
         """
-        if json_file[-5:] != ".json":
-            json_file = json_file + ".json"
+        if filename[-5:] != ".json":
+            filename = filename + ".json"
 
         # Opens the json and extracts the data
-        with open(json_file) as f:
+        with open(filename) as f:
             data = json.load(f)
-        
-        assert data.keys() == ["name", "cpu", "ram", "throughput", "latency", "availability"], "Keys in JSON don't match expected input for type vnf."
+        assert list(data.keys()) == ["name", "cpu", "ram", "throughput", "latency", "availability"], "Keys in JSON don't match expected input for type vnf."
         self.description, self.cpu, self.ram, self.throughput, self.latency, self.availability = data["name"], data["cpu"], data["ram"], data["throughput"], data["latency"], data["availability"]

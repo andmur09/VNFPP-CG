@@ -8,7 +8,7 @@ class Location(object):
     """
     represents a location in the datacenter.
     """
-    def __init__(self, description: str, type = None):
+    def __init__(self, description: str = None, type = None):
         self.id = next(Location.id_iter)
         self.description = description
         self.type = type
@@ -35,10 +35,22 @@ class Switch(Location):
     """
     Represents a switch location.
     """
-    def __init__(self, description: str):
+    def __init__(self, description: str = None):
         super().__init__(description)
         self.type = "Switch"
 
+    def load_from_dict(self, dictionary):
+        """
+        Given a json dictionary, loads the attributes.
+        """
+        assert list(dictionary.keys()) == ["id", "description", "type"], "Keys in JSON don't match expected input for type switch."
+        self.id, self.description, self.type = dictionary["id"], dictionary["description"], dictionary["type"]
+
+    def copy(self):
+        """
+        returns a copy of the location
+        """
+        return Switch(self.description[:])
 
 class Node(Location):
     """
@@ -49,7 +61,7 @@ class Node(Location):
     cost: Node rental cost.
     active: Whether the node is active (False to simulate node failure).
     """
-    def __init__(self, description: str, cpu: int, ram: float, cost: float = float(1), availability: float = float(1), active: bool = True):
+    def __init__(self, description: str = None, cpu: int = 1, ram: float = float(1), cost: float = float(1), availability: float = float(1), active: bool = True):
         super().__init__(description)
         self.type = "Node"
         self.cpu = cpu
@@ -57,23 +69,26 @@ class Node(Location):
         self.cost = cost
         self.availability = availability
         self.active = active
-
-    def get_component_assigned(self) -> str:
-        """
-        If node is a node in a service graph representing the assignment of a component to a node
-        this will return the component description else it will return None
-        """
-        if self.type == "Node":
-            s = re.search(r"\[(\w+)\]", self.description)
-            if s != None:
-                return s.group(0)[1:-1]
-        return None
+        self.assignments = None
+        self.cuts_generated = 0
 
     def to_json(self) -> dict:
         """
         return a dictionary for use with json.
         """
-        return {"id": self.id, "description": self.description, "type": self.type, "cpu": self.cpu, "ram": self.ram, "cost": self.cost,"availability": self.availability}
+        return {"id": self.id, "description": self.description, "type": self.type, "cpu": self.cpu, "ram": self.ram, "cost": self.cost,"availability": self.availability, "assignments": self.assignments}
+    
+    def load_from_dict(self, dictionary):
+        """
+        Given a json dictionary, loads the attributes.
+        """
+        self.id, self.description, self.type, self.cpu, self.ram, self.cost, self.availability = dictionary["id"], dictionary["description"], dictionary["type"], dictionary["cpu"], dictionary["ram"], dictionary["cost"], dictionary["availability"]
+
+    def copy(self):
+        """
+        returns a copy of the location
+        """
+        return Node(self.description[:], cpu = self.cpu, ram = self.ram, cost = self.cost, availability=self.availability, active=self.active)
 
 class Dummy(Node):
     """
@@ -84,4 +99,10 @@ class Dummy(Node):
     """
     def __init__(self, description):
         super().__init__(description, int(inf), inf, cost = inf)
+    
+    def copy(self):
+        """
+        returns a copy of the location
+        """
+        return Dummy(self.description)
         

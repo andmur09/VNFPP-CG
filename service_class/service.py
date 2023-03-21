@@ -1,4 +1,7 @@
 from lib2to3.pgen2.token import PERCENTEQUAL
+from matplotlib.pyplot import vlines
+
+from numpy import percentile
 from service_class.vnf import VNF
 from topology.link import Link
 from topology.network import Network
@@ -22,16 +25,17 @@ class Service(object):
         \param source               Instance of Location, representing start point of service.
         \param sink                 Instance of Location, representing end point of service.
     """
-    def __init__(self, description: str, vnfs: list, throughput: float, latency: float, percentage_traffic: float, availability: float = None, source: Location = None, sink: Location = None):
+    def __init__(self, description: str = None, vnfs: list = None, throughput: float = None, latency: float = None, percentage_traffic: float = None, availability: float = None, source: Location = None, sink: Location = None):
         self.description = description
         self.vnfs = vnfs
         self.throughput = throughput
         self.latency = latency
-        self.availability = availability
         self.percentage_traffic = percentage_traffic
+        self.availability = availability
         self.source = source
         self.sink = sink
         self.graph = None
+        self.status = False
     
     def add_vnf(self, vnf: VNF):
         """
@@ -58,13 +62,31 @@ class Service(object):
         """
         Given a list of VNFs, returns the list of required VNFs that match the name of the 
         """
-        return [v for v in vnfs if v.description in self.vnfs]
+        to_return = []
+        for v in self.vnfs:
+            for vnf in vnfs:
+                if vnf.description == v:
+                    to_return.append(vnf)
+        return to_return
 
     def to_json(self) -> dict:
         """
         Returns a json dictionary describing the vnf.
         """
-        return {"name": self.description, "vnfs": self.vnfs, "throughput": self.throughput, "latency": self.latency, "percentage_traffic": self.percentage_traffic, "availability": self.availability}
+        to_return = {}
+        to_return["name"] = self.description
+        to_return["vnfs"] = self.vnfs
+        to_return["throughput"] = self.throughput
+        to_return["latency"] = self.latency
+        to_return["percentage_traffic"] = self.percentage_traffic
+        to_return["availability"] = self.availability
+        if self.source != None:
+            to_return["source"] = self.source.to_json()
+        if self.sink != None:
+            to_return["sink"] = self.sink.to_json()
+        if self.graph != None:
+            to_return["paths"] = [p.to_json() for p in self.graph.paths]
+        return to_return
 
     def save_as_json(self, filename = None):
         """
@@ -84,21 +106,26 @@ class Service(object):
         """
         Given a json file, it loads the data and stores as instance of VNF.
         """
-        if json_file[-5:] != ".json":
-            json_file = json_file + ".json"
+        if filename[-5:] != ".json":
+            filename = filename + ".json"
 
         # Opens the json and extracts the data
-        with open(json_file) as f:
+        with open(filename) as f:
             data = json.load(f)
         
-        assert data.keys() == ["name", "cpu", "ram", "throughput", "latency", "availability"], "Keys in JSON don't match expected input for type vnf."
-        self.description, self.cpu, self.ram, self.throughput, self.latency, self.availability = data["name"], data["cpu"], data["ram"], data["throughput"], data["latency"], data["availability"]
-    
-    def make_graph(self, topology: Network):
+        self.description = data["name"]
+        self.vnfs = data["vnfs"]
+        self.throughput = data["throughput"]
+        self.latency = data["latency"]
+        self.percentage_traffic = data["percentage_traffic"]
+        self.availability = data["availability"]
+
+    def make_graph(self, vnfs: list, topology: Network):
         """
         Makes a graph representing the service in the network
         """
-        n_layers = len(self.vnfs) + 1
+        required_vnfs = self.get_vnfs(vnfs)
+        n_layers = len(required_vnfs) + 1
         layers = []
         nodes, edges = [], []
         # Makes copy of network into n_components + 1 layers
@@ -106,10 +133,14 @@ class Service(object):
             layer = topology.copy(topology.description + "_l{}".format(i))
             for node in layer.locations:
                 node.description = node.description + "_l{}".format(i)
+            # Adds opposing edges since edges are bidirectional:
+            for edge in layer.links:
+                opposite_edge = [e for e in layer.links if e.source == edge.sink and e.sink == edge.source]
+                if not opposite_edge:
+                    layer.links.append(Link(source = edge.sink, sink = edge.source))
             nodes += layer.locations
             edges += layer.links
-            layers.append(layer)
-        
+
         # Adds edges connecting the nodes on layer l to layer l+1. Traversing this edge represents assigning component l to the node on layer l.
         serv_g = service_graph(self.description + "_graph", nodes, edges, topology, self, n_layers)
         nodes = [n for n in topology.locations if isinstance(n, Node) == True]
@@ -118,12 +149,11 @@ class Service(object):
             for l in range(n_layers - 1):
                 from_ = serv_g.get_location_by_description(node.description + "_l{}".format(l))
                 to_ = serv_g.get_location_by_description(node.description + "_l{}".format(l+1))
-                serv_g.add_link(Link(from_, to_, latency = self.vnfs[l].latency, cost = 0, assignment_link = True))
+                serv_g.add_link(Link(from_, to_, latency = required_vnfs[l].latency, cost = 0, assignment_link = True))
 
         self.graph = serv_g
-        
-        # Initialises path using dummy node.#
-        
+
+        # Initialises path using dummy node.
         used_edges, used_nodes = [], []
         # Gets nodes used in initial path.
         used_nodes.append(self.graph.get_location_by_description(self.source.description + "_l0"))
@@ -144,5 +174,4 @@ class Service(object):
 
         path = service_path(self.description, used_nodes, used_edges, topology, self, n_layers = n_layers)
         self.graph.add_path(path)
-        path.save_as_dot()
         return path
