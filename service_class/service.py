@@ -1,4 +1,5 @@
 from lib2to3.pgen2.token import PERCENTEQUAL
+from unittest.mock import NonCallableMagicMock
 from matplotlib.pyplot import vlines
 
 from numpy import percentile
@@ -36,6 +37,7 @@ class Service(object):
         self.sink = sink
         self.graph = None
         self.status = False
+        self.sla_violations = None
     
     def add_vnf(self, vnf: VNF):
         """
@@ -86,6 +88,8 @@ class Service(object):
             to_return["sink"] = self.sink.to_json()
         if self.graph != None:
             to_return["paths"] = [p.to_json() for p in self.graph.paths]
+        if self.sla_violations != None:
+            to_return["sla_violations"] = self.sla_violations
         return to_return
 
     def save_as_json(self, filename = None):
@@ -152,26 +156,3 @@ class Service(object):
                 serv_g.add_link(Link(from_, to_, latency = required_vnfs[l].latency, cost = 0, assignment_link = True))
 
         self.graph = serv_g
-
-        # Initialises path using dummy node.
-        used_edges, used_nodes = [], []
-        # Gets nodes used in initial path.
-        used_nodes.append(self.graph.get_location_by_description(self.source.description + "_l0"))
-        used_nodes.append(self.graph.get_location_by_description(self.sink.description + "_l{}".format(n_layers-1)))
-        for l in range(n_layers):
-            used_nodes.append(self.graph.get_location_by_description("dummy_l{}".format(l)))
-        
-        for edge in self.graph.links:
-            # Start link from source to dummy.
-            if edge.source.description == self.source.description + "_l0" and edge.sink.description == "dummy_l0":
-                used_edges.append(edge)
-            # End link from dummy to sink.
-            if edge.source.description == "dummy_l{}".format(n_layers-1) and edge.sink.description == self.sink.description + "_l{}".format(n_layers-1):
-                used_edges.append(edge)
-            # Edges between dummy layers:
-            if "dummy" in edge.source.description and "dummy" in edge.sink.description:
-                used_edges.append(edge)
-
-        path = service_path(self.description, used_nodes, used_edges, topology, self, n_layers = n_layers)
-        self.graph.add_path(path)
-        return path

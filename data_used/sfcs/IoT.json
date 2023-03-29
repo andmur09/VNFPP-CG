@@ -1,0 +1,12 @@
+{
+    "name": "IoT", 
+    "vnfs": [
+        "nat", 
+        "fw", 
+        "ids"
+    ], 
+    "throughput": 1, 
+    "latency": 600, 
+    "percentage_traffic": 1, 
+    "availability": null
+}

@@ -1,0 +1,11 @@
+{
+    "name": "AI", 
+    "vnfs": [
+        "nat", 
+        "nat"
+    ], 
+    "throughput": 15, 
+    "latency": 1, 
+    "percentage_traffic": 1, 
+    "availability": 0.99999
+}

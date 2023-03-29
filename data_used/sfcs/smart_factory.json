@@ -6,6 +6,6 @@
     ], 
     "throughput": 20, 
     "latency": 10, 
-    "percentage_traffic": 8.7, 
+    "percentage_traffic": 4, 
     "availability": 0.999999
 }

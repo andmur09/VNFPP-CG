@@ -2,6 +2,8 @@ from pygame import Surface
 from topology.network import Network
 import itertools
 import graphviz as gvz
+from service_class.vnf import VNF
+from topology.location import Node
 
 class service_graph(Network):
     """
@@ -70,12 +72,13 @@ class service_path(Network):
     This class represents a path on the above graph class.
     """
     id_iter = itertools.count()
-    def __init__(self, description, locations, links, network, service, n_layers: int):
+    def __init__(self, description, locations, links, network, service, n_layers: int, latency_violated: bool = False):
         super().__init__(description, locations, links)
         self.description = description + "_path" + str(next(service_path.id_iter))
         self.network = network
         self.service = service
         self.n_layers = n_layers
+        self.latency_violated = False
         self.flow = None
     
     def get_edge_from_original_network(self, link):
@@ -126,7 +129,7 @@ class service_path(Network):
         """
         Gets a dictionary of parameters required for the RMP. These are: the number of times each edge has been traversed in the path and the nodes that each required VNF is considered assigned to.
         """
-        to_return = {"components assigned": {}, "times traversed": {}}
+        to_return = {"components assigned": {}, "times traversed": {}, "latency violated": self.latency_violated}
         # Gets the number of times each edge from the network topology is traversed across the layers of the graph.
         normal_edges = [e for e in self.links if e.assignment_link == False]
         assignment_edges = [e for e in self.links if e.assignment_link == True]
@@ -142,7 +145,7 @@ class service_path(Network):
             tokens1, tokens2 = edge.source.description.split("_"), edge.sink.description.split("_")
             if tokens1[0] == tokens2[0]:
                 l = int(tokens1[-1][-1])
-                to_return["components assigned"][self.service.vnfs[l]] = tokens1[0]
+                to_return["components assigned"][l] = tokens1[0]
         return to_return
 
     def get_actual_path(self):
@@ -194,4 +197,25 @@ class service_path(Network):
         """
         if self.__str__() == other_path.__str__():
             return True
+        return False
+    
+    def check_if_using_assignment(self, vnf, node):
+        """
+        Returns True if path has VNF installed on a node, else False:
+        """
+        assignments = self.get_params()["components assigned"]
+        # If the string description is provided, uses that.
+        if isinstance(vnf, str) and isinstance(node, str):
+            vnf_indexes = [i for i in range(len(self.service.vnfs)) if vnf == self.service.vnfs[i]]
+            for i in vnf_indexes:
+                if assignments[i] == node:
+                    return True
+        # If the objects are provided, uses that.
+        elif isinstance(vnf, VNF) and isinstance(node, Node):
+            vnf_indexes = [i for i in range(len(self.service.vnfs)) if vnf.description == self.service.vnfs[i]]
+            for i in vnf_indexes:
+                if assignments[i] == node.description:
+                    return True
+        else:
+            raise ValueError("Invalid input type.")
         return False

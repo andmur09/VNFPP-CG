@@ -1,8 +1,8 @@
 {
     "name": "voc", 
-    "cpu": 8, 
-    "ram": 1000, 
-    "throughput": 1000, 
+    "cpu": 2, 
+    "ram": 2000, 
+    "throughput": 580, 
     "latency": 0.25, 
     "availability": 0.999
 }
