@@ -1,4 +1,5 @@
 from multiprocessing.sharedctypes import Value
+from tempfile import TemporaryFile
 import this
 from matplotlib import use
 import numpy as np
@@ -33,38 +34,53 @@ class ColumnGeneration(object):
                     results - string filename to use to log output.
     """
     def __init__(self, network: Network, vnfs: list, services: list, verbose: int = 1, logfile: str ='log.txt', max_replicas: int = 3,
-                node_availability: float = 0.9999, min_flow_param: int = 10, weights = [1, 100]) -> None:
+                node_availability: float = 0.9999, min_flow_param: int = 10, weights = [1, 0]) -> None:
         """
         Initialises the optimisation problem
         """
         if verbose not in [0, 1, 2]:
             raise ValueError("Invalid verbosity level. Use 0 for no log, 1 for info and 2 for info and debug.")
         self.verbose = verbose
-        logging.basicConfig(filename=logfile, encoding='utf-8', level=logging.DEBUG, filemode='w') if self.verbose == True else None
+        logging.basicConfig(filename=logfile, encoding='utf-8', level=logging.DEBUG, filemode='w') if self.verbose > 0 else None
 
         self.network = network
 
         # # Adds the dummy node to the network.
         # self.network.add_dummy_node()
-        self.vnfs = vnfs
+
         self.services = services
+        # Makes set of VNF's containing only those used and without duplicates
+        self.vnfs = set()
+        for service in self.services:
+            for f in service.get_vnfs(vnfs):
+                self.vnfs.add(f)
+        self.vnfs = list(self.vnfs)
         self.lower_bound = eps
         self.upper_bound = inf
         self.status = None
         self.runtime = None
         self.model = None
-        self.gap = inf
         self.max_replicas = max_replicas
         self.node_availability = node_availability
         self.min_flow_param = min_flow_param
-        self.nodes = None
-        self.weights = weights
+        self.nodes = [n for n in self.network.locations if isinstance(n, Node) and not isinstance(n, Dummy)]
         self.n_nodes_used = None
         self.total_penalties = None
-
+        #Gets a dictionary calculating the max number of replicas of a vnf that can be hosted on a node.
+        self.replica_dict = {f.description: {n.description: min([n.cpu //f.cpu, n.ram // f.ram]) for n in self.nodes} for f in self.vnfs}
+        self.weights = weights
         # Initialises inner approximation for each service
         for service in services:
             service.make_graph(self.vnfs, self.network)
+
+    def get_vnf_by_description(self, description: str):
+        """
+        Given a string name of a vnf, returns the vnf from self.vnfs
+        """
+        for f in self.vnfs:
+            if f.description == description:
+                return f
+        return None
 
     def pricing_problem(self, service, initial = False, heuristic_solution = None, bigM = 1000):
         """
@@ -83,11 +99,11 @@ class ColumnGeneration(object):
         
         if heuristic_solution != None:
             bounds = []
-            # Fixes assignment edges to be zero if they are the function is not installed in the node in the heuristic solution.
             for l in links:
+                # Fixes assignment edges to be zero if they are the function is not installed in the node in the heuristic solution.
                 if l.assignment_link == True:
                     node, function = graph.get_node_and_function_from_assignment_edge(l, self.vnfs)
-                    if node.description not in heuristic_solution[function.description]:
+                    if heuristic_solution[function.description][node.description] == 0:
                         bounds.append(0)
                     else:
                         bounds.append(1)
@@ -125,6 +141,20 @@ class ColumnGeneration(object):
         # Adds latency constraint.
         lat = np.array([l.latency for l in links])
         m.addConstr(lat @ x  - bigM * penalty <= service.latency, name = "latency")
+        # Adds resource constraints.
+        for node in self.nodes:
+            vnfs_used, vars, cpus, rams = [], [], [], []
+            # Gets assignment edges associated with node
+            for i in range(len(service.vnfs)):
+                # If the service uses the same VNF/node combination more than once in the service chain then we don't want to consider it's resources twice.
+                if service.vnfs[i] not in vnfs_used:
+                    vars.append(m.getVarByName("({}_l{}, {}_l{})".format(node.description, i, node.description, i + 1)))
+                    cpus.append(self.get_vnf_by_description(service.vnfs[i]).cpu)
+                    rams.append(self.get_vnf_by_description(service.vnfs[i]).ram)
+                    vnfs_used.append(service.vnfs[i])
+            m.addConstr(gp.quicksum(vars[i] * cpus[i] for i in range(len(vars))) <= node.cpu, name = node.description + "_cpu")
+            m.addConstr(gp.quicksum(vars[i] * rams[i] for i in range(len(vars))) <= node.ram, name = node.description + "_ram")
+
         # Gets dual variable associated with constraint that 100% of the flow must be used
         if self.model != None:
             pi = -self.model.getConstrByName("pathflow_{}".format(service.description)).getAttr("Pi")
@@ -132,14 +162,14 @@ class ColumnGeneration(object):
             pi = 0
 
         # Sets objective to reduced cost.
-        m.setObjective(self.weights[1] * penalty + pi + w @ x, GRB.MINIMIZE)
+        m.setObjective(self.weights[0] * penalty + pi + w @ x, GRB.MINIMIZE)
         m.update()
         m.optimize()
         m.write("{}.lp".format(m.getAttr("ModelName")))
         if m.status == GRB.OPTIMAL:
             logging.info(" Optimisation terminated successfully.") if self.verbose > 0 else None
             logging.info(' Ojective: {}'.format(m.objVal)) if self.verbose > 0 else None
-            logging.info(' Vars:')
+            logging.info(' Vars:') if self.verbose > 0 else None
             vars = m.getVars()
             for i in range(len(vars)):
                 if vars[i].x != 0:
@@ -157,71 +187,64 @@ class ColumnGeneration(object):
         """
         # Makes list of replica count for required VNF's using availability
         n_replicas = {v.description: 1 for v in self.vnfs}
-        function_availability = min([v.availability for v in self.vnfs])
-        n_paths_needed = {s.description: 1 for s in self.services}
-        nodes = [n for n in self.network.locations if isinstance(n, Node) and not isinstance(n, Dummy)]
-        for s in self.services:
-            if s.availability != None:
-                k = len(s.vnfs)
-                # Starting with one, check if availability can be satisfied using one path, else increase 1 until it can be satisfied
-                i = 1
-                while (1 - (1 - self.node_availability * function_availability)**i)**k < s.availability:
-                    i += 1
-                # Updates the number of paths needed for each service based on the availability.
-                n_paths_needed[s.description] = max(n_paths_needed[s.description], i)
-                for v in s.vnfs:
-                    # If the required relicas for this service is greater than that previously calculated we update it.
-                    n_replicas[v] = max(i, n_replicas[v])
 
         # if the number of vnfs cannot handle the required throughput, then we increase the replica count so that it can.
         for v in self.vnfs:
             n_instances = ceil(sum([s.throughput for s in self.services if v in s.get_vnfs(self.vnfs)])/v.throughput)
             n_replicas[v.description] = max(n_instances, n_replicas[v.description])
 
-        # Sorts the nodes according to cost
-        nodes = [n for _, n in sorted(zip([n.cost for n in nodes], nodes), key=lambda pair: pair[0])]
         # Sorts vnfs according to cores:
         vnfs = [v for _, v in sorted(zip([v.cpu for v in self.vnfs], self.vnfs), key=lambda pair: pair[0], reverse=True)]
-        # Start with the cheapest node
+        assignments = {f.description: {n.description: 0 for n in self.nodes} for f in self.vnfs}
+
         i = 0
-        assignments = {f.description: [] for f in vnfs}
-        try:
-            while any(x != 0 for x in n_replicas.values()) and i < len(nodes):
-                current_node = nodes[i]
-                cpu_remaining, ram_remaining = nodes[i].cpu, nodes[i].ram
-                to_place = vnfs[:]
-                while to_place:
-                    v = to_place.pop(0)
-                    # If it's possible to place it, and an instance still needs to be placed then place it.
-                    if v.cpu <= cpu_remaining and v.ram <= ram_remaining and n_replicas[v.description] > 0:
-                        assignments[v.description].append(current_node.description)
-                        n_replicas[v.description] -= 1
-                        cpu_remaining -= v.cpu
-                        ram_remaining -= v.ram
-                # Move onto next cheapest node.
-                i += 1
-            logging.info(" HEURISTIC FOUND THE FOLLOWING ASSIGNMENTS {}\n".format(assignments)) if self.verbose > 0 else None
-            # Uses heuristic to add paths for each service.
-            for service in self.services:
-                logging.info(" USING HEURISTIC SOLUTION TO GENERATE COLUMNS FOR {}\n".format(service.description)) if self.verbose > 0 else None
-                assignments_to_use = copy.deepcopy(assignments)
-                for i in range(n_paths_needed[s.description]):
+        # Loop while there are still nodes with space.
+        while i < len(self.nodes):
+            current_node = self.nodes[i]
+            cpu_remaining, ram_remaining = current_node.cpu, current_node.ram
+            to_place = vnfs[:]
+            # Loop while there are still replicas needing placed.
+            while to_place:
+                current_vnf = to_place.pop(0)
+                k = 1
+                # Loop while we can keep putting multiple replicas.
+                while k * current_vnf.cpu <= cpu_remaining and k * current_vnf.ram <= ram_remaining and k <= self.replica_dict[current_vnf.description][current_node.description] and n_replicas[current_vnf.description] >= k:
+                    k += 1
+                if k != 1:
+                    assignments[current_vnf.description][current_node.description] = k - 1
+                    cpu_remaining -= (k - 1) * current_vnf.cpu
+                    ram_remaining -= (k - 1) * current_vnf.ram
+                    n_replicas[current_vnf.description] -= (k - 1)
+            i += 1
+
+        logging.info(" HEURISTIC FOUND THE FOLLOWING ASSIGNMENTS {}\n".format(assignments)) if self.verbose > 0 else None
+
+        for service in self.services:
+            logging.info(" USING HEURISTIC SOLUTION TO GENERATE COLUMNS FOR {}\n".format(service.description)) if self.verbose > 0 else None
+            assignments_to_use = copy.deepcopy(assignments)
+            # While we can still find a path, add it.
+            try:
+                cg = self.pricing_problem(service, initial = True, heuristic_solution = assignments_to_use)
+                terminate = False
+            except:
+                terminate = True
+            while terminate == False:
+                # Adds the path if it has a feasible solution.
+                path = self.get_path_from_model(service, cg)
+                service.graph.add_path(path)
+                # Removes the nodes used in the solution from the assignments_to_use dictionary.
+                assignments_used = path.get_params()["components assigned"]
+                logging.info(" Params used: {}".format(path.get_params())) if self.verbose > 0 else None
+                for i in range(len(service.vnfs)):
+                    # If the service uses the same VNF twice, then should only remove that VNF once.
+                    if assignments_used[i] in assignments_to_use[service.vnfs[i]]:
+                        assignments_to_use[service.vnfs[i]][assignments_used[i]] = 0
+                logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.\n") if self.verbose > 0 else None
+                try:
                     cg = self.pricing_problem(service, initial = True, heuristic_solution = assignments_to_use)
-                    if cg.status == GRB.OPTIMAL:
-                        # Adds the path if it has a feasible solution.
-                        path = self.get_path_from_model(service, cg)
-                        service.graph.add_path(path)
-                        # Removes the nodes used in the solution from the assignments_to_use dictionary.
-                        assignments_used = path.get_params()["components assigned"]
-                        logging.info(" Params used: {}".format(path.get_params()))
-                        for i in range(len(service.vnfs)):
-                            # If the service uses the same VNF twice, then should only remove that VNF once.
-                            if assignments_used[i] in assignments_to_use[service.vnfs[i]]:
-                                assignments_to_use[service.vnfs[i]].remove(assignments_used[i])
-                        logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.\n") if self.verbose > 0 else None
-                        
-        except IndexError:
-            logging.info(" Not possible to assign all services\n".format(assignments)) if self.verbose > 0 else None
+                except:
+                    terminate = True
+        return assignments
 
     def get_path_from_model(self, service, model):
         """
@@ -267,20 +290,11 @@ class ColumnGeneration(object):
         path = service_path(service.description, used_nodes, used_edges, self.network, service, n_layers = graph.n_layers)
         return path
 
-    def build_initial_model(self):
+    def build_initial_model(self, heuristic = None):
         """
         Builds and solves the restricted master problem given the initial approximation points.
         """
         self.model = gp.Model(self.network.description, env=env)
-        nodes = [n for n in self.network.locations if isinstance(n, Node) == True]
-        self.nodes = nodes
-
-        vnfs = set()
-        # Also makes set of components for all services so that no duplicate components are considered
-        for service in self.services:
-            for f in service.get_vnfs(self.vnfs):
-                vnfs.add(f)
-        self.vnfs = list(vnfs)
 
         # Gets set of edges - not including reverse edges since edges are bidirectional.
         edges = []
@@ -289,12 +303,14 @@ class ColumnGeneration(object):
                 edges.append(edge)
 
         # Adds variables, for LP relaxation makes variables continuous.
-        for node in nodes:
-            # Adds variable that says whether a node is used.
-            self.model.addVar(lb = 0, ub = 1, vtype=GRB.CONTINUOUS, obj = node.cost, name= node.description + "_used")
-            for function in vnfs:
+        for node in self.nodes:
+            for function in self.vnfs:
                 # Adds variable that says a function is installed on a node.
-                self.model.addVar(lb = 0, ub = 1, vtype=GRB.CONTINUOUS, obj = node.cost, name= node.description + "_" + function.description + "_assignment")
+                # If heuristic is provided, fixes these assignment vars to 1.
+                if heuristic != None:
+                    self.model.addVar(lb = heuristic[function.description][node.description], ub = heuristic[function.description][node.description], vtype=GRB.CONTINUOUS, obj = node.cost, name= node.description + "_" + function.description + "_assignment")
+                else:
+                    self.model.addVar(vtype=GRB.CONTINUOUS, obj = node.cost, name= node.description + "_" + function.description +  "_assignment")
  
         for service in self.services:
             # Adds availability penalty variable.
@@ -313,19 +329,11 @@ class ColumnGeneration(object):
                 self.model.addVar(vtype=GRB.CONTINUOUS, name = path.description + "_flow")
 
         self.model.update()
-        # Adds a constraint that says if any function is hosted on a node, then the node is considered used.
-        for node in nodes:
-            for function in vnfs:
-                node_var = self.model.getVarByName(node.description + "_used")
-                function_var = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
-                self.model.addConstr(node_var >= function_var, name = node.description + "_" + function.description + "_used")
 
         # Adds constraint that the sum of CPU and RAM of the functions does not exceed the capacity of the nodes.
-        for node in nodes:
-            vars_used = []
-            cpus = []
-            rams = []
-            for function in vnfs:
+        for node in self.nodes:
+            vars_used, cpus, rams = [], [], []
+            for function in self.vnfs:
                 vars_used.append(self.model.getVarByName(node.description + "_" + function.description + "_assignment"))
                 cpus.append(function.cpu)
                 rams.append(function.ram)
@@ -349,33 +357,21 @@ class ColumnGeneration(object):
             penalty_var = self.model.getVarByName(service.description + "_throughputpenalty")
             self.model.addConstr(gp.quicksum(vars_used) + penalty_var == 1, name = "pathflow_{}".format(service.description))
 
-        # Adds a constraint that says, if a vnf is not assigned to a node, then every path in that service, that considers the vnf to be installed on that node must have zero flow.
-        for service in self.services:
-            for node in self.nodes:
-                for function in service.get_vnfs(self.vnfs):
-                    flow_vars_used = []
-                    # Gets the path flow variables which assume the VNF to be hosted on the node.
-                    for path in service.graph.paths:
-                        if path.check_if_using_assignment(function, node) == True:
-                            flow_vars_used.append(self.model.getVarByName(path.description + "_flow"))
-                    # Gets the assignment variables and parameters.
-                    assignment_var = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
-                    self.model.addConstr(gp.quicksum(flow_vars_used[i] for i in range(len(flow_vars_used))) <= assignment_var, name="assignment_{}_{}_{}".format(service.description, node.description, function.description))
-        
         # Adds a constraint that says the sum of flows through any instance of a VNF must not exceed it's processing capacity.
-        for node in nodes:
-            for function in vnfs:
-                flow_vars_used, throughput_params = [], []
+        for node in self.nodes:
+            for function in self.vnfs:
+                flow_vars_used, flow_params = [], []
+                assignment_vars_used, assignment_params = [], []
+                # Gets the path variables using this assignment.
                 for service in self.services:
                     if function in service.get_vnfs(self.vnfs):
                         for path in service.graph.paths:
                             if path.check_if_using_assignment(function, node) == True:
                                 flow_vars_used.append(self.model.getVarByName(path.description + "_flow"))
-                                throughput_params.append(service.throughput)
-                # Gets the assignment variables and parameters.
+                                flow_params.append(service.throughput)
                 assignment_var = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
-                self.model.addConstr(gp.quicksum(flow_vars_used[i] * throughput_params[i] for i in range(len(flow_vars_used))) <= assignment_var * function.throughput, name="throughput_{}_{}".format(node.description, function.description))
-        
+                self.model.addConstr(gp.quicksum(flow_vars_used[i] * flow_params[i] for i in range(len(flow_vars_used))) <= assignment_var * function.throughput, name="throughput_{}_{}".format(node.description, function.description))
+
         # Adds a constraint that forces the installation variable of a service to be 1 if at least one path using that node is used to route flow.
         for service in self.services:
             for node in self.nodes:
@@ -399,7 +395,7 @@ class ColumnGeneration(object):
             for function in service.get_vnfs(self.vnfs):
                 #dummy_installation = self.model.getVarByName(service.description + "_" + dummy_node.description + "_" + function.description + "_installation")
                 replication_vars_used = [self.model.getVarByName(service.description+ "_" + function.description + "_" + str(i) + "_replication") for i in range(1, self.max_replicas + 1)]
-                installation_var_used = [self.model.getVarByName(service.description + "_" + n.description + "_" + function.description + "_installation") for n in nodes if isinstance(n, Dummy) == False]
+                installation_var_used = [self.model.getVarByName(service.description + "_" + n.description + "_" + function.description + "_installation") for n in self.nodes if isinstance(n, Dummy) == False]
                 params = [i for i in range(1, self.max_replicas + 1)]
                 self.model.addConstr(gp.quicksum(params[i] * replication_vars_used[i] for i in range(len(replication_vars_used))) <= gp.quicksum(installation_var_used), name = "nreplicas_{}_{}".format(service.description, function.description))
 
@@ -415,9 +411,16 @@ class ColumnGeneration(object):
                 penalty = self.model.getVarByName(service.description + "_availabilitypenalty")
                 self.model.addConstr(gp.quicksum(params[i] * vars_used[i] for i in range(len(vars_used))) + penalty >= rhs, name = "availability_{}".format(service.description))
 
+        # # Adds a constraint (for LP) that says if an installation variable takes a value of 1, the assignment variable must be 1.
+        for service in self.services:
+            for node in self.nodes:
+                for function in service.get_vnfs(self.vnfs):
+                    assignment_var = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
+                    installation_var =  self.model.getVarByName(service.description + "_" + node.description + "_" + function.description + "_installation")
+                    self.model.addConstr(assignment_var >= installation_var, name = "coupling_{}_{}_{}".format(service.description, node.description, function.description))
+
         # Updates and optimises the model.
         self.model.update()
-        node_used_vars = [v for v in self.model.getVars() if "_used" in v.varName]
         av_pens = [v for v in self.model.getVars() if "_availabilitypenalty" in v.varName]
         tp_pens = [v for v in self.model.getVars() if "_throughputpenalty" in v.varName]
         lt_pens, path_vars = [], []
@@ -426,11 +429,17 @@ class ColumnGeneration(object):
                 if p.latency_violated == True:
                     path_vars.append(self.model.getVarByName(p.description + "_flow"))
                     lt_pens.append(1)
-        
-        # Makes the objective the combination of nodes used, and SLA violation costs.
-        self.model.setObjective(self.weights[0] * gp.quicksum(node_used_vars[i] for i in range(len(node_used_vars))) + 
-                                self.weights[1] * (gp.quicksum(av_pens[i] for i in range(len(av_pens))) + gp.quicksum(tp_pens[i] for i in range(len(tp_pens)))
-                                + gp.quicksum(lt_pens[i] * path_vars[i] for i in range(len(lt_pens)))))
+
+        # Gets the cpu usage for the objective
+        vars_used, params = [], []
+        for node in self.nodes:
+            for function in self.vnfs:
+                vars_used.append(self.model.getVarByName(node.description + "_" + function.description +  "_assignment"))
+                params.append(function.cpu)
+
+        # Makes the objective SLA violation costs.
+        self.model.setObjective(self.weights[0] * (gp.quicksum(av_pens[i] for i in range(len(av_pens))) + gp.quicksum(tp_pens[i] for i in range(len(tp_pens)))
+                                + gp.quicksum(lt_pens[i] * path_vars[i] for i in range(len(lt_pens)))) + self.weights[1] * (gp.quicksum(vars_used[i] for i in range(len(vars_used)))))
         self.model.optimize()
 
         logging.info(" Initial model built, solving.") if self.verbose > 0 else None
@@ -496,7 +505,7 @@ class ColumnGeneration(object):
                     if -self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())).getAttr("Pi") == 0:
                         e.cost = 1e-6
                     else:
-                        e.cost = -self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())).getAttr("Pi")
+                        e.cost = -service.throughput * self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())).getAttr("Pi")
                 else:
                     raise KeyError("Bandwidth constraint not found for edge.")
 
@@ -504,15 +513,14 @@ class ColumnGeneration(object):
             assignment_edges = [e for e in graph.links if e.assignment_link == True]
             for e in assignment_edges:
                 node, function = graph.get_node_and_function_from_assignment_edge(e, self.vnfs)
-                constr1 = self.model.getConstrByName("assignment_{}_{}_{}".format(service.description, node.description, function.description))
-                constr2 = self.model.getConstrByName("throughput_{}_{}".format(node.description, function.description))
-                constr3 = self.model.getConstrByName("installation_{}_{}_{}".format(service.description, node.description, function.description))
-                if constr1 != None and constr2 != None and constr3 != None:
+                constr1 = self.model.getConstrByName("throughput_{}_{}".format(node.description, function.description))
+                constr2 = self.model.getConstrByName("installation_{}_{}_{}".format(service.description, node.description, function.description))
+                if constr1 != None and constr2 != None:
                     # To avoid adding arbitrary links due to zero cost edges we set the cost to a small value
-                    if -(constr1.getAttr("Pi") + constr2.getAttr("Pi") + self.min_flow_param / service.throughput * constr3.getAttr("Pi")) == 0:
+                    if -(service.throughput * constr1.getAttr("Pi") + self.min_flow_param * constr2.getAttr("Pi")) == 0:
                         e.cost = 1e-6
                     else:
-                        e.cost = -(constr1.getAttr("Pi") + service.throughput * constr2.getAttr("Pi") + self.min_flow_param * constr3.getAttr("Pi"))
+                        e.cost = -(service.throughput * constr1.getAttr("Pi") + self.min_flow_param * constr2.getAttr("Pi"))
                 else:
                     raise KeyError("Constraint not found for this service, node, function combination.")
     
@@ -528,24 +536,15 @@ class ColumnGeneration(object):
         # Gets the coefficients in the column associated with the new path variable in each constraint.
         for i in range(len(constrs)):
             if "bandwidth" in constrs[i].getAttr("ConstrName"):
-                # For bandwidth constraints this is the number of times the link is used
+                # For bandwidth constraints this is the number of times the link is used multiplied by the throughput.
                 edge = self.network.get_link_by_description(constrs[i].getAttr("ConstrName").split("_")[-1])
                 if edge.get_description() in params["times traversed"].keys():
-                    coefficients[i] = params["times traversed"][edge.get_description()]
+                    coefficients[i] = params["times traversed"][edge.get_description()] * service.throughput
                 else:
                     coefficients[i] = 0
             elif "pathflow_{}".format(service.description) in constrs[i].getAttr("ConstrName"):
                 # This is just 1 since we sum all the path flow variables.
                 coefficients[i] = 1
-            elif "assignment_{}".format(service.description) in constrs[i].getAttr("ConstrName"):
-                # This is 1 if the path has the function hosted on a particular node.
-                tokens = constrs[i].getAttr("ConstrName").split("_")
-                node, function = tokens[2], tokens[3]
-                if function in path.service.vnfs:
-                    if path.check_if_using_assignment(function, node) == True:
-                        coefficients[i] = 1
-                else:
-                    coefficients[i] = 0
             elif "throughput" in constrs[i].getAttr("ConstrName"):
                 tokens = constrs[i].getAttr("ConstrName").split("_")
                 node, function = tokens[1], tokens[2]
@@ -566,8 +565,9 @@ class ColumnGeneration(object):
                 coefficients[i] = 0
 
         # Adds the variable and column.
+        # If the latency is violated we include the latency violation cost in the objective.
         if path.latency_violated == True:    
-            self.model.addVar(obj = self.weights[1] ,column = gp.Column(coefficients, constrs), name = path.description + "_flow")
+            self.model.addVar(obj = self.weights[0] ,column = gp.Column(coefficients, constrs), name = path.description + "_flow")
         else:
             self.model.addVar(column = gp.Column(coefficients, constrs), name = path.description + "_flow")
 
@@ -577,34 +577,37 @@ class ColumnGeneration(object):
         """
         return self.upper_bound - self.lower_bound/self.lower_bound
 
-    def optimise(self, max_iterations: int = 1000, tolerance: float = 0.05, use_heuristic = False):
+    def optimise(self, max_iterations: int = 200, use_heuristic = False):
         """
         Finds schedule that optimises probability of success using column generation
         """
         terminate = False
 
-        if use_heuristic == True:
-            self.solve_heuristic()
+        heuristic_sln = self.solve_heuristic()
 
         # Solves shortest path for each service and adds the path for heuristic value.
-        for service in self.services:
-            logging.info(" SOLVING INITIAL COLUMN GENERATION FOR {}\n".format(service.description)) if self.verbose > 0 else None
-            cg = self.pricing_problem(service, initial = True)
-            path = self.get_path_from_model(service, cg)
-            service.graph.add_path(path)
-            logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
-            logging.info(" Params used: {}\n".format(path.get_params()))
+        if use_heuristic == False:
+            for service in self.services:
+                logging.info(" SOLVING INITIAL COLUMN GENERATION FOR {}\n".format(service.description)) if self.verbose > 0 else None
+                cg = self.pricing_problem(service, initial = True)
+                path = self.get_path_from_model(service, cg)
+                service.graph.add_path(path)
+                logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
+                logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
 
         # Solves restricted master problem using initial points and saves solution.
         logging.info(" BUILDING INITIAL MODEL.\n") if self.verbose > 0 else None
-        self.build_initial_model()
+        if use_heuristic == True:
+            self.build_initial_model(heuristic_sln)
+        else:
+            self.build_initial_model()
         self.upper_bound = self.model.objVal
         start = time()
         k = 1
 
         while terminate == False and k <= max_iterations:
-            logging.info(" Updating service graphs with dual information.\n")
-            self.update_duals()
+            logging.info(" Updating service graphs with dual information.\n") if self.verbose > 0 else None
+            self.update_duals() 
             terminate = True
             self.upper_bound, self.lower_bound = self.model.objVal, self.model.objVal
             # Solves the column generation problem for each sub problem.
@@ -622,13 +625,14 @@ class ColumnGeneration(object):
                         service.graph.add_path(path)
                         self.add_column_from_path(path)
                         logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
-                        logging.info(" Params used: {}\n".format(path.get_params()))
+                        logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
                     else:
                         logging.info(" Path not unique so not adding.") if self.verbose > 0 else None
+                        logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
+                        raise ValueError
                 else:
                     service.status = True
                     logging.info(" Not an improving path.") if self.verbose > 0 else None
-            self.gap = self.compute_optimality_gap()
 
 
             logging.info(" SOLVING RMP\n") if self.verbose > 0 else None
@@ -642,7 +646,9 @@ class ColumnGeneration(object):
 
         # Solves with integrality
         for v in self.model.getVars():
-            if "assignment" in v.varName or "replication" in v.varName or "installation" in v.varName:
+            if "replication" in v.varName or "installation" in v.varName or "availabilitypenalty" in v.varName:
+                v.setAttr(GRB.Attr.VType, "B")
+            elif "assignment" in v.varName:
                 v.setAttr(GRB.Attr.VType, "I")
 
         logging.info( " Solving with integrality constraints.\n.") if self.verbose > 0 else None
@@ -652,11 +658,9 @@ class ColumnGeneration(object):
         # Prints final solution
         if self.model.status == GRB.OPTIMAL:
             self.runtime = time() - start
-            self.gap = self.compute_optimality_gap()
             self.status = True
             self.parse_solution()
             logging.info( " Optimisation terminated successfully\n.") if self.verbose > 0 else None
-            logging.info( " Optimality Gap: {}".format(self.compute_optimality_gap()))
             logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
             logging.info(' Vars:') if self.verbose > 0 else None
             for v in self.model.getVars():
@@ -672,20 +676,17 @@ class ColumnGeneration(object):
         """"
         If the optimisation was successful, it parses the solution and updates the relevant objects with the information.
         """
-        nodes = [n for n in self.network.locations if isinstance(n, Node) == True]
-        # Adds the assignment of VNF's to the node
         nodes_used = []
-        for node in nodes:
-            assignments = []
-            for function in self.vnfs:
+        # Updates the assignments dictionary for each VNF outlining where, and how many instances have been assigned.
+        for function in self.vnfs:
+            for node in self.nodes:
                 var = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
-                if var.x == 1:
-                    assignments.append(function.description)
-                    if node not in nodes_used:
-                        nodes_used.append(node)
-            node.assignments = assignments
-            self.n_nodes_used = len(nodes_used)
-
+                if var.x != 0:
+                    function.assignments[node.description] = var.x
+                    if node.description not in nodes_used:
+                        nodes_used.append(node.description)
+        
+        self.n_nodes_used = len(nodes_used)
         total_penalties = 0
         for service in self.services:
             sla_violations = {}
@@ -712,6 +713,8 @@ class ColumnGeneration(object):
         to_return = {}
         to_return["status"] = self.status
         to_return["objective"] = self.model.objVal
+        to_return["lower bound"] = self.lower_bound
+        to_return["upper bound"] = self.upper_bound
         to_return["number of nodes used"] = self.n_nodes_used
         to_return["total penalties"] = self.total_penalties 
         to_return["runtime"] = self.runtime

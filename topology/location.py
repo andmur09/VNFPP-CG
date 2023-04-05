@@ -69,14 +69,12 @@ class Node(Location):
         self.cost = cost
         self.availability = availability
         self.active = active
-        self.assignments = None
-        self.cuts_generated = 0
 
     def to_json(self) -> dict:
         """
         return a dictionary for use with json.
         """
-        return {"id": self.id, "description": self.description, "type": self.type, "cpu": self.cpu, "ram": self.ram, "cost": self.cost,"availability": self.availability, "assignments": self.assignments}
+        return {"id": self.id, "description": self.description, "type": self.type, "cpu": self.cpu, "ram": self.ram, "cost": self.cost,"availability": self.availability}
     
     def load_from_dict(self, dictionary):
         """

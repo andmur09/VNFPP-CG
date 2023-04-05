@@ -21,7 +21,7 @@ class VNF(object):
         self.throughput = throughput
         self.latency = latency
         self.availability = availability
-        self.cuts_generated = 0
+        self.assignments = {}
     
     def __str__(self):
         """
@@ -39,7 +39,7 @@ class VNF(object):
         """
         Returns a json dictionary describing the vnf.
         """
-        return {"name": self.description, "cpu": self.cpu, "ram": self.ram, "throughput": self.throughput, "latency": self.latency, "availability": self.availability}
+        return {"name": self.description, "cpu": self.cpu, "ram": self.ram, "throughput": self.throughput, "latency": self.latency, "availability": self.availability, "assignments": self.assignments}
 
     def save_as_json(self, filename = None):
         """
