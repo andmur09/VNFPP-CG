@@ -78,7 +78,7 @@ class service_path(Network):
         self.network = network
         self.service = service
         self.n_layers = n_layers
-        self.latency_violated = False
+        self.latency_violated = latency_violated
         self.flow = None
     
     def get_edge_from_original_network(self, link):
@@ -189,7 +189,7 @@ class service_path(Network):
         """
         Returns the path as a json compatible dictionary.
         """
-        return {"description": self.description, "links used": self.get_actual_path(), "flow": self.flow}
+        return {"description": self.description, "links used": self.get_actual_path(), "flow": self.flow, "latency violated": self.latency_violated}
 
     def check_if_same(self, other_path):
         """

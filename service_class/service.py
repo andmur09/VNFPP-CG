@@ -24,9 +24,9 @@ class Service(object):
         \param availability         Float definint the required latency for the service.
         \param graph                Instance of graph class representing the service for a given topology.
         \param source               Instance of Location, representing start point of service.
-        \param sink                 Instance of Location, representing end point of service.
+        \param sink                 Instance of Location, representing end point of service. If none this will use the location of the final VNF.
     """
-    def __init__(self, description: str = None, vnfs: list = None, throughput: float = None, latency: float = None, percentage_traffic: float = None, availability: float = None, source: Location = None, sink: Location = None):
+    def __init__(self, description: str = None, vnfs: list = None, throughput: float = None, latency: float = None, percentage_traffic: float = None, availability: float = None, source: Location = None, sink: Location = None, n_subscribers: int = 1):
         self.description = description
         self.vnfs = vnfs
         self.throughput = throughput
@@ -35,6 +35,7 @@ class Service(object):
         self.availability = availability
         self.source = source
         self.sink = sink
+        self.n_subscribers = n_subscribers
         self.graph = None
         self.status = False
         self.sla_violations = None
@@ -82,6 +83,7 @@ class Service(object):
         to_return["latency"] = self.latency
         to_return["percentage_traffic"] = self.percentage_traffic
         to_return["availability"] = self.availability
+        to_return["n_subscribers"] = self.n_subscribers
         if self.source != None:
             to_return["source"] = self.source.to_json()
         if self.sink != None:
@@ -141,9 +143,13 @@ class Service(object):
             for edge in layer.links:
                 opposite_edge = [e for e in layer.links if e.source == edge.sink and e.sink == edge.source]
                 if not opposite_edge:
-                    layer.links.append(Link(source = edge.sink, sink = edge.source))
+                    layer.links.append(Link(source = edge.sink, sink = edge.source, latency=edge.latency))
             nodes += layer.locations
             edges += layer.links
+
+        # If no sink is provided it uses the location of the last VNF. A super sink is used to connect all nodes in layer l + 1 to the super sink.
+        super_sink = Switch("super_sink_l{}".format(n_layers-1))
+        nodes.append(super_sink)
 
         # Adds edges connecting the nodes on layer l to layer l+1. Traversing this edge represents assigning component l to the node on layer l.
         serv_g = service_graph(self.description + "_graph", nodes, edges, topology, self, n_layers)
@@ -154,5 +160,9 @@ class Service(object):
                 from_ = serv_g.get_location_by_description(node.description + "_l{}".format(l))
                 to_ = serv_g.get_location_by_description(node.description + "_l{}".format(l+1))
                 serv_g.add_link(Link(from_, to_, latency = required_vnfs[l].latency, cost = 0, assignment_link = True))
-
+        
+        # Adds edges connecting layer l + 1 to super sink.
+        for node in nodes:
+            from_ = serv_g.get_location_by_description(node.description + "_l{}".format(n_layers-1))
+            serv_g.add_link(Link(from_, super_sink, latency = 0, cost = 0))
         self.graph = serv_g

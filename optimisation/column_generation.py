@@ -66,6 +66,10 @@ class ColumnGeneration(object):
         self.nodes = [n for n in self.network.locations if isinstance(n, Node) and not isinstance(n, Dummy)]
         self.n_nodes_used = None
         self.total_penalties = None
+        self.availability_penalties = None
+        self.throughput_penalties = None
+        self.latency_penalties = None
+        self.n_requests = None
         #Gets a dictionary calculating the max number of replicas of a vnf that can be hosted on a node.
         self.replica_dict = {f.description: {n.description: min([n.cpu //f.cpu, n.ram // f.ram]) for n in self.nodes} for f in self.vnfs}
         self.weights = weights
@@ -86,10 +90,10 @@ class ColumnGeneration(object):
         """
         Solves the pricing problem for a service and finds the best new path to add to the master problem.
         """
+        start = time()
         graph = service.graph
-        graph.save_as_dot()
         m = gp.Model(graph.description, env=env)
-        links = [l for l in graph.links if not isinstance(l.sink, Dummy) and not isinstance(l.source, Dummy)]
+        links = [l for l in graph.links]
 
         # Initially we can assume the cost of each edge are all 1 and solve as shortest path to heuristically speed up solution.
         if initial == True:
@@ -112,18 +116,22 @@ class ColumnGeneration(object):
             x = m.addMVar(shape = len(links), ub = bounds, name = [l.get_description() for l in links], vtype = GRB.BINARY)
         else:
             x = m.addMVar(shape = len(links), name = [l.get_description() for l in links], vtype = GRB.BINARY)
+        #latency = m.addVar(name = "latency")
         m.update()
         penalty = m.addVar(name = "latencypenalty", vtype = GRB.BINARY)
 
         # Gets source and sink
         source = graph.get_location_by_description(service.source.description + "_l0")
-        sink = graph.get_location_by_description(service.sink.description + "_l{}".format(graph.n_layers - 1))
+        if service.sink != None:
+            sink = graph.get_location_by_description(service.sink.description + "_l{}".format(graph.n_layers - 1))
+        else:
+            sink = graph.get_location_by_description("super_sink_l{}".format(graph.n_layers-1))
 
         # Flow constraints for each node.
         for node in graph.locations:
             if isinstance(node, Dummy): continue
-            o_indexes = [links.index(o) for o in graph.outgoing_edge(node) if not isinstance(o.sink, Dummy)]
-            i_indexes = [links.index(i) for i in graph.incoming_edge(node) if not isinstance(i.source, Dummy)]
+            o_indexes = [links.index(o) for o in graph.outgoing_edge(node)]
+            i_indexes = [links.index(i) for i in graph.incoming_edge(node)]
             # 1 edge leaving the source must be active.
             if node == source:
                 m.addConstr(gp.quicksum(x[o] for o in o_indexes) == 1, name = "sourceflowout_{}".format(node.description))
@@ -141,6 +149,7 @@ class ColumnGeneration(object):
         # Adds latency constraint.
         lat = np.array([l.latency for l in links])
         m.addConstr(lat @ x  - bigM * penalty <= service.latency, name = "latency")
+        #m.addConstr(lat @ x  == latency, name = "latency_value")
         # Adds resource constraints.
         for node in self.nodes:
             vnfs_used, vars, cpus, rams = [], [], [], []
@@ -162,10 +171,12 @@ class ColumnGeneration(object):
             pi = 0
 
         # Sets objective to reduced cost.
-        m.setObjective(self.weights[0] * penalty + pi + w @ x, GRB.MINIMIZE)
+        m.setObjective(self.weights[0] * service.n_subscribers * penalty + pi + w @ x, GRB.MINIMIZE)
         m.update()
         m.optimize()
-        m.write("{}.lp".format(m.getAttr("ModelName")))
+        logging.info( " Finished in time {}.".format(time() - start)) if self.verbose > 0 else None
+        #if self.verbose == 2:
+        #m.write("{}.lp".format(m.getAttr("ModelName")))
         if m.status == GRB.OPTIMAL:
             logging.info(" Optimisation terminated successfully.") if self.verbose > 0 else None
             logging.info(' Ojective: {}'.format(m.objVal)) if self.verbose > 0 else None
@@ -173,7 +184,7 @@ class ColumnGeneration(object):
             vars = m.getVars()
             for i in range(len(vars)):
                 if vars[i].x != 0:
-                    logging.info(" Description: {}, Value: {}".format(links[i].get_description(), vars[i].x)) if self.verbose > 0 else None
+                    logging.info(" Description: {}, Value: {}".format(vars[i].varName, vars[i].x)) if self.verbose > 0 else None
             return m
         else:
             logging.error(" Optimisation Failed - consult .ilp") if self.verbose > 0 else None
@@ -194,27 +205,33 @@ class ColumnGeneration(object):
             n_replicas[v.description] = max(n_instances, n_replicas[v.description])
 
         # Sorts vnfs according to cores:
+        
         vnfs = [v for _, v in sorted(zip([v.cpu for v in self.vnfs], self.vnfs), key=lambda pair: pair[0], reverse=True)]
         assignments = {f.description: {n.description: 0 for n in self.nodes} for f in self.vnfs}
 
         i = 0
         # Loop while there are still nodes with space.
-        while i < len(self.nodes):
-            current_node = self.nodes[i]
+        edge = [n for n in self.nodes if "Edge" in n.description]
+        agg = [n for n in self.nodes if "Agg" in n.description]
+        core = [n for n in self.nodes if "Core" in n.description]
+        nodes = edge + agg + core
+
+        while i < len(nodes):
+            current_node = nodes[i]
             cpu_remaining, ram_remaining = current_node.cpu, current_node.ram
-            to_place = vnfs[:]
+            max_replicas = max(n_replicas.values())
+            # Makes list of replicas needed. We try to assign each vnf greedily before assiging replicas
+            to_place = []
+            for j in range(1, max_replicas + 1):
+                to_place += [v for v in vnfs if n_replicas[v.description] >= j]
             # Loop while there are still replicas needing placed.
             while to_place:
                 current_vnf = to_place.pop(0)
-                k = 1
-                # Loop while we can keep putting multiple replicas.
-                while k * current_vnf.cpu <= cpu_remaining and k * current_vnf.ram <= ram_remaining and k <= self.replica_dict[current_vnf.description][current_node.description] and n_replicas[current_vnf.description] >= k:
-                    k += 1
-                if k != 1:
-                    assignments[current_vnf.description][current_node.description] = k - 1
-                    cpu_remaining -= (k - 1) * current_vnf.cpu
-                    ram_remaining -= (k - 1) * current_vnf.ram
-                    n_replicas[current_vnf.description] -= (k - 1)
+                if current_vnf.cpu <= cpu_remaining and current_vnf.ram <= ram_remaining:
+                    assignments[current_vnf.description][current_node.description] += 1
+                    cpu_remaining -= current_vnf.cpu
+                    ram_remaining -= current_vnf.ram
+                    n_replicas[current_vnf.description] -= 1
             i += 1
 
         logging.info(" HEURISTIC FOUND THE FOLLOWING ASSIGNMENTS {}\n".format(assignments)) if self.verbose > 0 else None
@@ -264,6 +281,7 @@ class ColumnGeneration(object):
 
         # Gets whether latency is violated by path.
         if model.getVarByName("latencypenalty").x == 1:
+            logging.info( "Latency incurred") if self.verbose > 0 else None
             penalty_incurred = True
         else:
             penalty_incurred = False
@@ -294,6 +312,7 @@ class ColumnGeneration(object):
         """
         Builds and solves the restricted master problem given the initial approximation points.
         """
+        start = time()
         self.model = gp.Model(self.network.description, env=env)
 
         # Gets set of edges - not including reverse edges since edges are bidirectional.
@@ -361,7 +380,6 @@ class ColumnGeneration(object):
         for node in self.nodes:
             for function in self.vnfs:
                 flow_vars_used, flow_params = [], []
-                assignment_vars_used, assignment_params = [], []
                 # Gets the path variables using this assignment.
                 for service in self.services:
                     if function in service.get_vnfs(self.vnfs):
@@ -418,18 +436,23 @@ class ColumnGeneration(object):
                     assignment_var = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
                     installation_var =  self.model.getVarByName(service.description + "_" + node.description + "_" + function.description + "_installation")
                     self.model.addConstr(assignment_var >= installation_var, name = "coupling_{}_{}_{}".format(service.description, node.description, function.description))
-
+        
         # Updates and optimises the model.
         self.model.update()
-        av_pens = [v for v in self.model.getVars() if "_availabilitypenalty" in v.varName]
-        tp_pens = [v for v in self.model.getVars() if "_throughputpenalty" in v.varName]
+        av_pens, av_params = [], []
+        tp_pens, tp_params = [], []
+        for service in self.services:
+            av_pens.append(self.model.getVarByName(service.description + "_availabilitypenalty"))
+            av_params.append(service.n_subscribers)
+            tp_pens.append(self.model.getVarByName(service.description + "_throughputpenalty"))
+            tp_params.append(service.n_subscribers)
         lt_pens, path_vars = [], []
         for s in self.services:
             for p in s.graph.paths:
                 if p.latency_violated == True:
                     path_vars.append(self.model.getVarByName(p.description + "_flow"))
-                    lt_pens.append(1)
-
+                    lt_pens.append(p.service.n_subscribers)
+        
         # Gets the cpu usage for the objective
         vars_used, params = [], []
         for node in self.nodes:
@@ -438,14 +461,18 @@ class ColumnGeneration(object):
                 params.append(function.cpu)
 
         # Makes the objective SLA violation costs.
-        self.model.setObjective(self.weights[0] * (gp.quicksum(av_pens[i] for i in range(len(av_pens))) + gp.quicksum(tp_pens[i] for i in range(len(tp_pens)))
-                                + gp.quicksum(lt_pens[i] * path_vars[i] for i in range(len(lt_pens)))) + self.weights[1] * (gp.quicksum(vars_used[i] for i in range(len(vars_used)))))
+        self.model.setObjective(self.weights[0] * (gp.quicksum(av_pens[i] * av_params[i] for i in range(len(av_pens))) + 
+                                gp.quicksum(tp_pens[i] * tp_params[i] for i in range(len(tp_pens))) +
+                                gp.quicksum(lt_pens[i] * path_vars[i] for i in range(len(lt_pens)))) + 
+                                self.weights[1] * (gp.quicksum(vars_used[i] for i in range(len(vars_used)))))
         self.model.optimize()
 
         logging.info(" Initial model built, solving.") if self.verbose > 0 else None
         self.model.update()
-        self.model.write("{}.lp".format(self.model.getAttr("ModelName")))
+        if self.verbose == 2:
+            self.model.write("{}.lp".format(self.model.getAttr("ModelName")))
         self.model.optimize()
+        logging.info( " Finished in time {}.".format(time() - start)) if self.verbose > 0 else None
         if self.model.status == GRB.OPTIMAL:
             self.upper_bound = self.model.objVal
             logging.info( " Optimisation terminated successfully.") if self.verbose > 0 else None
@@ -470,7 +497,8 @@ class ColumnGeneration(object):
         """
         self.model.update()
         self.model.optimize()
-        self.model.write("{}.lp".format(self.model.getAttr("ModelName")))
+        if self.verbose == 2:
+            self.model.write("{}.lp".format(self.model.getAttr("ModelName")))
         if self.model.status == GRB.OPTIMAL:
             self.upper_bound = self.model.objVal
             logging.info( " Optimisation terminated successfully.") if self.verbose > 0 else None
@@ -499,15 +527,18 @@ class ColumnGeneration(object):
             normal_edges = [e for e in graph.links if e.assignment_link == False]
             # Updates the edge cost using the dual value associated with the bandwidth constraint for each link.
             for e in normal_edges:
-                e_o = graph.get_edge_from_original_network(e)
-                if self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())) != None:
-                    # To avoid adding arbitrary links due to zero cost edges we set the cost to a small value
-                    if -self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())).getAttr("Pi") == 0:
-                        e.cost = 1e-6
-                    else:
-                        e.cost = -service.throughput * self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())).getAttr("Pi")
+                if "super_sink" in e.get_description():
+                    continue
                 else:
-                    raise KeyError("Bandwidth constraint not found for edge.")
+                    e_o = graph.get_edge_from_original_network(e)
+                    if self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())) != None:
+                        # To avoid adding arbitrary links due to zero cost edges we set the cost to a small value
+                        if -self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())).getAttr("Pi") == 0:
+                            e.cost = 1e-6
+                        else:
+                            e.cost = -service.throughput * self.model.getConstrByName("bandwidth_{}".format(e_o.get_description())).getAttr("Pi")
+                    else:
+                        raise KeyError("Bandwidth constraint not found for edge.")
 
             # Updates the assignment edge cost using the duals associated with the assignment constraints.
             assignment_edges = [e for e in graph.links if e.assignment_link == True]
@@ -566,8 +597,9 @@ class ColumnGeneration(object):
 
         # Adds the variable and column.
         # If the latency is violated we include the latency violation cost in the objective.
-        if path.latency_violated == True:    
-            self.model.addVar(obj = self.weights[0] ,column = gp.Column(coefficients, constrs), name = path.description + "_flow")
+        if path.latency_violated == True:
+            #print(service.description, service.n_subscribers)
+            self.model.addVar(obj = self.weights[0] * service.n_subscribers, column = gp.Column(coefficients, constrs), name = path.description + "_flow")
         else:
             self.model.addVar(column = gp.Column(coefficients, constrs), name = path.description + "_flow")
 
@@ -581,6 +613,8 @@ class ColumnGeneration(object):
         """
         Finds schedule that optimises probability of success using column generation
         """
+        for s in self.services:
+            logging.info(" Service {} has {} subscribers\n".format(s.description, s.n_subscribers)) if self.verbose > 0 else None
         terminate = False
 
         heuristic_sln = self.solve_heuristic()
@@ -627,6 +661,9 @@ class ColumnGeneration(object):
                         logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
                         logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
                     else:
+                        for p in service.graph.paths:
+                            if p.check_if_same(path) == True:
+                                logging.info(" Paths {} and {} the same".format(p.description, path.description)) if self.verbose > 0 else None
                         logging.info(" Path not unique so not adding.") if self.verbose > 0 else None
                         logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
                         raise ValueError
@@ -677,6 +714,8 @@ class ColumnGeneration(object):
         If the optimisation was successful, it parses the solution and updates the relevant objects with the information.
         """
         nodes_used = []
+        for function in self.vnfs:
+            function.assignments = {}
         # Updates the assignments dictionary for each VNF outlining where, and how many instances have been assigned.
         for function in self.vnfs:
             for node in self.nodes:
@@ -688,12 +727,15 @@ class ColumnGeneration(object):
         
         self.n_nodes_used = len(nodes_used)
         total_penalties = 0
+        availability_penalties, throughput_penalties, latency_penalties = 0, 0, 0
         for service in self.services:
             sla_violations = {}
             tp = self.model.getVarByName(service.description + "_throughputpenalty").x
             av = self.model.getVarByName(service.description + "_availabilitypenalty").x
-            total_penalties += tp
-            total_penalties += av
+            total_penalties += tp * service.n_subscribers
+            total_penalties += av * service.n_subscribers
+            throughput_penalties += tp * service.n_subscribers
+            availability_penalties += av * service.n_subscribers
             sla_violations["throughput"] = tp
             sla_violations["availability"] = av
             sla_violations["latency"] = {}
@@ -702,9 +744,13 @@ class ColumnGeneration(object):
                 path.flow = flow
                 if flow != 0 and path.latency_violated == True:
                     sla_violations["latency"][path.description] = flow
-                    total_penalties += flow
+                    total_penalties += flow * path.service.n_subscribers
+                    latency_penalties += flow * path.service.n_subscribers
             service.sla_violations = sla_violations
         self.total_penalties = total_penalties
+        self.availability_penalties = availability_penalties
+        self.throughput_penalties = throughput_penalties
+        self.latency_penalties = latency_penalties
                 
     def to_json(self) -> dict:
         """
@@ -716,7 +762,11 @@ class ColumnGeneration(object):
         to_return["lower bound"] = self.lower_bound
         to_return["upper bound"] = self.upper_bound
         to_return["number of nodes used"] = self.n_nodes_used
-        to_return["total penalties"] = self.total_penalties 
+        to_return["number of service requests"] = sum([s.n_subscribers for s in self.services])
+        to_return["total penalties"] = self.total_penalties
+        to_return["availability penalties"] = self.availability_penalties
+        to_return["throughput penalties"] = self.throughput_penalties
+        to_return["latency penalties"] = self.latency_penalties
         to_return["runtime"] = self.runtime
         to_return["network"] = self.network.to_json()
         to_return["vnfs"] = [v.to_json() for v in self.vnfs]
