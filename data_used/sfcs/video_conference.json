@@ -1,6 +1,9 @@
 {
     "name": "VideoConference", 
     "vnfs": [
+        "du", 
+        "cu", 
+        "upf", 
         "nat", 
         "fw", 
         "tm", 
@@ -8,7 +11,7 @@
         "ids"
     ], 
     "throughput": 5, 
-    "latency": 4, 
+    "latency": 150, 
     "percentage_traffic": 3, 
     "availability": 0.9999
 }

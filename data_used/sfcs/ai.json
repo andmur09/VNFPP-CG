@@ -1,11 +1,14 @@
 {
     "name": "AI", 
     "vnfs": [
+        "du", 
+        "cu", 
+        "upf", 
         "nat", 
         "nat"
     ], 
     "throughput": 15, 
-    "latency": 1, 
+    "latency": 70, 
     "percentage_traffic": 1, 
     "availability": 0.99999
 }

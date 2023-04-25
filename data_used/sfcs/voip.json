@@ -1,6 +1,9 @@
 {
     "name": "VoIP", 
     "vnfs": [
+        "du", 
+        "cu", 
+        "upf", 
         "nat", 
         "fw", 
         "tm", 

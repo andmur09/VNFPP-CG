@@ -1,7 +1,7 @@
 {
     "name": "nat", 
-    "cpu": 2, 
-    "ram": 2000, 
+    "cpu": 16, 
+    "ram": 16, 
     "throughput": 400, 
     "latency": 0.1, 
     "availability": 0.999

@@ -1,6 +1,9 @@
 {
     "name": "IoT", 
     "vnfs": [
+        "du", 
+        "cu", 
+        "upf", 
         "nat", 
         "fw", 
         "ids"

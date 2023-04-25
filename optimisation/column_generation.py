@@ -175,8 +175,8 @@ class ColumnGeneration(object):
         m.update()
         m.optimize()
         logging.info( " Finished in time {}.".format(time() - start)) if self.verbose > 0 else None
-        #if self.verbose == 2:
-        #m.write("{}.lp".format(m.getAttr("ModelName")))
+        if self.verbose == 2:
+            m.write("{}.lp".format(m.getAttr("ModelName")))
         if m.status == GRB.OPTIMAL:
             logging.info(" Optimisation terminated successfully.") if self.verbose > 0 else None
             logging.info(' Ojective: {}'.format(m.objVal)) if self.verbose > 0 else None
@@ -189,7 +189,8 @@ class ColumnGeneration(object):
         else:
             logging.error(" Optimisation Failed - consult .ilp") if self.verbose > 0 else None
             m.computeIIS()
-            m.write("{}.ilp".format(m.getAttr("ModelName")))
+            if self.verbose == 2:
+                m.write("{}.ilp".format(m.getAttr("ModelName")))
             raise ValueError("Optimisation failed")
 
     def solve_heuristic(self):
@@ -271,7 +272,7 @@ class ColumnGeneration(object):
         link_vars = [v for v in model.getVars() if v.varName != "latencypenalty"]    
         links = [l for l in graph.links if not isinstance(l.sink, Dummy) and not isinstance(l.source, Dummy)]
         # Gets the list of edges used - equal to the edges whose binary variable has value 1.
-        used_edges = [links[i] for i in range(len(links)) if link_vars[i].x == 1]
+        used_edges = [links[i] for i in range(len(links)) if round(link_vars[i].x, 4) == 1]
 
         # Gets the list of used nodes from the used edges.
         used_nodes = []
@@ -288,24 +289,6 @@ class ColumnGeneration(object):
 
         # Makes the path and adds it to the list of paths for the service graph.
         path = service_path(service.description, used_nodes, used_edges, self.network, service, n_layers = graph.n_layers, latency_violated = penalty_incurred)
-        return path
-
-    def add_path_manually(self, service, list_edges):
-        """
-        Adds a path given a list of strings where each string is the edge description.
-        """
-        graph = service.graph
-        # Gets the list of edges used - equal to the edges whose binary variable has value 1.
-        used_edges = [l for l in graph.links if l.get_description() in list_edges]
-
-        # Gets the list of used nodes from the used edges.
-        used_nodes = []
-        for edge in used_edges:
-            if edge.source not in used_nodes: used_nodes.append(edge.source)
-            if edge.sink not in used_nodes: used_nodes.append(edge.sink)
-
-        # Makes the path and adds it to the list of paths for the service graph.
-        path = service_path(service.description, used_nodes, used_edges, self.network, service, n_layers = graph.n_layers)
         return path
 
     def build_initial_model(self, heuristic = None):
@@ -384,9 +367,10 @@ class ColumnGeneration(object):
                 for service in self.services:
                     if function in service.get_vnfs(self.vnfs):
                         for path in service.graph.paths:
-                            if path.check_if_using_assignment(function, node) == True:
+                            count = path.count_times_using_assignment(function, node)
+                            if count != 0:
                                 flow_vars_used.append(self.model.getVarByName(path.description + "_flow"))
-                                flow_params.append(service.throughput)
+                                flow_params.append(count * service.throughput)
                 assignment_var = self.model.getVarByName(node.description + "_" + function.description + "_assignment")
                 self.model.addConstr(gp.quicksum(flow_vars_used[i] * flow_params[i] for i in range(len(flow_vars_used))) <= assignment_var * function.throughput, name="throughput_{}_{}".format(node.description, function.description))
 
@@ -394,13 +378,15 @@ class ColumnGeneration(object):
         for service in self.services:
             for node in self.nodes:
                 for function in service.get_vnfs(self.vnfs):
-                    flow_vars_used = []
+                    flow_vars_used, flow_params_used = [], []
                     # Gets the path flow variables which assume the VNF to be hosted on the node.
                     for path in service.graph.paths:
-                        if path.check_if_using_assignment(function, node) == True:
+                        count = path.count_times_using_assignment(function, node)
+                        if count != 0:
                             flow_vars_used.append(self.model.getVarByName(path.description + "_flow"))
+                            flow_params_used.append(count * self.min_flow_param)
                     installation_var = self.model.getVarByName(service.description + "_" + node.description + "_" + function.description + "_installation")
-                    self.model.addConstr(self.min_flow_param * gp.quicksum(flow_vars_used[i] for i in range(len(flow_vars_used))) >= installation_var, name="installation_{}_{}_{}".format(service.description, node.description, function.description))
+                    self.model.addConstr(gp.quicksum(flow_vars_used[i] * flow_params_used[i] for i in range(len(flow_vars_used))) >= installation_var, name="installation_{}_{}_{}".format(service.description, node.description, function.description))
              
         # Adds a constraint that forces one of the replication variables to take a value of one.
         for service in self.services:
@@ -462,7 +448,7 @@ class ColumnGeneration(object):
 
         # Makes the objective SLA violation costs.
         self.model.setObjective(self.weights[0] * (gp.quicksum(av_pens[i] * av_params[i] for i in range(len(av_pens))) + 
-                                gp.quicksum(tp_pens[i] * tp_params[i] for i in range(len(tp_pens))) +
+                                2 * gp.quicksum(tp_pens[i] * tp_params[i] for i in range(len(tp_pens))) +
                                 gp.quicksum(lt_pens[i] * path_vars[i] for i in range(len(lt_pens)))) + 
                                 self.weights[1] * (gp.quicksum(vars_used[i] for i in range(len(vars_used)))))
         self.model.optimize()
@@ -488,7 +474,7 @@ class ColumnGeneration(object):
         else:
             logging.error(" Optimisation Failed - consult .ilp file") if self.verbose > 0 else None
             self.model.computeIIS()
-            self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
+            #self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
             raise ValueError("Optimisation failed")
     
     def rmp(self, integrality = False):
@@ -515,7 +501,7 @@ class ColumnGeneration(object):
         else:
             logging.error(" Optimisation Failed - consult .ilp file") if self.verbose > 0 else None
             self.model.computeIIS()
-            self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
+            #self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
             raise ValueError("Optimisation failed")
 
     def update_duals(self):
@@ -573,23 +559,25 @@ class ColumnGeneration(object):
                     coefficients[i] = params["times traversed"][edge.get_description()] * service.throughput
                 else:
                     coefficients[i] = 0
-            elif "pathflow_{}".format(service.description) in constrs[i].getAttr("ConstrName"):
+            elif "pathflow_{}".format(service.description) == constrs[i].getAttr("ConstrName"):
                 # This is just 1 since we sum all the path flow variables.
                 coefficients[i] = 1
             elif "throughput" in constrs[i].getAttr("ConstrName"):
                 tokens = constrs[i].getAttr("ConstrName").split("_")
                 node, function = tokens[1], tokens[2]
                 if function in path.service.vnfs:
-                    if path.check_if_using_assignment(function, node) == True:
-                        coefficients[i] = service.throughput
+                    count = path.count_times_using_assignment(function, node)
+                    if count != 0:
+                        coefficients[i] = count * service.throughput
                 else:
                     coefficients[i] = 0
-            elif "installation_{}".format(service.description) in constrs[i].getAttr("ConstrName"):
+            elif "installation_{}_".format(service.description) in constrs[i].getAttr("ConstrName"):
                 tokens = constrs[i].getAttr("ConstrName").split("_")
                 node, function = tokens[2], tokens[3]
                 if function in path.service.vnfs:
-                    if path.check_if_using_assignment(function, node) == True:
-                        coefficients[i] = self.min_flow_param
+                    count = path.count_times_using_assignment(function, node)
+                    if count != 0:
+                        coefficients[i] = count * self.min_flow_param
                 else:
                     coefficients[i] = 0
             else:
@@ -609,7 +597,7 @@ class ColumnGeneration(object):
         """
         return self.upper_bound - self.lower_bound/self.lower_bound
 
-    def optimise(self, max_iterations: int = 200, use_heuristic = False):
+    def optimise(self, max_iterations: int = 500, use_heuristic = False):
         """
         Finds schedule that optimises probability of success using column generation
         """
@@ -706,7 +694,7 @@ class ColumnGeneration(object):
         else:
             logging.error(" Optimisation Failed - consult .ilp file") if self.verbose > 0 else None
             self.model.computeIIS()
-            self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
+            #self.model.write("{}.ilp".format(self.model.getAttr("ModelName")))
             self.status = False
     
     def parse_solution(self):

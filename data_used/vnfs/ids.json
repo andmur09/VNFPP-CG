@@ -1,7 +1,7 @@
 {
     "name": "ids", 
     "cpu": 8, 
-    "ram": 8000, 
+    "ram": 8, 
     "throughput": 600, 
     "latency": 0.01, 
     "availability": 0.999

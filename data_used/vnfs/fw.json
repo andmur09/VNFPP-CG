@@ -1,7 +1,7 @@
 {
     "name": "fw", 
     "cpu": 4, 
-    "ram": 4000, 
+    "ram": 4, 
     "throughput": 600, 
     "latency": 0.8, 
     "availability": 0.999

@@ -1,7 +1,7 @@
 {
     "name": "woc", 
     "cpu": 2, 
-    "ram": 2000, 
+    "ram": 2, 
     "throughput": 300, 
     "latency": 0.2, 
     "availability": 0.999

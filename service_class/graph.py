@@ -219,3 +219,58 @@ class service_path(Network):
         else:
             raise ValueError("Invalid input type.")
         return False
+    
+    def count_times_using_assignment(self, vnf, node):
+        """
+        Returns True if path has VNF installed on a node, else False:
+        """
+        assignments = self.get_params()["components assigned"]
+        # If the string description is provided, uses that.
+        if isinstance(vnf, str) and isinstance(node, str):
+            count = 0
+            vnf_indexes = [i for i in range(len(self.service.vnfs)) if vnf == self.service.vnfs[i]]
+            for i in vnf_indexes:
+                try:
+                    if assignments[i] == node:
+                        # print("\nChecking VNF " + vnf + " and node " + node)
+                        # print("Service VNFS", self.service.vnfs)
+                        # print("VNF Indexes found", vnf_indexes)
+                        # print("Assignments", assignments)
+                        # print("Index", i + 1)
+                        count += 1
+                except KeyError:
+                        print("\nDescription", self.description)
+                        print("Checking VNF " + vnf + " and node " + node)
+                        print("Service VNFS", self.service.vnfs)
+                        print("VNF Indexes found", vnf_indexes)
+                        print("Assignments", assignments)
+                        print("Index", i + 1)
+                        print("Assignment edges: ")
+                        for edge in self.links:
+                            if edge.assignment_link == True:
+                                print(edge.get_description())
+        # If the objects are provided, uses that.
+        elif isinstance(vnf, VNF) and isinstance(node, Node):
+            count = 0
+            vnf_indexes = [i for i in range(len(self.service.vnfs)) if vnf.description == self.service.vnfs[i]]
+            for i in vnf_indexes:
+                try:
+                    # print("\nChecking VNF " + vnf.description + " and node " + node.description)
+                    # print("Service VNFS", self.service.vnfs)
+                    # print("VNF Indexes found", vnf_indexes)
+                    # print("Assignments", assignments)
+                    # print("Index", i + 1)
+                    if assignments[i] == node.description:
+                        count += 1
+                except KeyError:
+                    print("\nDescription", self.description)
+                    print("Checking VNF " + vnf.description + " and node " + node.description)
+                    print("Service VNFS", self.service.vnfs)
+                    print("VNF Indexes found", vnf_indexes)
+                    print("Assignments", assignments)
+                    print("Index", i + 1)
+                    print("Assignment edges: ")
+                    for edge in self.links:
+                        if edge.assignment_link == True:
+                            print(edge.get_description())
+        return count
