@@ -1,0 +1,8 @@
+{
+    "name": "upf", 
+    "cpu": 32, 
+    "ram": 32, 
+    "throughput": 1000, 
+    "latency": 5, 
+    "availability": 0.999
+}

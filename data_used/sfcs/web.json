@@ -1,0 +1,17 @@
+{
+    "name": "Web", 
+    "vnfs": [
+        "du", 
+        "cu", 
+        "upf", 
+        "nat", 
+        "fw", 
+        "tm", 
+        "woc", 
+        "ids"
+    ], 
+    "throughput": 0.6, 
+    "latency": 500, 
+    "percentage_traffic": 11, 
+    "availability": null
+}

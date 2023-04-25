@@ -1,0 +1,17 @@
+{
+    "name": "AR", 
+    "vnfs": [
+        "du", 
+        "cu", 
+        "upf", 
+        "nat", 
+        "fw", 
+        "tm", 
+        "voc", 
+        "ids"
+    ], 
+    "throughput": 5, 
+    "latency": 150, 
+    "percentage_traffic": 2, 
+    "availability": 0.99999
+}

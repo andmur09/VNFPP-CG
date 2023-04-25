@@ -1,0 +1,17 @@
+{
+    "name": "Streaming", 
+    "vnfs": [
+        "du", 
+        "cu", 
+        "upf", 
+        "nat", 
+        "fw", 
+        "tm", 
+        "voc", 
+        "ids"
+    ], 
+    "throughput": 24, 
+    "latency": 100, 
+    "percentage_traffic": 71, 
+    "availability": null
+}

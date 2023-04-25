@@ -1,0 +1,8 @@
+{
+    "name": "tm", 
+    "cpu": 10, 
+    "ram": 10, 
+    "throughput": 200, 
+    "latency": 0.1, 
+    "availability": 0.999
+}

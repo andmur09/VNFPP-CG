@@ -1,0 +1,14 @@
+{
+    "name": "SmartFactory", 
+    "vnfs": [
+        "du", 
+        "cu", 
+        "upf", 
+        "nat", 
+        "fw"
+    ], 
+    "throughput": 20, 
+    "latency": 150, 
+    "percentage_traffic": 4, 
+    "availability": 0.999999
+}

@@ -1,10 +1,11 @@
+from multiprocessing.sharedctypes import Value
 from typing import List
 
 from kiwisolver import strength
 from topology.location import Location
 from topology.location import Dummy
 from topology.link import Link
-from topology.location import Node
+from topology.location import Node, Switch
 import json
 from topology.numpy_encoder import NpEncoder
 import graphviz as gvz
@@ -19,7 +20,7 @@ class Network(object):
         \param locations      List of locations in the network (vertices)
         \param links          List of links in the network (edges)
     """
-    def __init__(self, description: str, locations: list, links: list):
+    def __init__(self, description: str = None, locations: list = None, links: list = None):
         self.description = description
         self.locations = locations
         self.links = links
@@ -57,7 +58,7 @@ class Network(object):
                 return link
         return None
     
-    def get_link_by_locations(self, source_id, sink_id) -> Link:
+    def get_link_by_location(self, source_id, sink_id) -> Link:
         """
         returns an edge given two location ids.
         """
@@ -65,6 +66,17 @@ class Network(object):
             if link.source.id == source_id and link.sink.id == sink_id:
                 return link
             elif link.sink.id == source_id and link.source.id == sink_id:
+                return link
+        return None
+
+    def get_link_by_location_description(self, source, sink) -> Link:
+        """
+        returns an edge given two location ids.
+        """
+        for link in self.links:
+            if link.source.description == source.description and link.sink.description == sink.description:
+                return link
+            elif link.sink.id == source.description and link.source.id == sink.description:
                 return link
         return None
 
@@ -108,8 +120,8 @@ class Network(object):
         self.add_location(dummy)
         other_locations = [l for l in self.locations if l != dummy]
         for l in other_locations:
-            self.add_link(Link(dummy, l, cost = eps))
-            self.add_link(Link(l, dummy, cost = eps))
+            self.add_link(Link(dummy, l, latency = 0, bandwidth=inf))
+            self.add_link(Link(l, dummy, latency = 0, bandwidth=inf))
 
     def to_json(self) -> dict:
         """
@@ -119,14 +131,14 @@ class Network(object):
         for location in self.locations:
             to_return["locations"].append(location.to_json())
         for link in self.links:
-            to_return["locations"].append(link.to_json())
+            to_return["links"].append(link.to_json())
         return to_return
 
     def save_as_json(self, filename = None):
         """
         saves the network as a JSON to filename.json
         """
-        to_dump = self.to_json
+        to_dump = self.to_json()
         if filename != None:
             if filename[-5:] != ".json":
                 filename = filename + ".json"
@@ -134,29 +146,63 @@ class Network(object):
             filename = self.description + ".json"
 
         with open(filename, 'w') as fp:
-            json.dump(to_dump, fp, indent=4, separators=(", ", ": "), cls=NpEncoder)
-    
-    def print(self):
+            json.dump(to_dump, fp, indent=4, separators=(", ", ": "))
+
+    def load_from_json(self, filename):
         """
-        Prints information about the network.
-        TODO: This needs updating.
+        Given a json file, it loads the data and stores as instance of the network.
         """
+        if filename[-5:] != ".json":
+            filename = filename + ".json"
+
+        # Opens the json and extracts the data
+        with open(filename) as f:
+            data = json.load(f)
+        
+        assert list(data.keys()) == ["name", "locations", "links"], "Keys in JSON don't match expected input for type network."
+
+        self.description, self.locations, self.links = data["name"], [], []
+        locations, links = data["locations"], data["links"]
+        # Adds locations
+        for location in locations:
+            if location["type"] == "Switch":
+                toAdd = Switch()
+                toAdd.load_from_dict(location)
+                self.locations.append(toAdd)
+            elif location["type"] == "Node":
+                toAdd = Node()
+                toAdd.load_from_dict(location)
+                self.locations.append(toAdd)
+        
+        # Adds links by matching id's of newly created locations.
+        for link in links:
+            assert list(link.keys()) == ["source", "sink", "bandwidth", "latency"], "Keys in JSON don't match expected input for type link."
+            toAdd = Link()
+            for location in self.locations:
+                if location.id == link["source"]:
+                    toAdd.source = location
+                elif location.id == link["sink"]:
+                    toAdd.sink = location
+            if toAdd.source == None or toAdd.sink == None:
+                print(link)
+                raise ValueError("No source or sink found with that id.")
+            toAdd.bandwidth = link["bandwidth"]
+            toAdd.latency = link["latency"]
+            self.links.append(toAdd)
+
+    def __str__(self):
+        """
+        Prints the DC network to string.
+        """
+        to_return = "Name:\n"
+        to_return += "\t{}\n".format(self.description)
+        to_return += "Nodes:\n"
+        for location in self.locations:
+            to_return += "\t" + str(location.to_json()) + "\n"
+        to_return += "Edges:\n"
         for link in self.links:
-            print("\n")
-            print("Description: ", link.get_description())
-            print("Latency: {}, Bandwidth: {}".format(link.latency, link.bandwidth))
-            print("Source: ", link.source.description)
-            print("\tType: ", link.source.type)
-            if link.source.type == "node":
-                print("\tCPU: ", link.source.cpu)
-                print("\tRAM: ", link.source.ram)
-                print("\tCost: ", link.source.cost)
-            print("Sink: ", link.sink.description)
-            print("\tType: ", link.sink.type)
-            if link.sink.type == "node":
-                print("\tCPU: ", link.sink.cpu)
-                print("\tRAM: ", link.sink.ram)
-                print("\tCost: ", link.sink.cost)
+            to_return += "\t" + str(link.to_json()) + "\n"
+        return to_return
     
     def save_as_dot(self, filename = None):
         """

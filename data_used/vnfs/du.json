@@ -1,0 +1,8 @@
+{
+    "name": "du", 
+    "cpu": 32, 
+    "ram": 32, 
+    "throughput": 10000, 
+    "latency": 1, 
+    "availability": 0.999
+}
