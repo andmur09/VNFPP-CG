@@ -7,7 +7,7 @@ In Network Function Virtualisation (NFV), network functions are virtualised and 
 Current modules include:
 
 - topology
-    - network - A class to model telecoms networks, where the network is composed of a graph made up of a ser of links and locations.
+    - network - A class to model telecoms networks, where the network is composed of a graph made up of a number of links and locations.
     - location - A class to model physical locations within the network. These can be:
 	    - Switch - A location solely used for routing.
 		- Node - A location with compute and memory resources that can be used to host VNF's.
@@ -15,12 +15,12 @@ Current modules include:
 	
 - service_class
 	- vnf - A class used to model virtual network functions.
-	- service - A class used to model a service request. Each service request has a flow that must be processed by an ordered sequence of service requests.
-	- graph - A class used to model a augmented service graph. This is used as the "shortest path" column generation sub prolem.
+	- service - A class used to model a service request. Each service request has a flow that must be processed by an ordered sequence of VNF's.
+	- graph - A class used to model an augmented service graph. This is used as the "shortest path" column generation sub prolem.
 	- path - A class used to model a path on the augmented service graph.
 
 - optimisation
-    - column_generation - A class used to model VNF-PP as a column generation optimisation problem. This iterates between two problems, the Restricted Master Problem (rmp) and the column generation problem (pricing_problem).
+    - column_generation - A class used to model VNF-PP as a column generation optimisation problem. This iterates between two problems, the Restricted Master Problem (rmp) and the Column Generation Problem (pricing_problem).
 
 ### Requirements
 
@@ -36,11 +36,11 @@ git clone
 
 VNFPP-CG has the following dependencies:
 
-- [https://www.gurobi.com/](GUROBI) (Linear programming solver used in the optimisation. A free academic license is available on their website.
+- [https://www.gurobi.com/](GUROBI) (Linear programming solver used in the optimisation. A free academic license is available on their website.)
 - [https://graphviz.org/](Graphviz) (Used to plot topology.)
 
 ### Example
 
-To run the experiments used in this paper run the script toy_example.py. This loads the RAN test topology, set of VNF's and service types. It randomly samples 10 service
-requests and then solves using both column generation and a greedy heuristic. Set verbose = 0 for no output, verbose = 1 for logfile, verbose = 2 for logfile .lp and .ilp
+A toy example is provided in toy_example.py. This loads the RAN test topology, set of VNF's and service types. It randomly samples 10 service
+requests and then solves using both column generation and a greedy heuristic. Set verbose = 0 for no output, verbose = 1 for logfile, verbose = 2 for logfile, .lp and .ilp
 output. The result will be saved as a .json file, output directory can be changed by modifying fname.
