@@ -1,5 +1,4 @@
 import itertools
-import re
 
 inf = 1e9
 
