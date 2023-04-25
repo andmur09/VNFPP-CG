@@ -1,13 +1,8 @@
-from multiprocessing.sharedctypes import Value
-from typing import List
-
-from kiwisolver import strength
 from topology.location import Location
 from topology.location import Dummy
 from topology.link import Link
 from topology.location import Node, Switch
 import json
-from topology.numpy_encoder import NpEncoder
 import graphviz as gvz
 
 inf = 1000000

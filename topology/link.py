@@ -1,4 +1,3 @@
-import copy
 from topology.location import Location
 inf = 1e6
 

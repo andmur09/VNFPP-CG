@@ -1,19 +1,11 @@
-from multiprocessing.sharedctypes import Value
-from tempfile import TemporaryFile
-import this
-from matplotlib import use
 import numpy as np
-from math import log, exp
-from scipy import stats
+from math import log
 from time import time
-from service_class.service import Service
-from service_class.graph import service_graph, service_path
+from service_class.graph import service_path
 from topology.network import Network
-from topology.location import Dummy, Node, Switch
-from service_class.vnf import VNF
+from topology.location import Dummy, Node
 import gurobipy as gp
 from gurobipy import GRB
-from scipy import optimize
 import logging
 import json
 from math import ceil
