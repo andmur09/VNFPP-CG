@@ -1,14 +1,8 @@
-from lib2to3.pgen2.token import PERCENTEQUAL
-from unittest.mock import NonCallableMagicMock
-from matplotlib.pyplot import vlines
-
-from numpy import percentile
 from service_class.vnf import VNF
 from topology.link import Link
 from topology.network import Network
 from topology.location import *
 from service_class.graph import service_graph
-from service_class.graph import service_path
 import json
 inf = 1000000000
 eps = 1e-9

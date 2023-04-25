@@ -1,13 +1,9 @@
-from cgi import test
-from http import server
-import numpy as np
 import os
 from service_class.vnf import VNF
 from service_class.service import Service
 from topology.network import Network
 from optimisation.column_generation import ColumnGeneration
 import random
-import numpy as np
 
 def solve_case(topology, vnfs, service_requests, filename, verbose = 0):
     """

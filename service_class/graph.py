@@ -1,4 +1,3 @@
-from pygame import Surface
 from topology.network import Network
 import itertools
 import graphviz as gvz
