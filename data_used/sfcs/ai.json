@@ -1,9 +1,6 @@
 {
     "name": "AI", 
     "vnfs": [
-        "du", 
-        "cu", 
-        "upf", 
         "nat", 
         "nat"
     ], 

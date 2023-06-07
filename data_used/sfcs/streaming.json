@@ -1,9 +1,6 @@
 {
     "name": "Streaming", 
     "vnfs": [
-        "du", 
-        "cu", 
-        "upf", 
         "nat", 
         "fw", 
         "tm", 

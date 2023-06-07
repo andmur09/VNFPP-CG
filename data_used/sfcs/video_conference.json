@@ -1,9 +1,6 @@
 {
     "name": "VideoConference", 
     "vnfs": [
-        "du", 
-        "cu", 
-        "upf", 
         "nat", 
         "fw", 
         "tm", 

@@ -4,6 +4,8 @@ from topology.link import Link
 from topology.location import Node, Switch
 import json
 import graphviz as gvz
+import networkx as nx
+from matplotlib import pyplot as plt
 
 inf = 1000000
 eps = 1e-6
@@ -14,11 +16,25 @@ class Network(object):
         \param description    String name describing network
         \param locations      List of locations in the network (vertices)
         \param links          List of links in the network (edges)
+        \param netx           Networkx graph object representation.
     """
-    def __init__(self, description: str = None, locations: list = None, links: list = None):
+    def __init__(self, description: str = None, locations: list = None, links: list = None, netx = None):
         self.description = description
         self.locations = locations
         self.links = links
+        self.netx = netx
+
+    def make_netx(self):
+        """
+        Makes a networkx graph version of the network.
+        """
+        G = nx.Graph()
+        for location in self.locations:
+            G.add_node(location.description)
+        for link in self.links:
+            G.add_edge(link.source.description, link.sink.description, weight = link.cost)
+        self.netx = G
+
 
     def copy(self, description: str):
         """
@@ -64,16 +80,34 @@ class Network(object):
                 return link
         return None
 
-    def get_link_by_location_description(self, source, sink) -> Link:
+    def get_link_by_location_description(self, source, sink, two_way = True) -> Link:
         """
-        returns an edge given two location ids.
+        returns an edge given two location descriptions.
         """
-        for link in self.links:
-            if link.source.description == source.description and link.sink.description == sink.description:
-                return link
-            elif link.sink.id == source.description and link.source.id == sink.description:
-                return link
+        if isinstance(source, Location) and isinstance(sink, Location):
+            if two_way == True:
+                for link in self.links:
+                    if link.source.description == source.description and link.sink.description == sink.description:
+                        return link
+                    elif link.sink.id == source.description and link.source.id == sink.description:
+                        return link
+            else:
+                for link in self.links:
+                    if link.source.description == source.description and link.sink.description == sink.description:
+                        return link
+        elif isinstance(source, str) and isinstance(sink, str):
+            if two_way == True:
+                for link in self.links:
+                    if link.source.description == source and link.sink.description == sink:
+                        return link
+                    elif link.sink.id == source and link.source.id == sink:
+                        return link
+            else:
+                for link in self.links:
+                    if link.source.description == source and link.sink.description == sink:
+                        return link
         return None
+    
 
     def get_locations_by_type(self, type: str) -> list:
         """
@@ -179,7 +213,6 @@ class Network(object):
                 elif location.id == link["sink"]:
                     toAdd.sink = location
             if toAdd.source == None or toAdd.sink == None:
-                print(link)
                 raise ValueError("No source or sink found with that id.")
             toAdd.bandwidth = link["bandwidth"]
             toAdd.latency = link["latency"]

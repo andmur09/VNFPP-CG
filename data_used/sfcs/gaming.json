@@ -1,9 +1,6 @@
 {
     "name": "Gaming", 
     "vnfs": [
-        "du", 
-        "cu", 
-        "upf", 
         "nat", 
         "fw", 
         "voc", 

@@ -1,9 +1,6 @@
 {
     "name": "SmartFactory", 
     "vnfs": [
-        "du", 
-        "cu", 
-        "upf", 
         "nat", 
         "fw"
     ], 

@@ -1,0 +1,177 @@
+{
+    "name": "TestNetwork", 
+    "locations": [
+        {
+            "id": 0, 
+            "description": "DNVRng", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999
+        }, 
+        {
+            "id": 1, 
+            "description": "SNVAng", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999
+        }, 
+        {
+            "id": 2, 
+            "description": "WASHng", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999
+        }, 
+        {
+            "id": 3, 
+            "description": "NYCMng", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999
+        }, 
+        {
+            "id": 4, 
+            "description": "KSCYng", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999
+        }, 
+        {
+            "id": 5, 
+            "description": "ATLAM5", 
+            "type": "Switch"
+        }, 
+        {
+            "id": 6, 
+            "description": "CHINng", 
+            "type": "Switch"
+        }, 
+        {
+            "id": 7, 
+            "description": "LOSAng", 
+            "type": "Switch"
+        }, 
+        {
+            "id": 8, 
+            "description": "HSTNng", 
+            "type": "Switch"
+        }, 
+        {
+            "id": 9, 
+            "description": "ATLAng", 
+            "type": "Switch"
+        }, 
+        {
+            "id": 10, 
+            "description": "STTLng", 
+            "type": "Switch"
+        }, 
+        {
+            "id": 11, 
+            "description": "IPLSng", 
+            "type": "Switch"
+        }
+    ], 
+    "links": [
+        {
+            "source": 9, 
+            "sink": 5, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 8, 
+            "sink": 9, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 11, 
+            "sink": 9, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 2, 
+            "sink": 9, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 11, 
+            "sink": 6, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 3, 
+            "sink": 6, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 4, 
+            "sink": 0, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 1, 
+            "sink": 0, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 10, 
+            "sink": 0, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 4, 
+            "sink": 8, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 7, 
+            "sink": 8, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 4, 
+            "sink": 11, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 1, 
+            "sink": 7, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 2, 
+            "sink": 3, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }, 
+        {
+            "source": 10, 
+            "sink": 1, 
+            "bandwidth": 400000, 
+            "latency": 100
+        }
+    ]
+}

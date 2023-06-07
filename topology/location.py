@@ -1,4 +1,5 @@
 import itertools
+from socket import has_dualstack_ipv6
 
 inf = 1e9
 
@@ -7,10 +8,11 @@ class Location(object):
     """
     represents a location in the datacenter.
     """
-    def __init__(self, description: str = None, type = None):
+    def __init__(self, description: str = None, type: "str" = None, handles_requests: bool = True):
         self.id = next(Location.id_iter)
         self.description = description
         self.type = type
+        self.handles_requests = handles_requests
     
     def __str__(self) -> str:
         """
@@ -28,22 +30,21 @@ class Location(object):
         """
         return a dictionary for use with json.
         """
-        return {"id": self.id, "description": self.description, "type": self.type}
+        return {"id": self.id, "description": self.description, "type": self.type, "handles_requests": self.handles_requests}
 
 class Switch(Location):
     """
     Represents a switch location.
     """
-    def __init__(self, description: str = None):
-        super().__init__(description)
+    def __init__(self, description: str = None, handles_requests: bool = True):
+        super().__init__(description, handles_requests = handles_requests)
         self.type = "Switch"
 
     def load_from_dict(self, dictionary):
         """
         Given a json dictionary, loads the attributes.
         """
-        assert list(dictionary.keys()) == ["id", "description", "type"], "Keys in JSON don't match expected input for type switch."
-        self.id, self.description, self.type = dictionary["id"], dictionary["description"], dictionary["type"]
+        self.id, self.description, self.type, self.handles_requests = dictionary["id"], dictionary["description"], dictionary["type"], dictionary["handles_requests"]
 
     def copy(self):
         """
@@ -60,8 +61,8 @@ class Node(Location):
     cost: Node rental cost.
     active: Whether the node is active (False to simulate node failure).
     """
-    def __init__(self, description: str = None, cpu: int = 1, ram: float = float(1), cost: float = float(1), availability: float = float(1), active: bool = True):
-        super().__init__(description)
+    def __init__(self, description: str = None, cpu: int = 1, ram: float = float(1), cost: float = float(1), availability: float = float(1), active: bool = True, handles_requests: bool = True):
+        super().__init__(description, handles_requests = handles_requests)
         self.type = "Node"
         self.cpu = cpu
         self.ram = ram
@@ -73,19 +74,19 @@ class Node(Location):
         """
         return a dictionary for use with json.
         """
-        return {"id": self.id, "description": self.description, "type": self.type, "cpu": self.cpu, "ram": self.ram, "cost": self.cost,"availability": self.availability}
+        return {"id": self.id, "description": self.description, "type": self.type, "cpu": self.cpu, "ram": self.ram, "cost": self.cost,"availability": self.availability, "handles_requests": self.handles_requests}
     
     def load_from_dict(self, dictionary):
         """
         Given a json dictionary, loads the attributes.
         """
-        self.id, self.description, self.type, self.cpu, self.ram, self.cost, self.availability = dictionary["id"], dictionary["description"], dictionary["type"], dictionary["cpu"], dictionary["ram"], dictionary["cost"], dictionary["availability"]
+        self.id, self.description, self.type, self.cpu, self.ram, self.cost, self.availability, self.handles_requests = dictionary["id"], dictionary["description"], dictionary["type"], dictionary["cpu"], dictionary["ram"], dictionary["cost"], dictionary["availability"], dictionary["handles_requests"]
 
     def copy(self):
         """
         returns a copy of the location
         """
-        return Node(self.description[:], cpu = self.cpu, ram = self.ram, cost = self.cost, availability=self.availability, active=self.active)
+        return Node(self.description[:], cpu = self.cpu, ram = self.ram, cost = self.cost, availability=self.availability, active=self.active, handles_requests= self.handles_requests)
 
 class Dummy(Node):
     """

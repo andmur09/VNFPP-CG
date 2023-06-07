@@ -20,7 +20,7 @@ class Service(object):
         \param source               Instance of Location, representing start point of service.
         \param sink                 Instance of Location, representing end point of service. If none this will use the location of the final VNF.
     """
-    def __init__(self, description: str = None, vnfs: list = None, throughput: float = None, latency: float = None, percentage_traffic: float = None, availability: float = None, source: Location = None, sink: Location = None, n_subscribers: int = 1):
+    def __init__(self, description: str = None, vnfs: list = None, throughput: float = None, latency: float = None, percentage_traffic: float = None, availability: float = None, source: Location = None, sink: Location = None, n_subscribers: int = 1, weight: int = 1):
         self.description = description
         self.vnfs = vnfs
         self.throughput = throughput
@@ -31,8 +31,9 @@ class Service(object):
         self.sink = sink
         self.n_subscribers = n_subscribers
         self.graph = None
-        self.status = False
         self.sla_violations = None
+        self.weight = weight
+        self.find_improving_paths = None
     
     def add_vnf(self, vnf: VNF):
         """
@@ -78,6 +79,7 @@ class Service(object):
         to_return["percentage_traffic"] = self.percentage_traffic
         to_return["availability"] = self.availability
         to_return["n_subscribers"] = self.n_subscribers
+        to_return["weight"] = self.weight
         if self.source != None:
             to_return["source"] = self.source.to_json()
         if self.sink != None:
@@ -102,9 +104,9 @@ class Service(object):
         with open(filename, 'w') as fp:
             json.dump(to_dump, fp, indent=4, separators=(", ", ": "))
     
-    def load_from_json(self, filename: str):
+    def load_from_json(self, filename: str, network = None):
         """
-        Given a json file, it loads the data and stores as instance of VNF.
+        Given a json file, it loads the data and stores as instance of Service.
         """
         if filename[-5:] != ".json":
             filename = filename + ".json"
@@ -112,14 +114,16 @@ class Service(object):
         # Opens the json and extracts the data
         with open(filename) as f:
             data = json.load(f)
-        
         self.description = data["name"]
         self.vnfs = data["vnfs"]
         self.throughput = data["throughput"]
-        self.latency = data["latency"]
         self.percentage_traffic = data["percentage_traffic"]
-        self.availability = data["availability"]
-
+        if data["latency"] != None:
+            self.latency = data["latency"]
+        if data["availability"] != None:
+            self.availability = data["availability"]
+        self.weight = data["weight"]
+                    
     def make_graph(self, vnfs: list, topology: Network):
         """
         Makes a graph representing the service in the network
@@ -140,10 +144,11 @@ class Service(object):
                     layer.links.append(Link(source = edge.sink, sink = edge.source, latency=edge.latency))
             nodes += layer.locations
             edges += layer.links
-
-        # If no sink is provided it uses the location of the last VNF. A super sink is used to connect all nodes in layer l + 1 to the super sink.
-        super_sink = Switch("super_sink_l{}".format(n_layers-1))
-        nodes.append(super_sink)
+        
+        if self.sink == None:
+            # If no sink is provided it uses the location of the last VNF. A super sink is used to connect all nodes in layer l + 1 to the super sink.
+            super_sink = Switch("super_sink_l{}".format(n_layers-1))
+            nodes.append(super_sink)
 
         # Adds edges connecting the nodes on layer l to layer l+1. Traversing this edge represents assigning component l to the node on layer l.
         serv_g = service_graph(self.description + "_graph", nodes, edges, topology, self, n_layers)
@@ -156,7 +161,9 @@ class Service(object):
                 serv_g.add_link(Link(from_, to_, latency = required_vnfs[l].latency, cost = 0, assignment_link = True))
         
         # Adds edges connecting layer l + 1 to super sink.
-        for node in nodes:
-            from_ = serv_g.get_location_by_description(node.description + "_l{}".format(n_layers-1))
-            serv_g.add_link(Link(from_, super_sink, latency = 0, cost = 0))
+        if self.sink == None:
+            for node in nodes:
+                from_ = serv_g.get_location_by_description(node.description + "_l{}".format(n_layers-1))
+                serv_g.add_link(Link(from_, super_sink, latency = 0, cost = 0))
+        
         self.graph = serv_g

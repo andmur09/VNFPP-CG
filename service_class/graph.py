@@ -4,6 +4,59 @@ import graphviz as gvz
 from service_class.vnf import VNF
 from topology.location import Node
 
+class multi_layered_graph(Network):
+    """
+    This class is used to make a multi-layered graph for the compact model. This is similar to service_graph but not specific to any service.
+    """
+    def __init__(self, name, locations, links, network, n_layers: int):
+        super().__init__(name, locations, links)
+        self.network = network
+        self.n_layers = n_layers
+
+    def get_edge_from_original_network(self, link):
+        """
+        For a given link in the service graph, returns the equivalent link in the network topology.
+        """
+        tokens = link.get_description()[1:-1].split(",")
+        source, sink = tokens[0].split("_")[0], tokens[1].split("_")[0][1:]
+        for link in self.network.links:
+            if link.get_description() == "(" + source + ", " + sink + ")":
+                return link
+            elif link.get_description() == "(" + sink + ", " + source + ")":
+                return link
+        return None
+    
+    def get_node_and_function_from_assignment_edge(self, service, link, vnfs):
+        """
+        For a given assignment edge it returns the function and node combination considered by traversing that edge.
+        """
+        assert link.assignment_link == True
+        token = link.get_description()[1:].split(",")[0].split("_")
+        node, layer = token[0], token[1]
+        node = self.network.get_location_by_description(node)
+        function = service.get_vnfs(vnfs)[int(layer[1:])]
+        return node, function
+    
+    def save_as_dot(self, filename = None):
+        """
+        saves the datacenter topology as a DOT to filename.dot
+        """
+        if filename != None:
+            if filename[-5:] != ".dot":
+                filename = filename + ".dot"
+        else:
+            filename = self.description + ".dot"
+
+        plot = gvz.Digraph()
+        for location in self.locations:
+            plot.node(name=str(location.id), label=location.description)
+        
+        for link in self.links:
+            plot.edge(str(link.source.id), str(link.sink.id), label = str(link.cost))
+
+        with open(filename, "w") as f:
+            f.write(plot.source)
+
 class service_graph(Network):
     """
     This class is used to make a service graph. Service graph can be used for optimising datacenter.
@@ -100,6 +153,7 @@ class service_path(Network):
         # Gets the start and end node.
         start = None
         end = None
+
         for location in self.locations:
             outgoing_edges = [l for l in self.links if l.source == location]
             incoming_edges = [l for l  in self.links if l.sink == location]

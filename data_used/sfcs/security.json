@@ -1,9 +1,6 @@
 {
     "name": "Security", 
     "vnfs": [
-        "du", 
-        "cu", 
-        "upf", 
         "proxy", 
         "fw", 
         "ids"
