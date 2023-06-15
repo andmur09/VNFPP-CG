@@ -1,0 +1,8 @@
+{
+    "name": "adnf", 
+    "cpu": 8, 
+    "ram": 8, 
+    "throughput": 1500, 
+    "latency": 0.01, 
+    "availability": 0.999
+}

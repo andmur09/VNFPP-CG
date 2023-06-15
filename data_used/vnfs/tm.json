@@ -2,7 +2,7 @@
     "name": "tm", 
     "cpu": 10, 
     "ram": 10, 
-    "throughput": 200, 
+    "throughput": 2000, 
     "latency": 0.1, 
     "availability": 0.999
 }

@@ -2,7 +2,7 @@
     "name": "voc", 
     "cpu": 8, 
     "ram": 8, 
-    "throughput": 580, 
+    "throughput": 2320, 
     "latency": 0.25, 
     "availability": 0.999
 }

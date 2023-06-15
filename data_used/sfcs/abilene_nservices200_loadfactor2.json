@@ -1,0 +1,6202 @@
+{
+    "name": "abilene_nservices200_loadfactor2", 
+    "network": "abilene", 
+    "sfcs": [
+        {
+            "name": "AutonomousDriving2", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving7", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving12", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving17", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving22", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving27", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving32", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving37", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving42", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving47", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving52", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving57", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving62", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving67", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving72", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "AutonomousDriving77", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "adnf"
+            ], 
+            "throughput": 20, 
+            "latency": 1, 
+            "percentage_traffic": 10, 
+            "availability": 0.99999, 
+            "n_subscribers": 2, 
+            "weight": 3, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity2", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity7", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity12", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity17", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity22", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity27", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity32", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity37", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity42", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity47", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity52", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity57", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity62", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity67", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity72", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity77", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity82", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity87", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity92", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity97", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity102", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity107", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity112", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity117", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity122", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity127", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity132", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity137", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity142", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity147", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity152", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity157", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity162", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity167", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity172", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity177", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity182", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity187", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity192", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity197", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity202", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity207", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity212", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity217", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity222", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity227", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity232", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity237", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity242", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity247", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity252", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity257", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity262", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity267", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity272", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity277", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity282", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity287", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity292", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity297", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity302", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity307", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity312", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity317", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity322", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity327", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity332", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity337", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity342", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity347", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity352", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity357", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity362", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity367", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity372", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity377", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity382", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity387", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity392", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity397", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity402", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity407", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity412", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity417", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity422", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity427", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity432", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity437", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity442", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity447", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity452", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity457", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity462", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity467", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity472", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "SmartCity477", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "ids"
+            ], 
+            "throughput": 0.2, 
+            "latency": null, 
+            "percentage_traffic": 50, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 1, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming2", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming7", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming12", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming17", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming22", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming27", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming32", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming37", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming42", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming47", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming52", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming57", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming62", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming67", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming72", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming77", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming82", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming87", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming92", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming97", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming102", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming107", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming112", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming117", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming122", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming127", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming132", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming137", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming142", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming147", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming152", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming157", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming162", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming167", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming172", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming177", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming182", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming187", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming192", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming197", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming202", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming207", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming212", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming217", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming222", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming227", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming232", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming237", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming242", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming247", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming252", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming257", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming262", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming267", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming272", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming277", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming282", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming287", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming292", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming297", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming302", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming307", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming312", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming317", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming322", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming327", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming332", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming337", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming342", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming347", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming352", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming357", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming362", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming367", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming372", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming377", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming382", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming387", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming392", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming397", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming402", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming407", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming412", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming417", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming422", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming427", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming432", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 16, 
+                "description": "STTLngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }, 
+        {
+            "name": "UHDStreaming437", 
+            "vnfs": [
+                "nat", 
+                "fw", 
+                "tm", 
+                "voc", 
+                "ids"
+            ], 
+            "throughput": 400, 
+            "latency": 100, 
+            "percentage_traffic": 40, 
+            "availability": null, 
+            "n_subscribers": 2, 
+            "weight": 2, 
+            "source": {
+                "id": 14, 
+                "description": "NYCMngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }, 
+            "sink": {
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
+                "type": "Node", 
+                "cpu": 40, 
+                "ram": 40, 
+                "cost": 1.0, 
+                "availability": 0.9999, 
+                "handles_requests": true
+            }
+        }
+    ]
+}

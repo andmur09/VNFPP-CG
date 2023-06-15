@@ -22,10 +22,10 @@ def solve_case(topology, vnfs, service_requests, results_dir, filename, verbose 
 
     # # # Solves using heuristic.
     # try:
-    heur = ColumnGeneration(topology, vnfs, service_requests, weights = [1, 0], verbose = verbose, name = filename + "_greedy")
-    heur.optimise(use_heuristic=True, max_iterations = 0)
-    heur.parse_solution
-    heur.save_as_json(filename = results_dir + filename + "_greedy")
+    # heur = ColumnGeneration(topology, vnfs, service_requests, weights = [1, 0], verbose = verbose, name = filename + "_greedy")
+    # heur.optimise(use_heuristic=True, max_iterations = 0)
+    # heur.parse_solution
+    # heur.save_as_json(filename = results_dir + filename + "_greedy")
     # except:
     #     pass
     
@@ -81,8 +81,8 @@ if __name__ == "__main__":
     network_file = "data_used/networks/nobeleu"
     vnfs_dir = "data_used/vnfs/"
     sfcs_dir = "data_used/sfcs/"
-    results_dir = "data_used/results/"
-    cases = ["nobeleu_nservices700_loadfactor1.json", "nobeleu_nservices700_loadfactor2.json", "nobeleu_nservices700_loadfactor3.json","nobeleu_nservices700_loadfactor4.json", "nobeleu_nservices700_loadfactor5.json"]
+    results_dir = "data_used/results_backup/"
+    cases = ["nobeleu_nservices700_loadfactor5.json"]
     
     # Loads the network
     network = Network()

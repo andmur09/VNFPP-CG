@@ -1,0 +1,13 @@
+{
+    "name": "SmartCity", 
+    "vnfs": [
+        "nat", 
+        "fw",  
+        "ids"
+    ], 
+    "throughput": 0.1, 
+    "latency": null, 
+    "percentage_traffic": 50, 
+    "availability": null,
+    "weight": 1
+}

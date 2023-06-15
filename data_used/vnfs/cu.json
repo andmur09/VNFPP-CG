@@ -1,8 +1,0 @@
-{
-    "name": "cu", 
-    "cpu": 48, 
-    "ram": 48, 
-    "throughput": 50000, 
-    "latency": 1, 
-    "availability": 0.999
-}

@@ -1,177 +1,289 @@
 {
-    "name": "TestNetwork", 
+    "name": "abilene", 
     "locations": [
         {
             "id": 0, 
-            "description": "SNVAng", 
-            "type": "Node", 
-            "cpu": 100, 
-            "ram": 100, 
-            "cost": 1.0, 
-            "availability": 0.9999
+            "description": "ATLAM5Switch", 
+            "type": "Switch", 
+            "handles_requests": true
         }, 
         {
             "id": 1, 
-            "description": "CHINng", 
-            "type": "Node", 
-            "cpu": 100, 
-            "ram": 100, 
-            "cost": 1.0, 
-            "availability": 0.9999
+            "description": "ATLAngGateway", 
+            "type": "Switch", 
+            "handles_requests": true
         }, 
         {
             "id": 2, 
-            "description": "NYCMng", 
+            "description": "ATLAngCoreNode1", 
             "type": "Node", 
             "cpu": 100, 
             "ram": 100, 
             "cost": 1.0, 
-            "availability": 0.9999
+            "availability": 0.9999, 
+            "handles_requests": false
         }, 
         {
             "id": 3, 
-            "description": "IPLSng", 
+            "description": "ATLAngCoreNode2", 
             "type": "Node", 
             "cpu": 100, 
             "ram": 100, 
             "cost": 1.0, 
-            "availability": 0.9999
+            "availability": 0.9999, 
+            "handles_requests": false
         }, 
         {
             "id": 4, 
-            "description": "STTLng", 
+            "description": "ATLAngCoreNode3", 
             "type": "Node", 
             "cpu": 100, 
             "ram": 100, 
             "cost": 1.0, 
-            "availability": 0.9999
+            "availability": 0.9999, 
+            "handles_requests": false
         }, 
         {
             "id": 5, 
-            "description": "ATLAM5", 
-            "type": "Switch"
+            "description": "CHINngEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
         }, 
         {
             "id": 6, 
-            "description": "HSTNng", 
-            "type": "Switch"
+            "description": "DNVRngSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
         }, 
         {
             "id": 7, 
-            "description": "WASHng", 
-            "type": "Switch"
+            "description": "HSTNngEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
         }, 
         {
             "id": 8, 
-            "description": "ATLAng", 
-            "type": "Switch"
+            "description": "IPLSngGateway", 
+            "type": "Switch", 
+            "handles_requests": true
         }, 
         {
             "id": 9, 
-            "description": "DNVRng", 
-            "type": "Switch"
+            "description": "IPLSngCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
         }, 
         {
             "id": 10, 
-            "description": "KSCYng", 
-            "type": "Switch"
+            "description": "IPLSngCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
         }, 
         {
             "id": 11, 
-            "description": "LOSAng", 
-            "type": "Switch"
+            "description": "IPLSngCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 12, 
+            "description": "KSCYngEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 13, 
+            "description": "LOSAngSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 14, 
+            "description": "NYCMngEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 15, 
+            "description": "SNVAngSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 16, 
+            "description": "STTLngEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 17, 
+            "description": "WASHngEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
         }
     ], 
     "links": [
         {
+            "source": 1, 
+            "sink": 2, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 1, 
+            "sink": 3, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 1, 
+            "sink": 4, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 8, 
+            "sink": 9, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 8, 
+            "sink": 10, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 8, 
+            "sink": 11, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 1, 
+            "sink": 0, 
+            "bandwidth": 100000.0, 
+            "latency": 0.11630483891655007
+        }, 
+        {
+            "source": 7, 
+            "sink": 1, 
+            "bandwidth": 10000.0, 
+            "latency": 0.957798670653669
+        }, 
+        {
+            "source": 8, 
+            "sink": 1, 
+            "bandwidth": 10000.0, 
+            "latency": 0.460110881092131
+        }, 
+        {
+            "source": 17, 
+            "sink": 1, 
+            "bandwidth": 40000.0, 
+            "latency": 0.8253697149499597
+        }, 
+        {
             "source": 8, 
             "sink": 5, 
-            "bandwidth": 9920.0, 
-            "latency": 1.3451835897006728
+            "bandwidth": 100000.0, 
+            "latency": 0.21764655616688683
         }, 
         {
-            "source": 6, 
-            "sink": 8, 
-            "bandwidth": 9920.0, 
-            "latency": 11.077914435915138
+            "source": 14, 
+            "sink": 5, 
+            "bandwidth": 10000.0, 
+            "latency": 1.1836682085286299
         }, 
         {
-            "source": 3, 
-            "sink": 8, 
-            "bandwidth": 2480.0, 
-            "latency": 5.3216496618162505
-        }, 
-        {
-            "source": 7, 
-            "sink": 8, 
-            "bandwidth": 9920.0, 
-            "latency": 9.546239058748371
-        }, 
-        {
-            "source": 3, 
-            "sink": 1, 
-            "bandwidth": 9920.0, 
-            "latency": 2.5173034796998492
-        }, 
-        {
-            "source": 2, 
-            "sink": 1, 
-            "bandwidth": 9920.0, 
-            "latency": 13.690325050925555
-        }, 
-        {
-            "source": 10, 
-            "sink": 9, 
-            "bandwidth": 9920.0, 
-            "latency": 8.59147379750715
-        }, 
-        {
-            "source": 0, 
-            "sink": 9, 
-            "bandwidth": 9920.0, 
-            "latency": 17.354735660429984
-        }, 
-        {
-            "source": 4, 
-            "sink": 9, 
-            "bandwidth": 9920.0, 
-            "latency": 18.606786396366243
-        }, 
-        {
-            "source": 10, 
+            "source": 12, 
             "sink": 6, 
-            "bandwidth": 9920.0, 
-            "latency": 9.254817315386028
+            "bandwidth": 40000.0, 
+            "latency": 0.7428205218420604
         }, 
         {
-            "source": 11, 
+            "source": 15, 
             "sink": 6, 
-            "bandwidth": 9920.0, 
-            "latency": 23.132031345073372
+            "bandwidth": 100000.0, 
+            "latency": 1.5004938737579716
         }, 
         {
-            "source": 10, 
-            "sink": 3, 
-            "bandwidth": 9920.0, 
-            "latency": 10.469247337022129
+            "source": 16, 
+            "sink": 6, 
+            "bandwidth": 40000.0, 
+            "latency": 1.608746427738962
         }, 
         {
-            "source": 0, 
-            "sink": 11, 
-            "bandwidth": 9920.0, 
-            "latency": 5.038040774289154
+            "source": 12, 
+            "sink": 7, 
+            "bandwidth": 40000.0, 
+            "latency": 0.8001733334463171
         }, 
         {
-            "source": 7, 
-            "sink": 2, 
-            "bandwidth": 9920.0, 
-            "latency": 3.5946423666580487
+            "source": 13, 
+            "sink": 7, 
+            "bandwidth": 10000.0, 
+            "latency": 2.0
         }, 
         {
-            "source": 4, 
-            "sink": 0, 
-            "bandwidth": 9920.0, 
-            "latency": 10.217937015043692
+            "source": 12, 
+            "sink": 8, 
+            "bandwidth": 100000.0, 
+            "latency": 0.9051731930366638
+        }, 
+        {
+            "source": 15, 
+            "sink": 13, 
+            "bandwidth": 40000.0, 
+            "latency": 0.4355900006474917
+        }, 
+        {
+            "source": 17, 
+            "sink": 14, 
+            "bandwidth": 40000.0, 
+            "latency": 0.31079348916960814
+        }, 
+        {
+            "source": 16, 
+            "sink": 15, 
+            "bandwidth": 10000.0, 
+            "latency": 0.8834448529501836
         }
     ]
 }

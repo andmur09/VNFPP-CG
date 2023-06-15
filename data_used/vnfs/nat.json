@@ -2,7 +2,7 @@
     "name": "nat", 
     "cpu": 16, 
     "ram": 16, 
-    "throughput": 400, 
+    "throughput": 3200, 
     "latency": 0.1, 
     "availability": 0.999
 }

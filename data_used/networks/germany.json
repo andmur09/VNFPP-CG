@@ -1,0 +1,1435 @@
+{
+    "name": "germany", 
+    "locations": [
+        {
+            "id": 0, 
+            "description": "AachenEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 1, 
+            "description": "AugsburgEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 2, 
+            "description": "BayreuthEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 3, 
+            "description": "BerlinEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 4, 
+            "description": "BielefeldSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 5, 
+            "description": "BraunschweigGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 6, 
+            "description": "BraunschweigCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 7, 
+            "description": "BraunschweigCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 8, 
+            "description": "BraunschweigCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 9, 
+            "description": "BremenEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 10, 
+            "description": "BremerhavenEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 11, 
+            "description": "ChemnitzSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 12, 
+            "description": "DarmstadtEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 13, 
+            "description": "DortmundGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 14, 
+            "description": "DortmundCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 15, 
+            "description": "DortmundCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 16, 
+            "description": "DortmundCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 17, 
+            "description": "DresdenSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 18, 
+            "description": "DuesseldorfEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 19, 
+            "description": "ErfurtEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 20, 
+            "description": "EssenEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 21, 
+            "description": "FlensburgEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 22, 
+            "description": "FrankfurtGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 23, 
+            "description": "FrankfurtCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 24, 
+            "description": "FrankfurtCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 25, 
+            "description": "FrankfurtCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 26, 
+            "description": "FreiburgEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 27, 
+            "description": "FuldaGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 28, 
+            "description": "FuldaCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 29, 
+            "description": "FuldaCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 30, 
+            "description": "FuldaCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 31, 
+            "description": "GiessenGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 32, 
+            "description": "GiessenCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 33, 
+            "description": "GiessenCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 34, 
+            "description": "GiessenCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 35, 
+            "description": "GreifswaldSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 36, 
+            "description": "HamburgSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 37, 
+            "description": "HannoverEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 38, 
+            "description": "KaiserslauternEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 39, 
+            "description": "KarlsruheGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 40, 
+            "description": "KarlsruheCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 41, 
+            "description": "KarlsruheCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 42, 
+            "description": "KarlsruheCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 43, 
+            "description": "KasselGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 44, 
+            "description": "KasselCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 45, 
+            "description": "KasselCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 46, 
+            "description": "KasselCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 47, 
+            "description": "KemptenEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 48, 
+            "description": "KielEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 49, 
+            "description": "KoblenzEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 50, 
+            "description": "KoelnSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 51, 
+            "description": "KonstanzEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 52, 
+            "description": "LeipzigSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 53, 
+            "description": "MagdeburgEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 54, 
+            "description": "MannheimSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 55, 
+            "description": "MuenchenEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 56, 
+            "description": "MuensterEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 57, 
+            "description": "NordenEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 58, 
+            "description": "NuernbergSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 59, 
+            "description": "OldenburgEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 60, 
+            "description": "OsnabrueckEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 61, 
+            "description": "PassauEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 62, 
+            "description": "RegensburgEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 63, 
+            "description": "SaarbrueckenSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 64, 
+            "description": "SchwerinEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 65, 
+            "description": "SiegenGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 66, 
+            "description": "SiegenCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 67, 
+            "description": "SiegenCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 68, 
+            "description": "SiegenCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 69, 
+            "description": "StuttgartGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 70, 
+            "description": "StuttgartCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 71, 
+            "description": "StuttgartCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 72, 
+            "description": "StuttgartCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 73, 
+            "description": "TrierEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 74, 
+            "description": "UlmEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 75, 
+            "description": "WeselEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 76, 
+            "description": "WuerzburgGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 77, 
+            "description": "WuerzburgCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 78, 
+            "description": "WuerzburgCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 79, 
+            "description": "WuerzburgCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }
+    ], 
+    "links": [
+        {
+            "source": 5, 
+            "sink": 6, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 5, 
+            "sink": 7, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 5, 
+            "sink": 8, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 13, 
+            "sink": 14, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 13, 
+            "sink": 15, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 13, 
+            "sink": 16, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 22, 
+            "sink": 23, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 22, 
+            "sink": 24, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 22, 
+            "sink": 25, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 27, 
+            "sink": 28, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 27, 
+            "sink": 29, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 27, 
+            "sink": 30, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 31, 
+            "sink": 32, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 31, 
+            "sink": 33, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 31, 
+            "sink": 34, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 39, 
+            "sink": 40, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 39, 
+            "sink": 41, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 39, 
+            "sink": 42, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 43, 
+            "sink": 44, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 43, 
+            "sink": 45, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 43, 
+            "sink": 46, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 65, 
+            "sink": 66, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 65, 
+            "sink": 67, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 65, 
+            "sink": 68, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 69, 
+            "sink": 70, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 69, 
+            "sink": 71, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 69, 
+            "sink": 72, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 76, 
+            "sink": 77, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 76, 
+            "sink": 78, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 76, 
+            "sink": 79, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 18, 
+            "sink": 20, 
+            "bandwidth": 40000.0, 
+            "latency": 0.032649655434629075
+        }, 
+        {
+            "source": 13, 
+            "sink": 20, 
+            "bandwidth": 40000.0, 
+            "latency": 0.04328972164382675
+        }, 
+        {
+            "source": 75, 
+            "sink": 20, 
+            "bandwidth": 40000.0, 
+            "latency": 0.06537583651472456
+        }, 
+        {
+            "source": 50, 
+            "sink": 18, 
+            "bandwidth": 40000.0, 
+            "latency": 0.032572994949804895
+        }, 
+        {
+            "source": 0, 
+            "sink": 50, 
+            "bandwidth": 40000.0, 
+            "latency": 0.08492938243034621
+        }, 
+        {
+            "source": 49, 
+            "sink": 50, 
+            "bandwidth": 40000.0, 
+            "latency": 0.0845044377532919
+        }, 
+        {
+            "source": 56, 
+            "sink": 13, 
+            "bandwidth": 40000.0, 
+            "latency": 0.048383881613611845
+        }, 
+        {
+            "source": 65, 
+            "sink": 13, 
+            "bandwidth": 40000.0, 
+            "latency": 0.08345058418010032
+        }, 
+        {
+            "source": 43, 
+            "sink": 13, 
+            "bandwidth": 40000.0, 
+            "latency": 0.2068743580050461
+        }, 
+        {
+            "source": 75, 
+            "sink": 0, 
+            "bandwidth": 40000.0, 
+            "latency": 0.07111961754677842
+        }, 
+        {
+            "source": 73, 
+            "sink": 0, 
+            "bandwidth": 40000.0, 
+            "latency": 0.11957006314291196
+        }, 
+        {
+            "source": 4, 
+            "sink": 56, 
+            "bandwidth": 40000.0, 
+            "latency": 0.09027181176868009
+        }, 
+        {
+            "source": 60, 
+            "sink": 56, 
+            "bandwidth": 40000.0, 
+            "latency": 0.053009433122794394
+        }, 
+        {
+            "source": 65, 
+            "sink": 49, 
+            "bandwidth": 40000.0, 
+            "latency": 0.07212489168102769
+        }, 
+        {
+            "source": 22, 
+            "sink": 49, 
+            "bandwidth": 40000.0, 
+            "latency": 0.12224974437601102
+        }, 
+        {
+            "source": 38, 
+            "sink": 49, 
+            "bandwidth": 40000.0, 
+            "latency": 0.09968951800465273
+        }, 
+        {
+            "source": 73, 
+            "sink": 49, 
+            "bandwidth": 40000.0, 
+            "latency": 0.10621205204683684
+        }, 
+        {
+            "source": 4, 
+            "sink": 65, 
+            "bandwidth": 40000.0, 
+            "latency": 0.12238463955905604
+        }, 
+        {
+            "source": 31, 
+            "sink": 65, 
+            "bandwidth": 40000.0, 
+            "latency": 0.07247068372797363
+        }, 
+        {
+            "source": 59, 
+            "sink": 75, 
+            "bandwidth": 40000.0, 
+            "latency": 0.25187298386289864
+        }, 
+        {
+            "source": 57, 
+            "sink": 75, 
+            "bandwidth": 40000.0, 
+            "latency": 0.23642546394159836
+        }, 
+        {
+            "source": 52, 
+            "sink": 3, 
+            "bandwidth": 40000.0, 
+            "latency": 0.15532224567009065
+        }, 
+        {
+            "source": 17, 
+            "sink": 3, 
+            "bandwidth": 40000.0, 
+            "latency": 0.15282997088267752
+        }, 
+        {
+            "source": 64, 
+            "sink": 3, 
+            "bandwidth": 40000.0, 
+            "latency": 0.2196474447836804
+        }, 
+        {
+            "source": 53, 
+            "sink": 3, 
+            "bandwidth": 40000.0, 
+            "latency": 0.17907819521091903
+        }, 
+        {
+            "source": 35, 
+            "sink": 3, 
+            "bandwidth": 40000.0, 
+            "latency": 0.15700318468107588
+        }, 
+        {
+            "source": 17, 
+            "sink": 52, 
+            "bandwidth": 40000.0, 
+            "latency": 0.13851353724455961
+        }, 
+        {
+            "source": 19, 
+            "sink": 52, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1387515765676199
+        }, 
+        {
+            "source": 53, 
+            "sink": 52, 
+            "bandwidth": 40000.0, 
+            "latency": 0.10897706180660204
+        }, 
+        {
+            "source": 2, 
+            "sink": 52, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1616230181626371
+        }, 
+        {
+            "source": 19, 
+            "sink": 17, 
+            "bandwidth": 40000.0, 
+            "latency": 0.2690464643885886
+        }, 
+        {
+            "source": 11, 
+            "sink": 17, 
+            "bandwidth": 40000.0, 
+            "latency": 0.08222530024268687
+        }, 
+        {
+            "source": 11, 
+            "sink": 19, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1895178091895324
+        }, 
+        {
+            "source": 43, 
+            "sink": 19, 
+            "bandwidth": 40000.0, 
+            "latency": 0.15673225577397912
+        }, 
+        {
+            "source": 76, 
+            "sink": 19, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1607762420259905
+        }, 
+        {
+            "source": 2, 
+            "sink": 11, 
+            "bandwidth": 40000.0, 
+            "latency": 0.16197839362087793
+        }, 
+        {
+            "source": 53, 
+            "sink": 64, 
+            "bandwidth": 40000.0, 
+            "latency": 0.14227438279606036
+        }, 
+        {
+            "source": 35, 
+            "sink": 64, 
+            "bandwidth": 40000.0, 
+            "latency": 0.20233882474700723
+        }, 
+        {
+            "source": 36, 
+            "sink": 64, 
+            "bandwidth": 40000.0, 
+            "latency": 0.14601369798755176
+        }, 
+        {
+            "source": 48, 
+            "sink": 64, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1546932448428182
+        }, 
+        {
+            "source": 5, 
+            "sink": 53, 
+            "bandwidth": 40000.0, 
+            "latency": 0.10989540481748997
+        }, 
+        {
+            "source": 48, 
+            "sink": 36, 
+            "bandwidth": 40000.0, 
+            "latency": 0.07808969202141886
+        }, 
+        {
+            "source": 37, 
+            "sink": 36, 
+            "bandwidth": 40000.0, 
+            "latency": 0.12202458768625257
+        }, 
+        {
+            "source": 5, 
+            "sink": 36, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1406307221058044
+        }, 
+        {
+            "source": 59, 
+            "sink": 9, 
+            "bandwidth": 40000.0, 
+            "latency": 0.06399999999999988
+        }, 
+        {
+            "source": 10, 
+            "sink": 9, 
+            "bandwidth": 40000.0, 
+            "latency": 0.05077400909914437
+        }, 
+        {
+            "source": 37, 
+            "sink": 9, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1135693620656556
+        }, 
+        {
+            "source": 21, 
+            "sink": 48, 
+            "bandwidth": 40000.0, 
+            "latency": 0.07961155694998057
+        }, 
+        {
+            "source": 57, 
+            "sink": 59, 
+            "bandwidth": 40000.0, 
+            "latency": 0.11135977729862807
+        }, 
+        {
+            "source": 60, 
+            "sink": 59, 
+            "bandwidth": 40000.0, 
+            "latency": 0.08492938243034609
+        }, 
+        {
+            "source": 10, 
+            "sink": 21, 
+            "bandwidth": 40000.0, 
+            "latency": 0.15065855435387693
+        }, 
+        {
+            "source": 4, 
+            "sink": 37, 
+            "bandwidth": 40000.0, 
+            "latency": 0.12664912159190067
+        }, 
+        {
+            "source": 5, 
+            "sink": 37, 
+            "bandwidth": 40000.0, 
+            "latency": 0.08360023923410748
+        }, 
+        {
+            "source": 60, 
+            "sink": 37, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1692955994702758
+        }, 
+        {
+            "source": 5, 
+            "sink": 4, 
+            "bandwidth": 40000.0, 
+            "latency": 0.2064000968992022
+        }, 
+        {
+            "source": 43, 
+            "sink": 5, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1415344481036332
+        }, 
+        {
+            "source": 31, 
+            "sink": 43, 
+            "bandwidth": 40000.0, 
+            "latency": 0.11260994627474075
+        }, 
+        {
+            "source": 27, 
+            "sink": 43, 
+            "bandwidth": 40000.0, 
+            "latency": 0.07810249675906634
+        }, 
+        {
+            "source": 12, 
+            "sink": 22, 
+            "bandwidth": 40000.0, 
+            "latency": 0.023769728648009136
+        }, 
+        {
+            "source": 31, 
+            "sink": 22, 
+            "bandwidth": 40000.0, 
+            "latency": 0.04517742799230637
+        }, 
+        {
+            "source": 27, 
+            "sink": 22, 
+            "bandwidth": 40000.0, 
+            "latency": 0.10742439201596637
+        }, 
+        {
+            "source": 54, 
+            "sink": 12, 
+            "bandwidth": 40000.0, 
+            "latency": 0.04308131845707591
+        }, 
+        {
+            "source": 38, 
+            "sink": 12, 
+            "bandwidth": 40000.0, 
+            "latency": 0.10107423014794628
+        }, 
+        {
+            "source": 39, 
+            "sink": 54, 
+            "bandwidth": 40000.0, 
+            "latency": 0.04866210024238615
+        }, 
+        {
+            "source": 63, 
+            "sink": 38, 
+            "bandwidth": 40000.0, 
+            "latency": 0.07472616676907767
+        }, 
+        {
+            "source": 39, 
+            "sink": 38, 
+            "bandwidth": 40000.0, 
+            "latency": 0.0782304288624319
+        }, 
+        {
+            "source": 27, 
+            "sink": 31, 
+            "bandwidth": 40000.0, 
+            "latency": 0.10200490184299965
+        }, 
+        {
+            "source": 63, 
+            "sink": 73, 
+            "bandwidth": 40000.0, 
+            "latency": 0.06268173577685957
+        }, 
+        {
+            "source": 76, 
+            "sink": 27, 
+            "bandwidth": 40000.0, 
+            "latency": 0.0828733974204028
+        }, 
+        {
+            "source": 39, 
+            "sink": 63, 
+            "bandwidth": 40000.0, 
+            "latency": 0.13974262055650735
+        }, 
+        {
+            "source": 39, 
+            "sink": 69, 
+            "bandwidth": 40000.0, 
+            "latency": 0.07409453421137062
+        }, 
+        {
+            "source": 74, 
+            "sink": 69, 
+            "bandwidth": 40000.0, 
+            "latency": 0.09527329111561139
+        }, 
+        {
+            "source": 51, 
+            "sink": 69, 
+            "bandwidth": 40000.0, 
+            "latency": 0.10829589096544762
+        }, 
+        {
+            "source": 76, 
+            "sink": 69, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1355912976558599
+        }, 
+        {
+            "source": 26, 
+            "sink": 39, 
+            "bandwidth": 40000.0, 
+            "latency": 0.11970797801316346
+        }, 
+        {
+            "source": 1, 
+            "sink": 74, 
+            "bandwidth": 40000.0, 
+            "latency": 0.09126883367283711
+        }, 
+        {
+            "source": 26, 
+            "sink": 51, 
+            "bandwidth": 40000.0, 
+            "latency": 0.14166156853571826
+        }, 
+        {
+            "source": 47, 
+            "sink": 51, 
+            "bandwidth": 40000.0, 
+            "latency": 0.11415778554264276
+        }, 
+        {
+            "source": 1, 
+            "sink": 55, 
+            "bandwidth": 40000.0, 
+            "latency": 0.06937578828380979
+        }, 
+        {
+            "source": 47, 
+            "sink": 55, 
+            "bandwidth": 40000.0, 
+            "latency": 0.1321892582625381
+        }, 
+        {
+            "source": 61, 
+            "sink": 55, 
+            "bandwidth": 40000.0, 
+            "latency": 0.19361043360315075
+        }, 
+        {
+            "source": 58, 
+            "sink": 55, 
+            "bandwidth": 40000.0, 
+            "latency": 0.15192103211866376
+        }, 
+        {
+            "source": 62, 
+            "sink": 55, 
+            "bandwidth": 40000.0, 
+            "latency": 0.09964436762808032
+        }, 
+        {
+            "source": 76, 
+            "sink": 1, 
+            "bandwidth": 40000.0, 
+            "latency": 0.17226142922894863
+        }, 
+        {
+            "source": 62, 
+            "sink": 61, 
+            "bandwidth": 40000.0, 
+            "latency": 0.14358969322343448
+        }, 
+        {
+            "source": 2, 
+            "sink": 58, 
+            "bandwidth": 40000.0, 
+            "latency": 0.06657326790837297
+        }, 
+        {
+            "source": 76, 
+            "sink": 58, 
+            "bandwidth": 40000.0, 
+            "latency": 0.10806016842481775
+        }, 
+        {
+            "source": 62, 
+            "sink": 58, 
+            "bandwidth": 40000.0, 
+            "latency": 0.12035364556173617
+        }
+    ]
+}

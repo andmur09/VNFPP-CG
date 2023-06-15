@@ -1,0 +1,721 @@
+{
+    "name": "nobeleu", 
+    "locations": [
+        {
+            "id": 0, 
+            "description": "AmsterdamGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 1, 
+            "description": "AmsterdamCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 2, 
+            "description": "AmsterdamCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 3, 
+            "description": "AmsterdamCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 4, 
+            "description": "AthensEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 5, 
+            "description": "BarcelonaEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 6, 
+            "description": "BelgradeEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 7, 
+            "description": "BerlinGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 8, 
+            "description": "BerlinCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 9, 
+            "description": "BerlinCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 10, 
+            "description": "BerlinCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 11, 
+            "description": "BordeauxEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 12, 
+            "description": "BrusselsEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 13, 
+            "description": "BudapestEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 14, 
+            "description": "CopenhagenEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 15, 
+            "description": "DublinSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 16, 
+            "description": "FrankfurtEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 17, 
+            "description": "GlasgowSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 18, 
+            "description": "HamburgGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 19, 
+            "description": "HamburgCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 20, 
+            "description": "HamburgCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 21, 
+            "description": "HamburgCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 22, 
+            "description": "LondonEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 23, 
+            "description": "LyonEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 24, 
+            "description": "MadridSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 25, 
+            "description": "MilanGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 26, 
+            "description": "MilanCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 27, 
+            "description": "MilanCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 28, 
+            "description": "MilanCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 29, 
+            "description": "MunichSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 30, 
+            "description": "OsloEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 31, 
+            "description": "ParisSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 32, 
+            "description": "PragueSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 33, 
+            "description": "RomeSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 34, 
+            "description": "StockholmEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 35, 
+            "description": "StrasbourgEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 36, 
+            "description": "ViennaEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 37, 
+            "description": "WarsawEdgeNode", 
+            "type": "Node", 
+            "cpu": 40, 
+            "ram": 40, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": true
+        }, 
+        {
+            "id": 38, 
+            "description": "ZagrebSwitch", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 39, 
+            "description": "ZurichGateway", 
+            "type": "Switch", 
+            "handles_requests": true
+        }, 
+        {
+            "id": 40, 
+            "description": "ZurichCoreNode1", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 41, 
+            "description": "ZurichCoreNode2", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }, 
+        {
+            "id": 42, 
+            "description": "ZurichCoreNode3", 
+            "type": "Node", 
+            "cpu": 100, 
+            "ram": 100, 
+            "cost": 1.0, 
+            "availability": 0.9999, 
+            "handles_requests": false
+        }
+    ], 
+    "links": [
+        {
+            "source": 0, 
+            "sink": 1, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 0, 
+            "sink": 2, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 0, 
+            "sink": 3, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 7, 
+            "sink": 8, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 7, 
+            "sink": 9, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 7, 
+            "sink": 10, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 18, 
+            "sink": 19, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 18, 
+            "sink": 20, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 18, 
+            "sink": 21, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 25, 
+            "sink": 26, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 25, 
+            "sink": 27, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 25, 
+            "sink": 28, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 39, 
+            "sink": 40, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 39, 
+            "sink": 41, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 39, 
+            "sink": 42, 
+            "bandwidth": 1000000.0, 
+            "latency": 0
+        }, 
+        {
+            "source": 0, 
+            "sink": 12, 
+            "bandwidth": 100000.0, 
+            "latency": 0.2943017279667251
+        }, 
+        {
+            "source": 0, 
+            "sink": 17, 
+            "bandwidth": 10000.0, 
+            "latency": 1.571591162087599
+        }, 
+        {
+            "source": 0, 
+            "sink": 18, 
+            "bandwidth": 100000.0, 
+            "latency": 0.9491990970919867
+        }, 
+        {
+            "source": 0, 
+            "sink": 22, 
+            "bandwidth": 40000.0, 
+            "latency": 0.7904377930959487
+        }, 
+        {
+            "source": 4, 
+            "sink": 6, 
+            "bandwidth": 10000.0, 
+            "latency": 1.2843641484434984
+        }, 
+        {
+            "source": 4, 
+            "sink": 33, 
+            "bandwidth": 40000.0, 
+            "latency": 2.0
+        }, 
+        {
+            "source": 5, 
+            "sink": 23, 
+            "bandwidth": 100000.0, 
+            "latency": 0.8223400939897647
+        }, 
+        {
+            "source": 5, 
+            "sink": 24, 
+            "bandwidth": 100000.0, 
+            "latency": 0.9441096834544348
+        }, 
+        {
+            "source": 6, 
+            "sink": 13, 
+            "bandwidth": 10000.0, 
+            "latency": 0.5210053130161029
+        }, 
+        {
+            "source": 6, 
+            "sink": 38, 
+            "bandwidth": 100000.0, 
+            "latency": 0.8107854587422003
+        }, 
+        {
+            "source": 7, 
+            "sink": 14, 
+            "bandwidth": 40000.0, 
+            "latency": 0.5461795970088784
+        }, 
+        {
+            "source": 7, 
+            "sink": 18, 
+            "bandwidth": 10000.0, 
+            "latency": 0.5703844014159981
+        }, 
+        {
+            "source": 7, 
+            "sink": 29, 
+            "bandwidth": 10000.0, 
+            "latency": 0.7854442324824953
+        }, 
+        {
+            "source": 7, 
+            "sink": 32, 
+            "bandwidth": 100000.0, 
+            "latency": 0.42283971852217517
+        }, 
+        {
+            "source": 7, 
+            "sink": 37, 
+            "bandwidth": 10000.0, 
+            "latency": 1.250105064863597
+        }, 
+        {
+            "source": 11, 
+            "sink": 24, 
+            "bandwidth": 40000.0, 
+            "latency": 0.8892278030492988
+        }, 
+        {
+            "source": 11, 
+            "sink": 31, 
+            "bandwidth": 10000.0, 
+            "latency": 0.8033232666231187
+        }, 
+        {
+            "source": 12, 
+            "sink": 16, 
+            "bandwidth": 10000.0, 
+            "latency": 0.7114306165932284
+        }, 
+        {
+            "source": 12, 
+            "sink": 31, 
+            "bandwidth": 40000.0, 
+            "latency": 0.47659394227381735
+        }, 
+        {
+            "source": 13, 
+            "sink": 32, 
+            "bandwidth": 40000.0, 
+            "latency": 0.9324093328483138
+        }, 
+        {
+            "source": 13, 
+            "sink": 37, 
+            "bandwidth": 100000.0, 
+            "latency": 0.863289335577615
+        }, 
+        {
+            "source": 14, 
+            "sink": 30, 
+            "bandwidth": 10000.0, 
+            "latency": 0.7677521186188575
+        }, 
+        {
+            "source": 15, 
+            "sink": 17, 
+            "bandwidth": 10000.0, 
+            "latency": 0.515048556470169
+        }, 
+        {
+            "source": 15, 
+            "sink": 22, 
+            "bandwidth": 10000.0, 
+            "latency": 1.0792337443570907
+        }, 
+        {
+            "source": 16, 
+            "sink": 18, 
+            "bandwidth": 40000.0, 
+            "latency": 0.6164752906224411
+        }, 
+        {
+            "source": 16, 
+            "sink": 29, 
+            "bandwidth": 10000.0, 
+            "latency": 0.6035587663767723
+        }, 
+        {
+            "source": 16, 
+            "sink": 35, 
+            "bandwidth": 100000.0, 
+            "latency": 0.33112666023723764
+        }, 
+        {
+            "source": 22, 
+            "sink": 31, 
+            "bandwidth": 100000.0, 
+            "latency": 0.6091044178880184
+        }, 
+        {
+            "source": 23, 
+            "sink": 31, 
+            "bandwidth": 10000.0, 
+            "latency": 0.6499556219292122
+        }, 
+        {
+            "source": 25, 
+            "sink": 29, 
+            "bandwidth": 40000.0, 
+            "latency": 0.6037962944325542
+        }, 
+        {
+            "source": 25, 
+            "sink": 33, 
+            "bandwidth": 40000.0, 
+            "latency": 0.832640063295606
+        }, 
+        {
+            "source": 25, 
+            "sink": 39, 
+            "bandwidth": 10000.0, 
+            "latency": 0.35472632809108695
+        }, 
+        {
+            "source": 29, 
+            "sink": 36, 
+            "bandwidth": 100000.0, 
+            "latency": 0.8264518896684729
+        }, 
+        {
+            "source": 30, 
+            "sink": 34, 
+            "bandwidth": 100000.0, 
+            "latency": 1.2850103992035784
+        }, 
+        {
+            "source": 31, 
+            "sink": 35, 
+            "bandwidth": 10000.0, 
+            "latency": 0.889479321630495
+        }, 
+        {
+            "source": 32, 
+            "sink": 36, 
+            "bandwidth": 100000.0, 
+            "latency": 0.4646380431421622
+        }, 
+        {
+            "source": 33, 
+            "sink": 38, 
+            "bandwidth": 10000.0, 
+            "latency": 0.8694709518297437
+        }, 
+        {
+            "source": 34, 
+            "sink": 37, 
+            "bandwidth": 100000.0, 
+            "latency": 1.2701639166007632
+        }, 
+        {
+            "source": 39, 
+            "sink": 23, 
+            "bandwidth": 40000.0, 
+            "latency": 0.7159351545534218
+        }, 
+        {
+            "source": 35, 
+            "sink": 39, 
+            "bandwidth": 40000.0, 
+            "latency": 0.24150664341436434
+        }, 
+        {
+            "source": 36, 
+            "sink": 38, 
+            "bandwidth": 10000.0, 
+            "latency": 0.46002305846068087
+        }
+    ]
+}

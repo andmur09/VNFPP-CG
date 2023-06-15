@@ -10,7 +10,7 @@ import random
 from itertools import product
 import json
 
-def random_sfcs(network, services, n_requests, scale_factor = 1):
+def random_sfcs(network, services, n_requests, scale_factors = [1]):
     """
     Given a number of requests, samples service types and returns list of SFC requests.
     network:        instance of Network to use.
@@ -23,8 +23,6 @@ def random_sfcs(network, services, n_requests, scale_factor = 1):
     service_probs = [s.percentage_traffic/100 for s in services]
     service_probs = [s/sum(service_probs) for s in service_probs]
     assert sum(service_probs) == 1, "Sum of probabilities for services must be one. Please modify service.percentage_traffic."
-    
-    service_requests = []
 
     # Randomly assigns service requests to service types.
     for i in range(n_requests):
@@ -32,8 +30,8 @@ def random_sfcs(network, services, n_requests, scale_factor = 1):
         n_subscribers[service_type] += 1
 
     access_points = [l for l in network.locations if l.handles_requests == True]
+    sfcs = [[] for i in range(len(scale_factors))]
 
-    service_requests = []
     for service in services:
         # This keeps track of which source/sink combinations have been used so that service chains are unique
         combinations = list(product(access_points, access_points))
@@ -43,10 +41,11 @@ def random_sfcs(network, services, n_requests, scale_factor = 1):
         for sample in samples:
             source, sink = sample[0], sample[1]
             # Adds service requests.
-            service_requests.append(Service(service.description + str(count), service.vnfs[:], scale_factor * service.throughput,
-            service.latency, service.percentage_traffic, service.availability, source = source, sink = sink, n_subscribers = scale_factor, weight = service.weight))
-            count += 1
-    return service_requests
+            for i in range(len(scale_factors)):
+                sfcs[i].append(Service(service.description + str(count), service.vnfs[:], scale_factors[i] * service.throughput,
+                service.latency, service.percentage_traffic, service.availability, source = source, sink = sink, n_subscribers = scale_factors[i], weight = service.weight))
+                count += 1
+    return sfcs
 
 if __name__ == "__main__":
     """
@@ -76,13 +75,15 @@ if __name__ == "__main__":
         service.load_from_json(service_dir + file)
         services.append(service)
 
-    for n in [700]:
-        for s in [1, 2, 3, 4, 5]:
-            sfcs = random_sfcs(network, services, n, s)
+    scale_factors = [1, 2, 3, 4, 5]
+
+    for n in [300, 400, 500, 600, 700]:
+        sfcs = random_sfcs(network, services, n, scale_factors = scale_factors)
+        for i in range(len(scale_factors)):
             sfc_dict = {}
-            name = network.description + "_nservices{}_loadfactor{}".format(n, s)
+            name = network.description + "_nservices{}_loadfactor{}".format(n, i + 1)
             sfc_dict["name"] = name
             sfc_dict["network"] = network.description
-            sfc_dict["sfcs"] = [s.to_json() for s in sfcs]
+            sfc_dict["sfcs"] = [s.to_json() for s in sfcs[i]]
             with open(output_dir + name + ".json", 'w') as fp:
                 json.dump(sfc_dict, fp, indent=4, separators=(", ", ": "))

@@ -587,7 +587,6 @@ class ColumnGeneration(object):
         self.model.optimize()
         logging.info( " Finished in time {}.".format(time() - start)) if self.verbose > 0 else None
         if self.model.status == GRB.OPTIMAL:
-            self.upper_bound = self.model.objVal
             logging.info( " Optimisation terminated successfully.") if self.verbose > 0 else None
             logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
             logging.info(' Vars:') if self.verbose > 0 else None
@@ -626,7 +625,6 @@ class ColumnGeneration(object):
         if self.model.status in [2, 9]:
             if integrality == True:
                 self.model.write(self.log_dir + "{}.sol".format(self.name))
-            self.upper_bound = self.model.objVal
             logging.info( " Optimisation terminated successfully.") if self.verbose > 0 else None
             logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
             logging.info(' Vars:') if self.verbose > 0 else None
@@ -834,15 +832,13 @@ class ColumnGeneration(object):
                         # If there is no improving paths then set the find_improving_paths flag to False for now.
                         service.find_improving_paths = False
                         logging.info(" Not an improving path.\n") if self.verbose > 0 else None
-
+                
+                # Updates the lower bound.
+                self.lower_bound = lb
+                logging.info("obj: {}, LB: {}".format(self.model.objVal, lb)) if self.verbose > 0 else None
+                
                 # If there are improving paths check whether lp is solved within lp_tolerance.
                 if terminate == False:
-                    gap = (self.model.objVal - lb)/self.model.objVal
-                    # If the new lower bound is better than the last we update it.
-                    if lb > self.lower_bound:
-                        self.lower_bound = lb
-                    logging.info("UB: {}, LB: {}".format(self.model.objVal, lb)) if self.verbose > 0 else None
-                    logging.info("LP gap is: {}\n".format(gap)) if self.verbose > 0 else None
                     if (self.model.objVal - lb)/self.model.objVal < lp_tolerance:
                         terminate = True
                     # Otherwise we don't want to check termination again on the next iteration.
@@ -935,6 +931,7 @@ class ColumnGeneration(object):
             logging.info(" SOLVING RMP\n") if self.verbose > 0 else None
             self.rmp()
             k += 1
+
         # If the lower bound has not been set and we have yet to exceed the maximum iterations, then the model terminated after
         # the first iteration and so we can set the lower bound to the current objective.
         if self.lower_bound == 1e-9 and k <= max_iterations:
@@ -959,11 +956,9 @@ class ColumnGeneration(object):
         print("Number paths {}".format(len([v for v in self.model.getVars() if "path" in v.varName])))
         self.rmp(integrality=True)
         self.upper_bound = self.model.objVal
-        
         # Prints final solution
         if self.model.status in [2,9]:
             self.status = True
-            self.parse_solution()
             logging.info( " Optimisation terminated successfully\n.") if self.verbose > 0 else None
             logging.info(' Objective: {}'.format(self.model.objVal)) if self.verbose > 0 else None
             logging.info(' Vars:') if self.verbose > 0 else None
@@ -976,6 +971,7 @@ class ColumnGeneration(object):
                 self.model.computeIIS()
                 self.model.write(self.log_dir + "{}.ilp".format(self.model.getAttr("ModelName")))
             self.status = False
+        self.parse_solution()
     
     def parse_solution(self):
         """"

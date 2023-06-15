@@ -1,0 +1,15 @@
+{
+    "name": "UHDStreaming", 
+    "vnfs": [
+        "nat", 
+        "fw", 
+        "tm", 
+        "voc", 
+        "ids"
+    ], 
+    "throughput": 200, 
+    "latency": 100, 
+    "percentage_traffic": 40, 
+    "availability": null,
+    "weight": 2
+}

@@ -1,0 +1,14 @@
+{
+    "name": "AutonomousDriving", 
+    "vnfs": [
+        "nat", 
+        "fw", 
+        "tm", 
+        "adnf"
+    ], 
+    "throughput": 10, 
+    "latency": 1, 
+    "percentage_traffic": 10, 
+    "availability": 0.99999,
+    "weight": 3
+}
