@@ -4,12 +4,20 @@ inf = 1e6
 class Link(object):
     """
     Class representing an edge (link) between two locations in the datacenter
-        \param description      String name describing link
-        \param soure            Start node in the link (instance of location class)
-        \param sink             End node in the link (instance of location class)
-        \param bandwidth        Float bandwidth of link
-        \param latency          Float latency of link
-        \param assignment_link  Boolean used for modelling service graphs. An assignment link traversal represents assignment of a vnf to a node.
+    -------------------
+    Params:
+        source:             topology.location.Location
+                                location object of source node.
+        sink:               topology.location.Location
+                                location object of sink node.
+        bandwidth:          float
+                                bandwidth of link.
+        latency:            float
+                                latency of link.
+        cost:               float
+                                cost of using link (modelled using dual variables).
+        assignment_link:    bool
+                                True is link is an assignment link between the same node in two layers of a graph, else False.
     """
 
     def __init__(self, source: Location = None, sink: Location = None, bandwidth: float = 1e6, latency: float = 0, cost = 0, assignment_link: bool = False):

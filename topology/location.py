@@ -6,9 +6,19 @@ inf = 1e9
 class Location(object):
     id_iter = itertools.count()
     """
-    represents a location in the datacenter.
+    Represents a location in the network.
+    -------------------
+    Params:
+        id:                 int
+                                unique identifier for node.
+        description:        str
+                                description of node.
+        type:               str
+                                can be "node" if it has NFV functionality, or "switch" if it doesn't
+        handles_requests    bool
+                                used to determine if SFC request can originate here.
     """
-    def __init__(self, description: str = None, type: "str" = None, handles_requests: bool = True):
+    def __init__(self, description: str = None, type: str = None, handles_requests: bool = True):
         self.id = next(Location.id_iter)
         self.description = description
         self.type = type
@@ -55,11 +65,16 @@ class Switch(Location):
 class Node(Location):
     """
     Represents a node location.
-    cpu: CPU available on the node.
-    ram: RAM available on the node.
-    availability: Availability of node, MTTF/(MTTR+MTTF)
-    cost: Node rental cost.
-    active: Whether the node is active (False to simulate node failure).
+    -------------------
+    Params:
+        cpu:                int
+                                CPU of node.
+        rab:                float
+                                RAM of node.
+        type:               cost
+                                cost of node.
+        availability:       float
+                                availability of node.
     """
     def __init__(self, description: str = None, cpu: int = 1, ram: float = float(1), cost: float = float(1), availability: float = float(1), active: bool = True, handles_requests: bool = True):
         super().__init__(description, handles_requests = handles_requests)

@@ -12,11 +12,16 @@ eps = 1e-6
 
 class Network(object):
     """
-    Class representing a network
-        \param description    String name describing network
-        \param locations      List of locations in the network (vertices)
-        \param links          List of links in the network (edges)
-        \param netx           Networkx graph object representation.
+    -------------------
+    Params:
+        description:        str
+                                description of network
+        locations:          list[topology.location.Location]
+                                list of locations in the network.
+        links:              list[topology.link.Link]
+                                list of links in the network.
+        netx:               networkx.Graph
+                                networkx graph object representation.
     """
     def __init__(self, description: str = None, locations: list = None, links: list = None, netx = None):
         self.description = description

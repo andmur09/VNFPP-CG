@@ -22,11 +22,31 @@ env.start()
 
 class ColumnGeneration(object):
     """
-    Description:    Class representing the datacenter optimisation problem via column generation.
-    Parameters:     datacenter - Instance of Datacenter class to be optimised.
-                    services - list of Service class representing the services to be hosted in the datacenter.
-                    verbose - int verbosity of output.
-                    results - string filename to use to log output.
+    Description:    Class representing the  VNF-PRP optimisation problem via column generation.
+    --------------------------------------
+    Params:
+        network:            topology.network.Network
+                                isntance of network to use in optimisation.
+        vnfs:               list[service_class.vnf.VNF]
+                                list of vnfs to use.
+        services:           list[service_class.service.Service]
+                                list of SFC requests to use.
+        verbose:            int
+                                verbosity of output.
+        logdir:             str
+                                string directory to save log to.
+        logfile:            str
+                                name of log file.
+        max_replicas:       int
+                                maximum number of replicas to satisfy availability.
+        node_availability:  float
+                                availability for each NFV node.
+        min_flow_param:     float
+                                parameter controlling minimum flow through a given path.
+        weights:            float
+                                weights to control tradeoff between SLA and operational cost.
+        name:               float
+                                name to give to model. defaults to None.
     """
     def __init__(self, network: Network, vnfs: list, services: list, verbose: int = 1, log_dir: str = os.getcwd(), logfile: str ='log.txt', max_replicas: int = 3,
                 node_availability: float = 0.9999, min_flow_param: int = 10, weights = [1, 0], name = None) -> None:
@@ -610,7 +630,7 @@ class ColumnGeneration(object):
 
     def optimise(self, max_iterations: int = 500, use_heuristic = False, cg_tolerance = 1e-4, lp_tolerance = 0.01):
         """
-        Finds schedule that optimises probability of success using column generation
+        Solves the VNF-PRP using column generation.
         """
 
         # Initialises runtime.

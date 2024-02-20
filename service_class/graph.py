@@ -6,7 +6,13 @@ from topology.location import Node
 
 class multi_layered_graph(Network):
     """
-    This class is used to make a multi-layered graph for the compact model. This is similar to service_graph but not specific to any service.
+    This class is used to make a multi-layered graph. This is similar to service_graph but not specific to any service.
+    -------------
+    Params:
+        network:     topology.network.Network
+                        Network to use
+        n_layers:   int
+                        Number of layers in the multi-layered graph. 
     """
     def __init__(self, name, locations, links, network, n_layers: int):
         super().__init__(name, locations, links)
@@ -39,7 +45,7 @@ class multi_layered_graph(Network):
     
     def save_as_dot(self, filename = None):
         """
-        saves the datacenter topology as a DOT to filename.dot
+        saves the topology as a DOT to filename.dot
         """
         if filename != None:
             if filename[-5:] != ".dot":
@@ -59,7 +65,17 @@ class multi_layered_graph(Network):
 
 class service_graph(Network):
     """
-    This class is used to make a service graph. Service graph can be used for optimising datacenter.
+    This class is used to make a service graph for the CGP.
+    -------------
+    Params:
+        network:     topology.network.Network
+                        network to use
+        service:    service_class.service.Service
+                        SFC to use
+        n_layers:   int
+                        number of layers in the multi-layered graph. 
+        paths:      list[service_graph.graph.service_path]
+                        list of paths enumerated so far.
     """
     def __init__(self, name, locations, links, network, service, n_layers: int):
         super().__init__(name, locations, links)
@@ -101,7 +117,7 @@ class service_graph(Network):
     
     def save_as_dot(self, filename = None):
         """
-        saves the datacenter topology as a DOT to filename.dot
+        saves the topology as a DOT to filename.dot
         """
         if filename != None:
             if filename[-5:] != ".dot":
@@ -121,7 +137,21 @@ class service_graph(Network):
 
 class service_path(Network):
     """
-    This class represents a path on the above graph class.
+    Class used to store paths on the service_graph.
+    -------------
+    Params:
+        description:        str
+                                string describing the path.
+        network:            topology.network.Network
+                                network to use
+        service:            service_class.service.Service
+                                SFC to use
+        n_layers:           int
+                                number of layers in the multi-layered graph. 
+        latency_violated:   bool
+                                True if the path violates the SFC latency constraint, else False.
+        flow:               float
+                                fraction of SFC flow routed down path.
     """
     id_iter = itertools.count()
     def __init__(self, description, locations, links, network, service, n_layers: int, latency_violated: bool = False):

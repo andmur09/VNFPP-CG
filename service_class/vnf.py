@@ -5,13 +5,21 @@ inf = 1e9
 class VNF(object):
     id_iter = itertools.count()
     """
-    Class representing a VNF used in a service
-        \param description      String description of vnf
-        \param cpu              Float required CPU (number of cores)
-        \param ram              Float required RAM (Mb)
-        \param throughput       Float throughput traffic processing capabilities per instance of VNF (Mbps)
-        \param latency          Float delay caused by VNF (ms)
-        \param availability     Float availability of VNF
+    Class representing a VNF.
+    -------------
+    Params:
+        description:        str
+                                string description of vnf
+        cpu:                float
+                                required CPU (number of cores)
+        ram:                float
+                                required RAM (Mb)
+        throughput:         float
+                                throughput traffic processing capabilities per instance of VNF (Mbps)
+        latency:            float
+                                delay caused by VNF (ms)
+        availability:       float
+                                 availability of VNF
     """
     def __init__(self, description: str = None, cpu: float = 1, ram: float = 1, throughput: float = None, latency: float = 0, availability: float = 1):
         self.id = next(VNF.id_iter)

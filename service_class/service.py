@@ -9,16 +9,31 @@ eps = 1e-9
 
 class Service(object):
     """
-    Class representing a service
-        \param description          String description of vnf
-        \param vnfs                 List of vnfs used in service
-        \param latency              Float defining the latency required for the service
-        \param throughput           Float defining the throughput required for the service
-        \param percentage traffic   Float defining the percentage of traffic for this given service for a network load.
-        \param availability         Float definint the required latency for the service.
-        \param graph                Instance of graph class representing the service for a given topology.
-        \param source               Instance of Location, representing start point of service.
-        \param sink                 Instance of Location, representing end point of service. If none this will use the location of the final VNF.
+    Class representing an SFC request.
+    -------------
+    Params:
+        description:        str
+                                string describing the SFC.
+        vnfs:               list[service_class.vnf.VNF]
+                                list of VNFs required by the SFC.
+        latency:            float
+                                SFC latency requirement.
+        throughput:         float
+                                SFC throughput requirement.
+        percentage_traffic: float
+                                percentage of traffic for this given service for a network load.
+        availability:       float
+                                SFC availability requirement.
+        graph:              service_class.graph.service_graph
+                                graph class representing the SFC for a given topology.
+        source:             topology.location.Location
+                                location representing start point of service.
+        sink:               topology.location.Location
+                                location representing end point of service.
+        n_subscribers:      int
+                                number of people accessing the service.
+        weight:             int
+                                SLA violation cost.
     """
     def __init__(self, description: str = None, vnfs: list = None, throughput: float = None, latency: float = None, percentage_traffic: float = None, availability: float = None, source: Location = None, sink: Location = None, n_subscribers: int = 1, weight: int = 1):
         self.description = description
@@ -43,8 +58,7 @@ class Service(object):
         
     def print(self):
         """
-        Prints the service in a readable format.
-        TODO: To be updated.
+        Prints the SFC in a readable format.
         """
         print("\n")
         print("Description: ", self.description)
