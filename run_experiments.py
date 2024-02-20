@@ -3,7 +3,6 @@ from service_class.vnf import VNF
 from service_class.service import Service
 from topology.network import Network
 from optimisation.column_generation import ColumnGeneration
-from optimisation.compact_model import CompactModel
 import numpy as np
 import json
 
@@ -12,31 +11,10 @@ def solve_case(topology, vnfs, service_requests, results_dir, filename, verbose 
     Solves a case using given load and services and saves result to .json
     """
     #Solves minimising SLA violations.
-    # try:
-    cg = ColumnGeneration(topology, vnfs, service_requests, weights = [1, 0], verbose = verbose, log_dir= "gurobi_files/", name = filename + "_cg")
+    cg = ColumnGeneration(topology, vnfs, service_requests, weights = [1, 0], verbose = verbose, log_dir= "gurobi_files/", name = filename + "_heur")
     cg.optimise()
     cg.parse_solution()
-    cg.save_as_json(filename = results_dir + filename + "_cg")
-    # except:
-    #     pass
-
-    # # # Solves using heuristic.
-    # try:
-    # heur = ColumnGeneration(topology, vnfs, service_requests, weights = [1, 0], verbose = verbose, name = filename + "_greedy")
-    # heur.optimise(use_heuristic=True, max_iterations = 0)
-    # heur.parse_solution
-    # heur.save_as_json(filename = results_dir + filename + "_greedy")
-    # except:
-    #     pass
-    
-    # # Solves using MIP
-    # try:
-    #     compact = CompactModel(topology, vnfs, service_requests, weights = [1, 0], verbose = verbose)
-    #     compact.optimise()
-    #     compact.parse_solution()
-    #     compact.save_as_json(filename = results_dir + filename + "_mip")
-    # except:
-    #     pass
+    cg.save_as_json(filename = results_dir + filename + "_heur")
 
 def load_sfcs(sfc_path, network):
     """
@@ -53,9 +31,9 @@ def load_sfcs(sfc_path, network):
                     source = location
                     sink = location
                 if location.description == s["sink"]["description"]:
-                    source = location
-                elif location.description == s["source"]["description"]:
                     sink = location
+                elif location.description == s["source"]["description"]:
+                    source = location
             assert source != None and sink != None, "Source and Sink not found in current graph."
             if s["latency"] != None and s["availability"] != None:
                 sfc = Service(s["name"], s["vnfs"], throughput = float(s["throughput"]),
@@ -81,8 +59,9 @@ if __name__ == "__main__":
     network_file = "data_used/networks/nobeleu"
     vnfs_dir = "data_used/vnfs/"
     sfcs_dir = "data_used/sfcs/"
-    results_dir = "data_used/results_backup/"
+    results_dir = "data_used/results_1it/"
     cases = ["nobeleu_nservices700_loadfactor5.json"]
+    print("Loading network")
     
     # Loads the network
     network = Network()
@@ -98,4 +77,5 @@ if __name__ == "__main__":
         # Loads sfcs
         sfcs = load_sfcs(sfcs_dir + case, network)
         fname = case.split(".")[0]
+        print("solving case {}".format(case))
         solve_case(network, vnfs, sfcs, results_dir, fname, verbose = 2)

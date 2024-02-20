@@ -4,7 +4,6 @@ from service_class.vnf import VNF
 from service_class.service import Service
 from topology.network import Network
 from optimisation.column_generation import ColumnGeneration
-from optimisation.compact_model import CompactModel
 import numpy as np
 import random
 from itertools import product
@@ -52,7 +51,7 @@ if __name__ == "__main__":
     This script runs the experiments used in the results.
     """
 
-    network_file = "data_used/networks/nobeleu"
+    network_file = "data_used/networks/abilene"
     vnfs_dir = "data_used/vnfs/"
     service_dir = "data_used/slices/"
     output_dir = "data_used/sfcs/"
@@ -75,9 +74,9 @@ if __name__ == "__main__":
         service.load_from_json(service_dir + file)
         services.append(service)
 
-    scale_factors = [1, 2, 3, 4, 5]
+    scale_factors = [1]
 
-    for n in [300, 400, 500, 600, 700]:
+    for n in [3]:
         sfcs = random_sfcs(network, services, n, scale_factors = scale_factors)
         for i in range(len(scale_factors)):
             sfc_dict = {}

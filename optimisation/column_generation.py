@@ -85,6 +85,7 @@ class ColumnGeneration(object):
         """
         Solves the pricing problem for a service and finds the best new path to add to the master problem.
         """
+        
         start = time()
         graph = service.graph
         m = gp.Model(graph.description, env=env)
@@ -122,7 +123,8 @@ class ColumnGeneration(object):
             sink = graph.get_location_by_description(service.sink.description + "_l{}".format(graph.n_layers - 1))
         else:
             sink = graph.get_location_by_description("super_sink_l{}".format(graph.n_layers-1))
-
+        logging.info("Source {}, Sink {}".format(service.source.description, service.sink.description))
+        logging.info("Source node name {}, Sink node name {}".format(source.description, sink.description))
         # Flow constraints for each node.
         for node in graph.locations:
             if isinstance(node, Dummy): continue
@@ -146,20 +148,6 @@ class ColumnGeneration(object):
         if service.latency != None:
             lat = np.array([l.latency for l in links])
             m.addConstr(lat @ x  - bigM * penalty <= service.latency, name = "latency")
-
-        # Adds resource constraints.
-        for node in self.nodes:
-            vnfs_used, vars, cpus, rams = [], [], [], []
-            # Gets assignment edges associated with node
-            for i in range(len(service.vnfs)):
-                # If the service uses the same VNF/node combination more than once in the service chain then we don't want to consider it's resources twice.
-                if service.vnfs[i] not in vnfs_used:
-                    vars.append(m.getVarByName("({}_l{}, {}_l{})".format(node.description, i, node.description, i + 1)))
-                    cpus.append(self.get_vnf_by_description(service.vnfs[i]).cpu)
-                    rams.append(self.get_vnf_by_description(service.vnfs[i]).ram)
-                    vnfs_used.append(service.vnfs[i])
-            m.addConstr(gp.quicksum(vars[i] * cpus[i] for i in range(len(vars))) <= node.cpu, name = node.description + "_cpu")
-            m.addConstr(gp.quicksum(vars[i] * rams[i] for i in range(len(vars))) <= node.ram, name = node.description + "_ram")
 
         # Gets dual variable associated with constraint that 100% of the flow must be used
         if self.model != None:
@@ -195,131 +183,6 @@ class ColumnGeneration(object):
             if self.verbose == 3:
                 m.write(self.log_dir + "{}.ilp".format(m.getAttr("ModelName")))
             raise ValueError("Optimisation failed")
-
-    def pricing_problem_bellmanford(self, service, initial = False):
-        """
-        Solves the pricing problem for a service using Bellman-Ford. Return None if no path is found or graph is not consistent.
-        """
-        logging.info(" Starting Bellman-Ford for {}".format(service.description)) if self.verbose > 0 else None
-
-        graph = service.graph
-        if initial == True:
-            for link in graph.links:
-                link.cost = link.latency
-        # Gets rid of infinitesimal dual values which can lead to negative cycles.
-        else:
-            for link in graph.links:
-                if abs(link.cost) < 1e-9:
-                    link.cost = 0 
-
-        n = len(graph.locations)
-
-        # Gets source and sink
-        source = graph.get_location_by_description(service.source.description + "_l0")
-        if service.sink != None:
-            sink = graph.get_location_by_description(service.sink.description + "_l{}".format(graph.n_layers - 1))
-        else:
-            sink = graph.get_location_by_description("super_sink_l{}".format(graph.n_layers-1))
-        
-        start = time()
-
-        # Makes list containing distance from source to other nodes.
-        dist = {v.description: inf for v in graph.locations}
-
-        # Makes predecessor list for building path.
-        predecessor = {v.description: None for v in graph.locations}
-
-        # Sets distance to source to be zero.
-        dist[source.description] = 0
-
-        # Main algorithm
-        for i in range(n - 1):
-            terminate = True
-            for edge in graph.links:
-                u, v, weight = edge.source.description, edge.sink.description, edge.cost
-                if dist[u] + weight < dist[v]:
-                    dist[v] = dist[u] + weight
-                    predecessor[v] = u
-                    terminate = False
-            # If no changes have been made on any iteration we can terminate.
-            if terminate == True:
-                break
-        
-        # Negative cycle check.
-        for edge in graph.links:
-            u, v, weight = edge.source.description, edge.sink.description, edge.cost
-            if dist[u] + weight < dist[v]:
-                # Negative cycles can be found when bandwidth dual values take on small positive values (circa 1 e -12).
-                # In which case return False and use Gurobi.
-                logging.info(' Negative Cycle found.\n') if self.verbose > 0 else None
-                return False
-                
-        self.runtime += time() - start
-        logging.info( " Finished in time {}.".format(time() - start)) if self.verbose > 0 else None
-
-        # Constructs path using predecessor dictionary.
-        current = sink.description
-        path = [current]
-        while current != source.description:
-            current = predecessor[current]
-            path.insert(0, current)
-
-        path = [graph.get_location_by_description(i) for i in path]
-
-        # Gets edges associated with nodes in the path.
-        edges_used = []
-        for i in range(len(path) - 1):
-            edge = graph.get_link_by_location_description(path[i], path[i+1], two_way = False)
-            assert edge != None, "Invalid path"
-            edges_used.append(edge)
-        
-        # Checks whether path violates latency.
-        if service.latency != None:
-            if sum([e.latency for e in edges_used]) > service.latency:
-                penalty = 1
-            else:
-                penalty = 0
-        else:
-            penalty = 0
-        
-        # Gets dual variable associated with constraint that 100% of the flow must be used.
-        if self.model != None:
-            pi = -self.model.getConstrByName("pathflow_{}".format(service.description)).getAttr("Pi")
-        else:
-            pi = 0
-        
-        # Calculates reduced cost.
-        if service.latency != None:
-            reduced_cost = self.weights[0] * service.n_subscribers * service.weight * penalty + pi + sum([e.cost for e in edges_used])
-            logging.info(" Optimisation terminated successfully.") if self.verbose > 0 else None
-            logging.info(" Latency Penalty Value {}".format(penalty)) if self.verbose > 0 else None
-            logging.info(' Ojective: {}'.format(reduced_cost)) if self.verbose > 0 else None
-            logging.info(" Nodes used {}\n".format([p.description for p in path])) if self.verbose > 0 else None
-        else:
-            reduced_cost =  pi + sum([e.cost for e in edges_used])
-            logging.info(" Optimisation terminated successfully.") if self.verbose > 0 else None
-            logging.info(' Ojective: {}'.format(reduced_cost)) if self.verbose > 0 else None
-            logging.info(" Nodes used {}\n".format([p.description for p in path])) if self.verbose > 0 else None
-        return (path, edges_used, penalty, reduced_cost)
-
-    def get_path_from_bellmandford(self, service, solution):
-        """
-        Given a solution from Bellman-Ford, it adds the current path to the service graph.
-        """
-        graph = service.graph
-        nodes_used, edges_used, penalty = solution[0], solution[1], solution[2]
-
-        # Gets whether latency is violated by path.
-        if service.latency != None:
-            if penalty == 1:
-                penalty_incurred = True
-            else:
-                penalty_incurred = False
-            # Makes the path and adds it to the list of paths for the service graph.
-            path = service_path(service.description, nodes_used, edges_used, self.network, service, n_layers = graph.n_layers, latency_violated = penalty_incurred)
-        else:
-            path = service_path(service.description, nodes_used, edges_used, self.network, service, n_layers = graph.n_layers)
-        return path
 
     def solve_heuristic(self):
         """
@@ -616,7 +479,7 @@ class ColumnGeneration(object):
             self.model.write(self.log_dir + "{}.lp".format(self.name))
             self.model.setParam("LogFile", self.log_dir + "{}.log".format(self.name))
             self.model.setParam("TimeLimit", 3600)
-            self.model.setParam("MIPGap", 1e-4)
+            self.model.setParam("MIPGap", 1e-2)
         self.model.optimize()
 
         self.runtime += time() - start
@@ -745,7 +608,7 @@ class ColumnGeneration(object):
             self.model.addVar(column = gp.Column(coefficients, constrs), name = path.description + "_flow")
 
 
-    def optimise(self, max_iterations: int = 500, use_heuristic = False, use_bellman_ford = True, cg_tolerance = 1e-4, lp_tolerance = 0.01):
+    def optimise(self, max_iterations: int = 500, use_heuristic = False, cg_tolerance = 1e-4, lp_tolerance = 0.01):
         """
         Finds schedule that optimises probability of success using column generation
         """
@@ -768,12 +631,8 @@ class ColumnGeneration(object):
             for service in self.services:
                 service.find_improving_paths = True
                 logging.info(" SOLVING INITIAL COLUMN GENERATION FOR {}\n".format(service.description)) if self.verbose > 0 else None
-                if use_bellman_ford == True:
-                    bf = self.pricing_problem_bellmanford(service, initial = True)
-                    path = self.get_path_from_bellmandford(service, bf)
-                else:
-                    cg = self.pricing_problem(service, initial= True)
-                    path = self.get_path_from_model(service, cg)
+                cg = self.pricing_problem(service, initial= True)
+                path = self.get_path_from_model(service, cg)
                 if not any([p.check_if_same(path) for p in service.graph.paths]):
                     service.graph.add_path(path)
                     logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
@@ -850,74 +709,32 @@ class ColumnGeneration(object):
                 for service in self.services:
                     if service.find_improving_paths == True:
                         logging.info(" SOLVING COLUMN GENERATION FOR {}\n".format(service.description)) if self.verbose > 0 else None
-                        # Tries to use Bellman Ford, if it returns solution uses it.
-                        if use_bellman_ford == True:
-                            bf = self.pricing_problem_bellmanford(service)
-                            if bf != False and bf[-1] < - cg_tolerance:
-                                path = self.get_path_from_bellmandford(service, bf)
-                                logging.info(" New path for service {} has negative reduced cost so adding.".format(service.description)) if self.verbose > 0 else None
-                                # Checks that the path is unique (i.e. not already in set of paths.)
-                                if not any([p.check_if_same(path) for p in service.graph.paths]):
-                                    terminate = False
-                                    service.graph.add_path(path)
-                                    self.add_column_from_path(path)
-                                    logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
-                                    logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
-                                # If the path is already in the set of paths try using ILP.
-                                else:
-                                    cg = self.pricing_problem(service)
-                                    # If reduced cost is negative we add the path. 
-                                    if cg.objVal < - cg_tolerance:
-                                        path = self.get_path_from_model(service, cg)
-                                        logging.info(" New path for service {} has negative reduced cost so adding.".format(service.description)) if self.verbose > 0 else None
-                                        # Checks that the path is unique (i.e. not already in set of paths.)
-                                        if not any([p.check_if_same(path) for p in service.graph.paths]):
-                                            terminate = False
-                                            service.graph.add_path(path)
-                                            self.add_column_from_path(path)
-                                            logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
-                                            logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
-                                        # If the path is already in the set of paths the reduced cost should be non-negative.
-                                        else:
-                                            for p in service.graph.paths:
-                                                if p.check_if_same(path) == True:
-                                                    logging.info(" Paths {} and {} the same".format(p.description, path.description)) if self.verbose > 0 else None
-                                            logging.info(" Path not unique so not adding.") if self.verbose > 0 else None
-                                            logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
-                                            # If there is no improving paths then set the find_improving_paths flag to False for now.
-                                            service.find_improving_paths = False
-                                            logging.info(" Not an improving path.\n") if self.verbose > 0 else None
-                                    else:
-                                        # If there is no improving paths then set the find_improving_paths flag to False for now.
-                                        service.find_improving_paths = False
-                                        logging.info(" Not an improving path.\n") if self.verbose > 0 else None
+                        cg = self.pricing_problem(service)
+                        # If reduced cost is negative we add the path. 
+                        if cg.objVal < - cg_tolerance:
+                            path = self.get_path_from_model(service, cg)
+                            logging.info(" New path for service {} has negative reduced cost so adding.".format(service.description)) if self.verbose > 0 else None
+                            # Checks that the path is unique (i.e. not already in set of paths.)
+                            if not any([p.check_if_same(path) for p in service.graph.paths]):
+                                terminate = False
+                                service.graph.add_path(path)
+                                self.add_column_from_path(path)
+                                logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
+                                logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
+                            # If the path is already in the set of paths the reduced cost should be non-negative.
                             else:
-                                cg = self.pricing_problem(service)
-                                # If reduced cost is negative we add the path. 
-                                if cg.objVal < - cg_tolerance:
-                                    path = self.get_path_from_model(service, cg)
-                                    logging.info(" New path for service {} has negative reduced cost so adding.".format(service.description)) if self.verbose > 0 else None
-                                    # Checks that the path is unique (i.e. not already in set of paths.)
-                                    if not any([p.check_if_same(path) for p in service.graph.paths]):
-                                        terminate = False
-                                        service.graph.add_path(path)
-                                        self.add_column_from_path(path)
-                                        logging.info(" Path {}: ".format(path.description) + path.__str__() + " added.") if self.verbose > 0 else None
-                                        logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
-                                    # If the path is already in the set of paths the reduced cost should be non-negative.
-                                    else:
-                                        for p in service.graph.paths:
-                                            if p.check_if_same(path) == True:
-                                                logging.info(" Paths {} and {} the same".format(p.description, path.description)) if self.verbose > 0 else None
-                                        logging.info(" Path not unique so not adding.") if self.verbose > 0 else None
-                                        logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
-                                        # If there is no improving paths then set the find_improving_paths flag to False for now.
-                                        service.find_improving_paths = False
-                                        logging.info(" Not an improving path.\n") if self.verbose > 0 else None
-                                else:
-                                    # If there is no improving paths then set the find_improving_paths flag to False for now.
-                                    service.find_improving_paths = False
-                                    logging.info(" Not an improving path.\n") if self.verbose > 0 else None
+                                for p in service.graph.paths:
+                                    if p.check_if_same(path) == True:
+                                        logging.info(" Paths {} and {} the same".format(p.description, path.description)) if self.verbose > 0 else None
+                                logging.info(" Path not unique so not adding.") if self.verbose > 0 else None
+                                logging.info(" Params used: {}\n".format(path.get_params())) if self.verbose > 0 else None
+                                # If there is no improving paths then set the find_improving_paths flag to False for now.
+                                service.find_improving_paths = False
+                                logging.info(" Not an improving path.\n") if self.verbose > 0 else None
+                        else:
+                            # If there is no improving paths then set the find_improving_paths flag to False for now.
+                            service.find_improving_paths = False
+                            logging.info(" Not an improving path.\n") if self.verbose > 0 else None
 
                 # If we have found no improving columns, but we have not solved all sub problems on this iterations,
                 # we set the find_improving_paths attribute of every service back to True. The algorithm should only
@@ -1053,117 +870,3 @@ class ColumnGeneration(object):
 
         with open(filename, 'w') as fp:
             json.dump(to_dump, fp, indent=4, separators=(", ", ": "))
-
-    
-    # def pricing_problem_fw(self, service, initial = False):
-    #     """
-    #     Solves the pricing problem for a service using Floyd Warshall. Return None if no path is found or graph is not consistent.
-    #     """
-    #     logging.info(" Starting floyd warshall for {}".format(service.description)) if self.verbose > 0 else None
-        
-    #     start = time()
-
-    #     graph = service.graph
-    #     if initial == True:
-    #         for link in graph.links:
-    #             link.cost = 1
-    #     links = [l for l in graph.links]
-
-    #     # Gets source and sink
-    #     source = graph.get_location_by_description(service.source.description + "_l0")
-    #     if service.sink != None:
-    #         sink = graph.get_location_by_description(service.sink.description + "_l{}".format(graph.n_layers - 1))
-    #     else:
-    #         sink = graph.get_location_by_description("super_sink_l{}".format(graph.n_layers-1))
-
-    #     # Initialises consistency to be True
-    #     consistent = True
-    #     # Makes adjacency matrix with edge weights initialised as inf.
-    #     adj = {k1.description: {k2.description: inf for k2 in graph.locations} for k1 in graph.locations}
-    #     # Makes a path matrix to extract shortest path.
-    #     path_matrix = {k1.description: {k2.description: None for k2 in graph.locations} for k1 in graph.locations}
-    #     for node1 in graph.locations:
-    #         for node2 in graph.locations:
-    #             # Sets self weights to zero.
-    #             if node1 == node2:
-    #                 adj[node1.description][node2.description] = 0
-    #                 path_matrix[node1.description][node2.description] = node1.description
-    #                 continue
-    #             else:
-    #                 for link in links:
-    #                     # If edge exists, sets weight as per the duals.
-    #                     if link.source == node1 and link.sink == node2:
-    #                         adj[node1.description][node2.description] = link.cost
-    #                         path_matrix[node1.description][node2.description] = node1.description
-    #                         continue 
-
-    #     # Runs floyd warshall and makes all pairs shortest path.
-    #     for k in graph.locations:
-    #         for i in graph.locations:
-    #             for j in graph.locations:
-    #                 if adj[i.description][j.description] > adj[i.description][k.description] + adj[k.description][j.description]:
-    #                     adj[i.description][j.description] = adj[i.description][k.description] + adj[k.description][j.description]
-    #                     path_matrix[i.description][j.description] = path_matrix[k.description][j.description]
-    #                     # Checks for negative cycle
-    #                     if i == j and adj[i.description][j.description] < 0:
-    #                         logging.info( " Negative Cycle found, graph not consistent.") if self.verbose > 0 else None
-    #                         return None
-    #                     continue
-        
-    #     logging.info( " Finished in time {}.".format(time() - start)) if self.verbose > 0 else None
-
-    #     # If graph is consistent, extracts shortest path.
-    #     if consistent == True:
-    #         if path_matrix[source.description][sink.description] == None:
-    #             logging.info( " No path found.") if self.verbose > 0 else None
-    #             return None
-    #         current_node = sink.description
-    #         path = [current_node]
-    #         while current_node != source.description:
-    #             current_node = path_matrix[source.description][current_node]
-    #             path.insert(0, current_node)
-
-    #     path = [graph.get_location_by_description(i) for i in path]
-
-    #     # Gets edges associated with nodes in the path.
-    #     edges_used = []
-    #     for i in range(len(path) - 1):
-    #         edge = graph.get_link_by_location_description(path[i], path[i+1], two_way = False)
-    #         assert edge != None, "Invalid path"
-    #         edges_used.append(edge)
-        
-    #     # Checks whether path violates latency.
-    #     if sum([e.latency for e in edges_used]) > service.latency:
-    #         penalty = 1
-    #     else:
-    #         penalty = 0
-        
-    #     # Gets dual variable associated with constraint that 100% of the flow must be used.
-    #     if self.model != None:
-    #         pi = -self.model.getConstrByName("pathflow_{}".format(service.description)).getAttr("Pi")
-    #     else:
-    #         pi = 0
-        
-    #     # Calculates reduced cost.
-    #     reduced_cost = self.weights[0] * service.n_subscribers * service.weight * penalty + pi + sum([e.cost for e in edges_used])
-    #     logging.info(" Optimisation terminated successfully.") if self.verbose > 0 else None
-    #     logging.info(' Ojective: {}'.format(reduced_cost)) if self.verbose > 0 else None
-    #     logging.info(" Nodes used {}\n".format([p.description for p in path])) if self.verbose > 0 else None
-    #     return (path, edges_used, penalty, reduced_cost)
-
-    # def get_path_from_fw(self, service, solution):
-    #     """
-    #     Given a solution from Floyd Warshall, it adds the current path to the service graph.
-    #     """
-    #     graph = service.graph
-    #     nodes_used, edges_used, penalty = solution[0], solution[1], solution[2]
-
-    #     # Gets whether latency is violated by path.
-    #     if penalty == 1:
-    #         penalty_incurred = True
-    #     else:
-    #         penalty_incurred = False
-
-    #     # Makes the path and adds it to the list of paths for the service graph.
-    #     path = service_path(service.description, nodes_used, edges_used, self.network, service, n_layers = graph.n_layers, latency_violated = penalty_incurred)
-    #     return path
