@@ -5,7 +5,7 @@ import os
 
 if __name__ == "__main__":
     """
-    This script takes a solution json and prints appends results to csv file.
+    This script takes a solution json and appends results to csv file.
     """
     # command line arguments
     if len(sys.argv) != 3:

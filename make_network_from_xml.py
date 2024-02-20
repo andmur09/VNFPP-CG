@@ -11,11 +11,26 @@ import networkx as nx
 def parse_network_from_xml(filename: str, name: str, output_dir: str, n_core_dc: int, n_edge_dc: int, max_latency = 2, bandwidths = [10000, 40000, 100000]):
     """
     This parses an xml file and makes a Network object then saves the network object as a json.
-        \param filenam          String name of the .xml file
-        \param name             String Name of the output json network
-        \param n_core_dc        Integer number of core DC's
-        \param n_edge_dc        Integer number of edge DC's
-        \param latency_factor   Float factor to apply to edges. latency for edge = factor & edge distance
+
+    Params
+    -----------------------------
+        filename:       str
+                            name of the .xml file
+        name:           str
+                            name of the output json network
+        output_dir:     str
+                            name of directory to save json to
+        n_core_dc:      int
+                            number of core DCs
+        n_edge_dc:      int
+                            number of edge DCs
+        max_latency:    int
+                            max latency used to scale latency of edges.
+        bandwidths:     list[int]
+                            bandwidth to use for edges.
+    Returns
+    -----------------------------
+                            None
     """
     # Opens the .xml file
     with open(filename, "r") as f:
@@ -27,7 +42,7 @@ def parse_network_from_xml(filename: str, name: str, output_dir: str, n_core_dc:
     edges = data["network"]["networkStructure"]["links"]["link"]
     assert n_core_dc + n_edge_dc <= len(vertices), "Number of DC's must be less than total number of vertices."
 
-    # Makes network x object to calculate betweeness centrality.
+    # Makes network x object to calculate betweeness centrality. This is used to find most important nodes for core DC.
     G = nx.Graph()
     distances = []
     for v in vertices:
@@ -79,18 +94,6 @@ def parse_network_from_xml(filename: str, name: str, output_dir: str, n_core_dc:
     
     for e in edges:
         source_id, sink_id = e["source"], e["target"]
-        # try:
-        #     bandwidth = e["preInstalledModule"]["capacity"]
-        # except KeyError:
-        #     try:
-        #         bandwidth = e["additionalModules"]["addModule"]["capacity"]
-        #         bandwidth = float(bandwidth) * 1000
-        #     # If multiple capacities are provided, select at random.
-        #     except TypeError:
-        #         bandwidths = e["additionalModules"]["addModule"]
-        #         #[-1]["capacity"]
-        #         bandwidth = random.choice(bandwidths)["capacity"]
-        #         bandwidth = float(bandwidth) * 1000
         bandwidth = random.choice(bandwidths)
         source, sink = None, None
         # Gets the coordinates of source and sink to compute latency.
@@ -111,6 +114,9 @@ def parse_network_from_xml(filename: str, name: str, output_dir: str, n_core_dc:
     network.save_as_json(output_dir + name)
 
 def main():
+    """
+    Script to load an xml file, translate to network object and save as json.
+    """
     filename = "data_used/network_xmls/nobeleu.xml"
     output_dir = "data_used/networks/"
     name = "nobeleu"

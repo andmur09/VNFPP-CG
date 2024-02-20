@@ -1,9 +1,7 @@
-from asyncio.transports import _FlowControlMixin
 import os
 from service_class.vnf import VNF
 from service_class.service import Service
 from topology.network import Network
-from optimisation.column_generation import ColumnGeneration
 import numpy as np
 import random
 from itertools import product
@@ -12,10 +10,20 @@ import json
 def random_sfcs(network, services, n_requests, scale_factors = [1]):
     """
     Given a number of requests, samples service types and returns list of SFC requests.
-    network:        instance of Network to use.
-    services:       list of services to use.
-    n_requests:     int number of service requests.
-    scale_factor:   int number of users per service request (i.e. if 2 then total required throughput is 2 * service.throughput)
+
+    Params
+    -----------------------------
+        network:        topology.network.Network
+                            instance of Network to use.
+        services:       list
+                            list of services to use.
+        n_requests:     int
+                            number of SFC requests.
+        scale_factor:   list[int]
+                            number of users per service request (i.e. if 2 then total required throughput is 2 * service.throughput)
+    Returns
+    -----------------------------
+                        list
     """
     service_names = [s.description for s in services]
     n_subscribers = {s.description: 0 for s in services}
@@ -48,7 +56,7 @@ def random_sfcs(network, services, n_requests, scale_factors = [1]):
 
 if __name__ == "__main__":
     """
-    This script runs the experiments used in the results.
+    This script generates the SFCs used in the experiments and saves them in data_used/sfcs/
     """
 
     network_file = "data_used/networks/abilene"
@@ -68,7 +76,7 @@ if __name__ == "__main__":
         vnfs.append(function)
     
     services = []
-    # Loads the set of services.h
+    # Loads the set of slices.
     for file in os.listdir(service_dir):
         service = Service()
         service.load_from_json(service_dir + file)
