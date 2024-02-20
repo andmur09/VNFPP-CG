@@ -40,4 +40,4 @@ VNFPP-CG has the following dependencies:
 - [https://graphviz.org/](Graphviz) (Used to plot topology.)
 
 ### Results
-Results are contained in the folder data_used/results and can be updating the cases list in run_experiments.py and running the script.
+Results are contained in the folder data_used/results and can be replicated by updating the cases list in run_experiments.py and running the script.
