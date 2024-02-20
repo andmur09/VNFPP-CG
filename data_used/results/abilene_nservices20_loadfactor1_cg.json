@@ -3,13 +3,13 @@
     "objective": 3.0, 
     "lower bound": 3.0, 
     "upper bound": 3.0, 
-    "number of nodes used": 8, 
+    "number of nodes used": 6, 
     "number of service requests": 20, 
     "total penalties": 1.0, 
     "availability penalties": 0.0, 
     "throughput penalties": 0.0, 
     "latency penalties": 1.0, 
-    "runtime": 0.5841183662414551, 
+    "runtime": 0.5724406242370605, 
     "network": {
         "name": "abilene", 
         "locations": [
@@ -301,30 +301,31 @@
     }, 
     "vnfs": [
         {
-            "name": "tm", 
-            "cpu": 10, 
-            "ram": 10, 
-            "throughput": 2000, 
-            "latency": 0.1, 
+            "name": "voc", 
+            "cpu": 8, 
+            "ram": 8, 
+            "throughput": 2320, 
+            "latency": 0.25, 
             "availability": 0.999, 
             "assignments": {
                 "ATLAngCoreNode1": 1.0, 
-                "IPLSngCoreNode1": 1.0, 
-                "KSCYngEdgeNode": 1.0
+                "ATLAngCoreNode2": 1.0, 
+                "IPLSngCoreNode3": 1.0
             }
         }, 
         {
-            "name": "nat", 
-            "cpu": 16, 
-            "ram": 16, 
-            "throughput": 3200, 
-            "latency": 0.1, 
+            "name": "fw", 
+            "cpu": 4, 
+            "ram": 4, 
+            "throughput": 600, 
+            "latency": 0.8, 
             "availability": 0.999, 
             "assignments": {
-                "ATLAngCoreNode1": 1.0, 
-                "CHINngEdgeNode": 1.0, 
-                "IPLSngCoreNode1": 1.0, 
-                "STTLngEdgeNode": 1.0, 
+                "ATLAngCoreNode1": 3.0, 
+                "ATLAngCoreNode2": 17.0, 
+                "ATLAngCoreNode3": 1.0, 
+                "IPLSngCoreNode3": 1.0, 
+                "NYCMngEdgeNode": 8.0, 
                 "WASHngEdgeNode": 1.0
             }
         }, 
@@ -337,10 +338,25 @@
             "availability": 0.999, 
             "assignments": {
                 "ATLAngCoreNode1": 3.0, 
-                "CHINngEdgeNode": 1.0, 
-                "IPLSngCoreNode1": 1.0, 
-                "STTLngEdgeNode": 1.0, 
-                "WASHngEdgeNode": 3.0
+                "ATLAngCoreNode2": 1.0, 
+                "ATLAngCoreNode3": 1.0, 
+                "IPLSngCoreNode3": 1.0, 
+                "NYCMngEdgeNode": 1.0
+            }
+        }, 
+        {
+            "name": "nat", 
+            "cpu": 16, 
+            "ram": 16, 
+            "throughput": 3200, 
+            "latency": 0.1, 
+            "availability": 0.999, 
+            "assignments": {
+                "ATLAngCoreNode1": 1.0, 
+                "ATLAngCoreNode2": 1.0, 
+                "ATLAngCoreNode3": 1.0, 
+                "IPLSngCoreNode3": 1.0, 
+                "WASHngEdgeNode": 1.0
             }
         }, 
         {
@@ -352,36 +368,21 @@
             "availability": 0.999, 
             "assignments": {
                 "ATLAngCoreNode1": 1.0, 
-                "KSCYngEdgeNode": 1.0
+                "WASHngEdgeNode": 1.0
             }
         }, 
         {
-            "name": "fw", 
-            "cpu": 4, 
-            "ram": 4, 
-            "throughput": 600, 
-            "latency": 0.8, 
-            "availability": 0.999, 
-            "assignments": {
-                "ATLAngCoreNode1": 3.0, 
-                "CHINngEdgeNode": 4.0, 
-                "HSTNngEdgeNode": 1.0, 
-                "IPLSngCoreNode1": 1.0, 
-                "KSCYngEdgeNode": 1.0, 
-                "NYCMngEdgeNode": 1.0, 
-                "STTLngEdgeNode": 1.0
-            }
-        }, 
-        {
-            "name": "voc", 
-            "cpu": 8, 
-            "ram": 8, 
-            "throughput": 2320, 
-            "latency": 0.25, 
+            "name": "tm", 
+            "cpu": 10, 
+            "ram": 10, 
+            "throughput": 2000, 
+            "latency": 0.1, 
             "availability": 0.999, 
             "assignments": {
                 "ATLAngCoreNode1": 1.0, 
-                "IPLSngCoreNode1": 1.0
+                "ATLAngCoreNode3": 1.0, 
+                "IPLSngCoreNode3": 1.0, 
+                "WASHngEdgeNode": 1.0
             }
         }
     ], 
@@ -401,6 +402,12 @@
             "n_subscribers": 1, 
             "weight": 3.0, 
             "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 17, 
                 "description": "WASHngEdgeNode", 
                 "type": "Node", 
@@ -410,22 +417,16 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 6, 
-                "description": "DNVRngSwitch", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "AutonomousDriving1_path110", 
                     "links used": [
-                        "(WASHngEdgeNode, ATLAngGateway)", 
+                        "(DNVRngSwitch, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, DNVRngSwitch)"
+                        "(ATLAngGateway, WASHngEdgeNode)"
                     ], 
                     "flow": 0.9, 
                     "latency violated": true
@@ -433,10 +434,12 @@
                 {
                     "description": "AutonomousDriving1_path130", 
                     "links used": [
-                        "(WASHngEdgeNode, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, DNVRngSwitch)"
+                        "(DNVRngSwitch, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(ATLAngGateway, ATLAngCoreNode3)", 
+                        "(ATLAngCoreNode3, ATLAngGateway)", 
+                        "(ATLAngGateway, WASHngEdgeNode)"
                     ], 
                     "flow": 0.1, 
                     "latency violated": true
@@ -465,12 +468,6 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
-                "id": 6, 
-                "description": "DNVRngSwitch", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
-            "sink": {
                 "id": 5, 
                 "description": "CHINngEdgeNode", 
                 "type": "Node", 
@@ -480,17 +477,23 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
+            "sink": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
             "paths": [
                 {
                     "description": "SmartCity1_path111", 
                     "links used": [
-                        "(DNVRngSwitch, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(CHINngEdgeNode, IPLSngGateway)", 
                         "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
                         "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, CHINngEdgeNode)"
+                        "(IPLSngGateway, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, DNVRngSwitch)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -498,9 +501,9 @@
                 {
                     "description": "SmartCity1_path131", 
                     "links used": [
-                        "(DNVRngSwitch, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, CHINngEdgeNode)"
+                        "(CHINngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, DNVRngSwitch)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -524,8 +527,8 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
-                "id": 5, 
-                "description": "CHINngEdgeNode", 
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
                 "type": "Node", 
                 "cpu": 40, 
                 "ram": 40, 
@@ -534,8 +537,8 @@
                 "handles_requests": true
             }, 
             "sink": {
-                "id": 7, 
-                "description": "HSTNngEdgeNode", 
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
                 "type": "Node", 
                 "cpu": 40, 
                 "ram": 40, 
@@ -547,11 +550,11 @@
                 {
                     "description": "SmartCity6_path112", 
                     "links used": [
-                        "(CHINngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(HSTNngEdgeNode, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, HSTNngEdgeNode)"
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, CHINngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -559,11 +562,11 @@
                 {
                     "description": "SmartCity6_path132", 
                     "links used": [
-                        "(CHINngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, HSTNngEdgeNode)"
+                        "(HSTNngEdgeNode, ATLAngGateway)", 
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, IPLSngCoreNode3)", 
+                        "(IPLSngCoreNode3, IPLSngGateway)", 
+                        "(IPLSngGateway, CHINngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -587,6 +590,12 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 16, 
                 "description": "STTLngEdgeNode", 
                 "type": "Node", 
@@ -596,23 +605,17 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 8, 
-                "description": "IPLSngGateway", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "SmartCity11_path113", 
                     "links used": [
-                        "(STTLngEdgeNode, DNVRngSwitch)", 
-                        "(DNVRngSwitch, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
                         "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)"
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, DNVRngSwitch)", 
+                        "(DNVRngSwitch, STTLngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -620,9 +623,11 @@
                 {
                     "description": "SmartCity11_path133", 
                     "links used": [
-                        "(STTLngEdgeNode, DNVRngSwitch)", 
-                        "(DNVRngSwitch, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, IPLSngGateway)"
+                        "(IPLSngGateway, IPLSngCoreNode3)", 
+                        "(IPLSngCoreNode3, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, DNVRngSwitch)", 
+                        "(DNVRngSwitch, STTLngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -646,6 +651,12 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
+                "id": 6, 
+                "description": "DNVRngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 12, 
                 "description": "KSCYngEdgeNode", 
                 "type": "Node", 
@@ -655,23 +666,17 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 6, 
-                "description": "DNVRngSwitch", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "SmartCity16_path114", 
                     "links used": [
+                        "(DNVRngSwitch, KSCYngEdgeNode)", 
                         "(KSCYngEdgeNode, IPLSngGateway)", 
                         "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
                         "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, DNVRngSwitch)"
+                        "(IPLSngGateway, KSCYngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -679,7 +684,7 @@
                 {
                     "description": "SmartCity16_path134", 
                     "links used": [
-                        "(KSCYngEdgeNode, DNVRngSwitch)"
+                        "(DNVRngSwitch, KSCYngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -703,6 +708,12 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
+                "id": 13, 
+                "description": "LOSAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 5, 
                 "description": "CHINngEdgeNode", 
                 "type": "Node", 
@@ -712,22 +723,16 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 13, 
-                "description": "LOSAngSwitch", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "SmartCity21_path115", 
                     "links used": [
-                        "(CHINngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(LOSAngSwitch, HSTNngEdgeNode)", 
+                        "(HSTNngEdgeNode, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, HSTNngEdgeNode)", 
-                        "(HSTNngEdgeNode, LOSAngSwitch)"
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, CHINngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -735,12 +740,12 @@
                 {
                     "description": "SmartCity21_path135", 
                     "links used": [
-                        "(CHINngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, HSTNngEdgeNode)", 
-                        "(HSTNngEdgeNode, LOSAngSwitch)"
+                        "(LOSAngSwitch, HSTNngEdgeNode)", 
+                        "(HSTNngEdgeNode, ATLAngGateway)", 
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, IPLSngCoreNode3)", 
+                        "(IPLSngCoreNode3, IPLSngGateway)", 
+                        "(IPLSngGateway, CHINngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -764,8 +769,8 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
-                "id": 5, 
-                "description": "CHINngEdgeNode", 
+                "id": 17, 
+                "description": "WASHngEdgeNode", 
                 "type": "Node", 
                 "cpu": 40, 
                 "ram": 40, 
@@ -774,8 +779,8 @@
                 "handles_requests": true
             }, 
             "sink": {
-                "id": 17, 
-                "description": "WASHngEdgeNode", 
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
                 "type": "Node", 
                 "cpu": 40, 
                 "ram": 40, 
@@ -787,11 +792,11 @@
                 {
                     "description": "SmartCity26_path116", 
                     "links used": [
-                        "(CHINngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(WASHngEdgeNode, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, WASHngEdgeNode)"
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, CHINngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -799,8 +804,8 @@
                 {
                     "description": "SmartCity26_path136", 
                     "links used": [
-                        "(CHINngEdgeNode, NYCMngEdgeNode)", 
-                        "(NYCMngEdgeNode, WASHngEdgeNode)"
+                        "(WASHngEdgeNode, NYCMngEdgeNode)", 
+                        "(NYCMngEdgeNode, CHINngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -824,12 +829,6 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
-                "id": 15, 
-                "description": "SNVAngSwitch", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
-            "sink": {
                 "id": 16, 
                 "description": "STTLngEdgeNode", 
                 "type": "Node", 
@@ -839,19 +838,25 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
+            "sink": {
+                "id": 15, 
+                "description": "SNVAngSwitch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
             "paths": [
                 {
                     "description": "SmartCity31_path117", 
                     "links used": [
-                        "(SNVAngSwitch, LOSAngSwitch)", 
-                        "(LOSAngSwitch, HSTNngEdgeNode)", 
-                        "(HSTNngEdgeNode, ATLAngGateway)", 
+                        "(STTLngEdgeNode, DNVRngSwitch)", 
+                        "(DNVRngSwitch, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, DNVRngSwitch)", 
-                        "(DNVRngSwitch, STTLngEdgeNode)"
+                        "(ATLAngGateway, HSTNngEdgeNode)", 
+                        "(HSTNngEdgeNode, LOSAngSwitch)", 
+                        "(LOSAngSwitch, SNVAngSwitch)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -859,7 +864,7 @@
                 {
                     "description": "SmartCity31_path137", 
                     "links used": [
-                        "(SNVAngSwitch, STTLngEdgeNode)"
+                        "(STTLngEdgeNode, SNVAngSwitch)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -883,14 +888,14 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
-                "id": 6, 
-                "description": "DNVRngSwitch", 
+                "id": 1, 
+                "description": "ATLAngGateway", 
                 "type": "Switch", 
                 "handles_requests": true
             }, 
             "sink": {
-                "id": 1, 
-                "description": "ATLAngGateway", 
+                "id": 6, 
+                "description": "DNVRngSwitch", 
                 "type": "Switch", 
                 "handles_requests": true
             }, 
@@ -898,23 +903,27 @@
                 {
                     "description": "SmartCity36_path118", 
                     "links used": [
-                        "(DNVRngSwitch, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)"
+                        "(ATLAngCoreNode1, ATLAngGateway)", 
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, DNVRngSwitch)"
                     ], 
-                    "flow": 1.0, 
+                    "flow": 0.0, 
                     "latency violated": false
                 }, 
                 {
                     "description": "SmartCity36_path138", 
                     "links used": [
-                        "(DNVRngSwitch, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)"
+                        "(ATLAngGateway, ATLAngCoreNode3)", 
+                        "(ATLAngCoreNode3, ATLAngGateway)", 
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, IPLSngCoreNode3)", 
+                        "(IPLSngCoreNode3, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, DNVRngSwitch)"
                     ], 
-                    "flow": 0.0, 
+                    "flow": 1.0, 
                     "latency violated": false
                 }
             ], 
@@ -936,8 +945,8 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
-                "id": 12, 
-                "description": "KSCYngEdgeNode", 
+                "id": 7, 
+                "description": "HSTNngEdgeNode", 
                 "type": "Node", 
                 "cpu": 40, 
                 "ram": 40, 
@@ -946,8 +955,8 @@
                 "handles_requests": true
             }, 
             "sink": {
-                "id": 7, 
-                "description": "HSTNngEdgeNode", 
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
                 "type": "Node", 
                 "cpu": 40, 
                 "ram": 40, 
@@ -959,11 +968,11 @@
                 {
                     "description": "SmartCity41_path119", 
                     "links used": [
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(HSTNngEdgeNode, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, HSTNngEdgeNode)"
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -971,7 +980,7 @@
                 {
                     "description": "SmartCity41_path139", 
                     "links used": [
-                        "(KSCYngEdgeNode, HSTNngEdgeNode)"
+                        "(HSTNngEdgeNode, KSCYngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -995,6 +1004,12 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 7, 
                 "description": "HSTNngEdgeNode", 
                 "type": "Node", 
@@ -1004,20 +1019,14 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 0, 
-                "description": "ATLAM5Switch", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "SmartCity46_path120", 
                     "links used": [
-                        "(HSTNngEdgeNode, ATLAngGateway)", 
+                        "(ATLAM5Switch, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAM5Switch)"
+                        "(ATLAngGateway, HSTNngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1025,10 +1034,8 @@
                 {
                     "description": "SmartCity46_path140", 
                     "links used": [
-                        "(HSTNngEdgeNode, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAM5Switch)"
+                        "(ATLAM5Switch, ATLAngGateway)", 
+                        "(ATLAngGateway, HSTNngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -1052,12 +1059,6 @@
             "n_subscribers": 1, 
             "weight": 1.0, 
             "source": {
-                "id": 1, 
-                "description": "ATLAngGateway", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
-            "sink": {
                 "id": 12, 
                 "description": "KSCYngEdgeNode", 
                 "type": "Node", 
@@ -1067,14 +1068,20 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
             "paths": [
                 {
                     "description": "SmartCity51_path121", 
                     "links used": [
+                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)"
+                        "(ATLAngCoreNode1, ATLAngGateway)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1082,10 +1089,10 @@
                 {
                     "description": "SmartCity51_path141", 
                     "links used": [
-                        "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)"
+                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(ATLAngGateway, ATLAngCoreNode3)", 
+                        "(ATLAngCoreNode3, ATLAngGateway)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -1111,6 +1118,12 @@
             "n_subscribers": 1, 
             "weight": 2.0, 
             "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 16, 
                 "description": "STTLngEdgeNode", 
                 "type": "Node", 
@@ -1120,23 +1133,17 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 0, 
-                "description": "ATLAM5Switch", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "UHDStreaming1_path122", 
                     "links used": [
-                        "(STTLngEdgeNode, DNVRngSwitch)", 
-                        "(DNVRngSwitch, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(ATLAM5Switch, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAM5Switch)"
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, DNVRngSwitch)", 
+                        "(DNVRngSwitch, STTLngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1144,13 +1151,13 @@
                 {
                     "description": "UHDStreaming1_path142", 
                     "links used": [
-                        "(STTLngEdgeNode, DNVRngSwitch)", 
-                        "(DNVRngSwitch, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, IPLSngCoreNode1)", 
-                        "(IPLSngCoreNode1, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAM5Switch)"
+                        "(ATLAM5Switch, ATLAngGateway)", 
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, IPLSngCoreNode3)", 
+                        "(IPLSngCoreNode3, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, DNVRngSwitch)", 
+                        "(DNVRngSwitch, STTLngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -1177,14 +1184,14 @@
             "n_subscribers": 1, 
             "weight": 2.0, 
             "source": {
-                "id": 8, 
-                "description": "IPLSngGateway", 
+                "id": 15, 
+                "description": "SNVAngSwitch", 
                 "type": "Switch", 
                 "handles_requests": true
             }, 
             "sink": {
-                "id": 15, 
-                "description": "SNVAngSwitch", 
+                "id": 8, 
+                "description": "IPLSngGateway", 
                 "type": "Switch", 
                 "handles_requests": true
             }, 
@@ -1192,12 +1199,12 @@
                 {
                     "description": "UHDStreaming6_path123", 
                     "links used": [
-                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(SNVAngSwitch, LOSAngSwitch)", 
+                        "(LOSAngSwitch, HSTNngEdgeNode)", 
+                        "(HSTNngEdgeNode, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, HSTNngEdgeNode)", 
-                        "(HSTNngEdgeNode, LOSAngSwitch)", 
-                        "(LOSAngSwitch, SNVAngSwitch)"
+                        "(ATLAngGateway, IPLSngGateway)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1205,11 +1212,9 @@
                 {
                     "description": "UHDStreaming6_path143", 
                     "links used": [
-                        "(IPLSngGateway, IPLSngCoreNode1)", 
-                        "(IPLSngCoreNode1, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, DNVRngSwitch)", 
-                        "(DNVRngSwitch, SNVAngSwitch)"
+                        "(SNVAngSwitch, DNVRngSwitch)", 
+                        "(DNVRngSwitch, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, IPLSngGateway)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -1236,6 +1241,12 @@
             "n_subscribers": 1, 
             "weight": 2.0, 
             "source": {
+                "id": 0, 
+                "description": "ATLAM5Switch", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 7, 
                 "description": "HSTNngEdgeNode", 
                 "type": "Node", 
@@ -1245,20 +1256,14 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 0, 
-                "description": "ATLAM5Switch", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "UHDStreaming11_path124", 
                     "links used": [
-                        "(HSTNngEdgeNode, ATLAngGateway)", 
+                        "(ATLAM5Switch, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAM5Switch)"
+                        "(ATLAngGateway, HSTNngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1266,8 +1271,10 @@
                 {
                     "description": "UHDStreaming11_path144", 
                     "links used": [
-                        "(HSTNngEdgeNode, ATLAngGateway)", 
-                        "(ATLAngGateway, ATLAM5Switch)"
+                        "(ATLAM5Switch, ATLAngGateway)", 
+                        "(ATLAngGateway, ATLAngCoreNode2)", 
+                        "(ATLAngCoreNode2, ATLAngGateway)", 
+                        "(ATLAngGateway, HSTNngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -1294,6 +1301,12 @@
             "n_subscribers": 1, 
             "weight": 2.0, 
             "source": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 12, 
                 "description": "KSCYngEdgeNode", 
                 "type": "Node", 
@@ -1303,20 +1316,14 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 1, 
-                "description": "ATLAngGateway", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "UHDStreaming16_path125", 
                     "links used": [
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)"
+                        "(ATLAngCoreNode1, ATLAngGateway)", 
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1324,10 +1331,16 @@
                 {
                     "description": "UHDStreaming16_path145", 
                     "links used": [
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, IPLSngCoreNode1)", 
-                        "(IPLSngCoreNode1, IPLSngGateway)", 
-                        "(IPLSngGateway, ATLAngGateway)"
+                        "(ATLAngGateway, ATLAngCoreNode2)", 
+                        "(ATLAngCoreNode2, ATLAngGateway)", 
+                        "(ATLAngGateway, ATLAngCoreNode3)", 
+                        "(ATLAngCoreNode3, ATLAngGateway)", 
+                        "(ATLAngGateway, ATLAngCoreNode2)", 
+                        "(ATLAngCoreNode2, ATLAngGateway)", 
+                        "(ATLAngGateway, ATLAngCoreNode3)", 
+                        "(ATLAngCoreNode3, ATLAngGateway)", 
+                        "(ATLAngGateway, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -1354,8 +1367,8 @@
             "n_subscribers": 1, 
             "weight": 2.0, 
             "source": {
-                "id": 12, 
-                "description": "KSCYngEdgeNode", 
+                "id": 5, 
+                "description": "CHINngEdgeNode", 
                 "type": "Node", 
                 "cpu": 40, 
                 "ram": 40, 
@@ -1364,8 +1377,8 @@
                 "handles_requests": true
             }, 
             "sink": {
-                "id": 5, 
-                "description": "CHINngEdgeNode", 
+                "id": 12, 
+                "description": "KSCYngEdgeNode", 
                 "type": "Node", 
                 "cpu": 40, 
                 "ram": 40, 
@@ -1377,12 +1390,12 @@
                 {
                     "description": "UHDStreaming21_path126", 
                     "links used": [
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(CHINngEdgeNode, IPLSngGateway)", 
                         "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
                         "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, CHINngEdgeNode)"
+                        "(IPLSngGateway, KSCYngEdgeNode)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1390,8 +1403,8 @@
                 {
                     "description": "UHDStreaming21_path146", 
                     "links used": [
-                        "(KSCYngEdgeNode, IPLSngGateway)", 
-                        "(IPLSngGateway, CHINngEdgeNode)"
+                        "(CHINngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, KSCYngEdgeNode)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -1418,12 +1431,6 @@
             "n_subscribers": 1, 
             "weight": 2.0, 
             "source": {
-                "id": 1, 
-                "description": "ATLAngGateway", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
-            "sink": {
                 "id": 5, 
                 "description": "CHINngEdgeNode", 
                 "type": "Node", 
@@ -1433,14 +1440,35 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
             "paths": [
                 {
                     "description": "UHDStreaming26_path127", 
                     "links used": [
+                        "(CHINngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, CHINngEdgeNode)"
+                        "(ATLAngCoreNode1, ATLAngGateway)"
+                    ], 
+                    "flow": 0.0, 
+                    "latency violated": false
+                }, 
+                {
+                    "description": "UHDStreaming26_path147", 
+                    "links used": [
+                        "(CHINngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, IPLSngCoreNode3)", 
+                        "(IPLSngCoreNode3, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
+                        "(ATLAngGateway, ATLAngCoreNode3)", 
+                        "(ATLAngCoreNode3, ATLAngGateway)", 
+                        "(ATLAngGateway, ATLAngCoreNode2)", 
+                        "(ATLAngCoreNode2, ATLAngGateway)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1467,12 +1495,6 @@
             "n_subscribers": 1, 
             "weight": 2.0, 
             "source": {
-                "id": 1, 
-                "description": "ATLAngGateway", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
-            "sink": {
                 "id": 16, 
                 "description": "STTLngEdgeNode", 
                 "type": "Node", 
@@ -1482,16 +1504,22 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
+            "sink": {
+                "id": 1, 
+                "description": "ATLAngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
             "paths": [
                 {
                     "description": "UHDStreaming31_path128", 
                     "links used": [
+                        "(STTLngEdgeNode, DNVRngSwitch)", 
+                        "(DNVRngSwitch, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, DNVRngSwitch)", 
-                        "(DNVRngSwitch, STTLngEdgeNode)"
+                        "(ATLAngCoreNode1, ATLAngGateway)"
                     ], 
                     "flow": 1.0, 
                     "latency violated": false
@@ -1499,12 +1527,10 @@
                 {
                     "description": "UHDStreaming31_path148", 
                     "links used": [
-                        "(ATLAngGateway, ATLAngCoreNode1)", 
-                        "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)", 
-                        "(IPLSngGateway, KSCYngEdgeNode)", 
-                        "(KSCYngEdgeNode, DNVRngSwitch)", 
-                        "(DNVRngSwitch, STTLngEdgeNode)"
+                        "(STTLngEdgeNode, DNVRngSwitch)", 
+                        "(DNVRngSwitch, KSCYngEdgeNode)", 
+                        "(KSCYngEdgeNode, IPLSngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)"
                     ], 
                     "flow": 0.0, 
                     "latency violated": false
@@ -1531,6 +1557,12 @@
             "n_subscribers": 1, 
             "weight": 2.0, 
             "source": {
+                "id": 8, 
+                "description": "IPLSngGateway", 
+                "type": "Switch", 
+                "handles_requests": true
+            }, 
+            "sink": {
                 "id": 14, 
                 "description": "NYCMngEdgeNode", 
                 "type": "Node", 
@@ -1540,32 +1572,28 @@
                 "availability": 0.9999, 
                 "handles_requests": true
             }, 
-            "sink": {
-                "id": 8, 
-                "description": "IPLSngGateway", 
-                "type": "Switch", 
-                "handles_requests": true
-            }, 
             "paths": [
                 {
                     "description": "UHDStreaming36_path129", 
                     "links used": [
-                        "(NYCMngEdgeNode, WASHngEdgeNode)", 
-                        "(WASHngEdgeNode, ATLAngGateway)", 
+                        "(IPLSngGateway, ATLAngGateway)", 
                         "(ATLAngGateway, ATLAngCoreNode1)", 
                         "(ATLAngCoreNode1, ATLAngGateway)", 
-                        "(ATLAngGateway, IPLSngGateway)"
+                        "(ATLAngGateway, WASHngEdgeNode)", 
+                        "(WASHngEdgeNode, NYCMngEdgeNode)"
                     ], 
-                    "flow": 1.0, 
+                    "flow": 0.0, 
                     "latency violated": false
                 }, 
                 {
                     "description": "UHDStreaming36_path149", 
                     "links used": [
-                        "(NYCMngEdgeNode, CHINngEdgeNode)", 
-                        "(CHINngEdgeNode, IPLSngGateway)"
+                        "(IPLSngGateway, IPLSngCoreNode3)", 
+                        "(IPLSngCoreNode3, IPLSngGateway)", 
+                        "(IPLSngGateway, CHINngEdgeNode)", 
+                        "(CHINngEdgeNode, NYCMngEdgeNode)"
                     ], 
-                    "flow": 0.0, 
+                    "flow": 1.0, 
                     "latency violated": false
                 }
             ], 
