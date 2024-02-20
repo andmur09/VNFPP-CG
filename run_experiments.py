@@ -84,13 +84,13 @@ if __name__ == "__main__":
     This script runs the experiments used in the results.
     """
 
-    network_file = "data_used/networks/nobeleu"
+    network_file = "data_used/networks/abilene"
     vnfs_dir = "data_used/vnfs/"
     sfcs_dir = "data_used/sfcs/"
-    results_dir = "data_used/results_1it/"
+    results_dir = "data_used/results/"
 
     # List of cases to run
-    cases = ["nobeleu_nservices700_loadfactor5.json"]
+    cases = ["abilene_nservices20_loadfactor1.json"]
     print("Loading network")
 
     # Loads the network
